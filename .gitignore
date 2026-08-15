@@ -1,0 +1,27 @@
+# The live app lives one level ABOVE this repo, so it is outside the working
+# tree and cannot be committed. These entries are belt-and-braces in case a
+# copy ever lands inside.
+finance-planner.html
+index.html
+financial-plan/
+
+# Local sanitization map — contains the real labels the demo build replaces.
+*.local.json
+
+# Snapshots and exports of real plan data
+*.snapshot.html
+*-backup.html
+plan-*.json
+export-*.json
+
+# Internal working context — stays local, not published
+CLAUDE.md
+
+# Uploaded archives — the extracted sources are what belong in git
+files.zip
+
+# Local noise
+.DS_Store
+.env
+.env.*
+node_modules/

@@ -249,20 +249,27 @@
   .legend .lab.off{color:var(--red)}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-  .grid3{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:12px;margin-top:14px}
-  /* On the dashboard these grids are bands of one ledger, so the cards drop
-     their borders and the grid's own rules do the dividing. */
-  .dashmain .grid3,.dashmain .grid2{
-    gap:0;margin-top:34px;border-top:2px solid rgba(32,30,29,.4);
+  /* On the dashboard these are bands of one ledger rather than a deck, so the
+     cards drop their borders and the grid's own rules do the dividing. */
+  .dashmain .grid2{
+    gap:0;margin-top:0;border-top:2px solid rgba(32,30,29,.4);grid-template-columns:1fr 1fr;
   }
-  .dashmain .grid2{grid-template-columns:1fr 1fr;margin-top:0}
-  .dashmain .grid3 > .card,.dashmain .grid2 > .card{
+  .dashmain .grid2.first{margin-top:34px}
+  .dashmain .grid2 > .card{
     border:0;border-right:1px solid var(--rule-2);padding:22px 24px 8px;background:transparent;
   }
-  .dashmain .grid3 > .card:first-child,.dashmain .grid2 > .card:first-child{padding-left:0}
-  .dashmain .grid3 > .card:last-child,.dashmain .grid2 > .card:last-child{border-right:0;padding-right:0}
+  .dashmain .grid2 > .card:first-child{padding-left:0}
+  .dashmain .grid2 > .card:last-child{border-right:0;padding-right:0}
   .dashmain .card h3{margin-bottom:4px}
   .subhead{font-size:11.5px;color:var(--muted);margin:0 0 16px}
+
+  /* Net worth trend, sitting beside the 401k tracker in the first band */
+  .trendbig{font-family:var(--mono);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-top:2px}
+  .trendsub{font-size:12.5px;font-weight:600;margin-top:2px}
+  .trendsub .down{color:var(--red)}
+  .trendspark{margin-top:16px}
+  .trendspark svg{display:block}
+  .trenddates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:2px}
 
   /* 401k gauges */
   .gauge{margin-bottom:18px}
@@ -321,12 +328,6 @@
   .railnote:last-child{border-bottom:0}
   .railnote strong{font-weight:700}
   .railnote.bad strong{color:var(--red)}
-  .railnw{font-family:var(--mono);font-weight:800;font-size:32px;letter-spacing:-.03em;margin-top:6px}
-  .railnw-sub{font-size:12.5px;font-weight:600;margin-top:2px}
-  .railnw-sub .down{color:var(--red)}
-  .railspark{margin-top:14px}
-  .railspark svg{display:block}
-  .raildates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
   .railrow{
     display:flex;justify-content:space-between;align-items:baseline;gap:10px;
     padding:8px 0;border-bottom:1px solid var(--rule);font-size:12.5px;
@@ -344,21 +345,23 @@
   /* Bar length is the width of the bracket, so the ladder says something
      true about the shape of the schedule. The red outline is how far into
      the current bracket the last ordinary dollar reaches. */
-  .brk{display:flex;flex-direction:column;gap:4px;margin:4px 0 0}
+  /* The bar column takes the slack so the ladder grows with the column it
+     sits in; the label column right-sizes to its text. */
+  .brk{display:flex;flex-direction:column;gap:5px;margin:6px 0 0}
   .brk-row{
-    display:grid;grid-template-columns:16px minmax(60px,104px) 1fr;align-items:center;
-    gap:10px;font-size:11px;color:var(--muted);
+    display:grid;grid-template-columns:18px minmax(90px,3fr) minmax(max-content,2fr);
+    align-items:center;gap:12px;font-size:12px;color:var(--muted);
   }
-  .brk-rate{font-family:var(--mono);font-weight:600;font-size:10.5px;color:var(--ink);text-align:right}
-  .brk-bar{height:16px;position:relative}
+  .brk-rate{font-family:var(--mono);font-weight:600;font-size:11px;color:var(--ink);text-align:right}
+  .brk-bar{height:18px;position:relative}
   .brk-bar i{display:block;height:100%;background:var(--rule-2)}
   .brk-row.on .brk-bar i{background:#201e1d}
   .brk-row.on .brk-lab{color:var(--ink);font-weight:600}
   .brk-rest{position:absolute;top:0;height:100%;background:#9b9797}
-  .brk-mark{position:absolute;top:-4px;height:24px;width:2px;background:var(--accent)}
+  .brk-mark{position:absolute;top:-4px;height:26px;width:2px;background:var(--accent)}
   .brk-foot{
     font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-    color:var(--red);margin-top:12px;
+    color:var(--red);margin-top:14px;
   }
   .ratestrip{display:flex;gap:20px;border-top:1px solid var(--rule-2);padding-top:12px;margin-top:12px}
   .ratestrip .rl{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
@@ -677,10 +680,22 @@
     .dashrail{display:contents}
     .hero{order:1;margin-top:20px}
     .dashmain{order:2;border-right:0;padding-right:0;padding-bottom:0}
-    .railbody{order:3;padding:24px 0 40px}
+    /* Full width, the rail's sections would run as one sparse column with
+       unreadably long lines, so they pair up: the notes down the left, the
+       what-if and the credits stacked beside them. */
+    .railbody{
+      order:3;padding:0 0 40px;display:grid;grid-template-columns:1fr 1fr;
+      gap:0 32px;align-items:start;
+    }
+    .railbody > .railsec:first-child{
+      grid-row:1 / span 2;
+      border-top:2px solid rgba(32,30,29,.4);margin-top:18px;padding-top:16px;
+    }
   }
+  /* The tabs need the whole bar once the masthead tightens, and net worth
+     has a panel of its own in the ledger by then anyway. */
+  @media (max-width:1180px){ .ticker{display:none} }
   @media (max-width:820px){
-    .ticker{display:none}
     .stamp{width:100%;order:5}
     .wm-name{font-size:16px}
     .toolbar{margin-left:auto}
@@ -692,11 +707,11 @@
     .kpi:nth-child(even){padding-right:0}
     .kpi .v{font-size:30px}
     .kpis.sticky{position:static;box-shadow:none;margin-top:0}
-    .grid2,.grid3{grid-template-columns:1fr}
-    .dashmain .grid3 > .card,.dashmain .grid2 > .card{
+    .grid2{grid-template-columns:1fr}
+    .dashmain .grid2 > .card{
       border-right:0;border-bottom:1px solid var(--rule-2);padding:20px 0;
     }
-    .dashmain .grid3 > .card:last-child,.dashmain .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
+    .dashmain .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
     main{padding:0 14px 60px}
     header.top{padding:12px 14px 0}
     .pagehead{padding-top:22px}
@@ -2479,7 +2494,19 @@ function dash(){
       </div>
     </div>
 
-    <div class="grid3">
+    <div class="grid2 first">
+      <div class="card">
+        <h3>Net worth</h3>
+        <p class="subhead">${nw.last ? `Last logged ${fmtDay(nw.last[0])}` : "Nothing logged yet"}</p>
+        <div class="trendbig">${usd(nw.total)}</div>
+        <div class="trendsub">
+          <span class="${nw.sinceLast>=0?"":"down"}">${nw.sinceLast>=0?"▲":"▼"} ${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
+          <span class="${nw.ytd>=0?"":"down"}">${nw.ytd>=0?"▲":"▼"} ${usd(Math.abs(nw.ytd))} YTD</span>
+        </div>
+        <div class="trendspark">${railSpark(nw.hist.slice(-40))}</div>
+        ${nw.hist.length>1?`<div class="trenddates"><span>${fmtDay(nw.hist.slice(-40)[0][0])}</span><span>${fmtDay(nw.hist[nw.hist.length-1][0])}</span></div>`:""}
+      </div>
+
       <div class="card">
         <h3>401k limit tracker</h3>
         <p class="subhead">Against this year's ${usd(S.irsLimit)} IRS deferral limit</p>
@@ -2498,7 +2525,9 @@ function dash(){
           </div>`;
         }).join("")}
       </div>
+    </div>
 
+    <div class="grid2">
       <div class="card">
         <h3>This year at current rates</h3>
         <p class="subhead">Both salaries, blended across the year</p>
@@ -2564,17 +2593,6 @@ function dash(){
       <div class="railsec">
         <span class="eyebrow">Also worth a look</span>
         ${rest.map(([k,t])=>`<div class="railnote${k==="bad"?" bad":""}">${t}</div>`).join("")}
-      </div>
-
-      <div class="railsec">
-        <span class="eyebrow">Net worth</span>
-        <div class="railnw">${usd(nw.total)}</div>
-        <div class="railnw-sub">
-          <span class="${nw.sinceLast>=0?"":"down"}">${nw.sinceLast>=0?"▲":"▼"} ${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
-          <span class="${nw.ytd>=0?"":"down"}">${nw.ytd>=0?"▲":"▼"} ${usd(Math.abs(nw.ytd))} YTD</span>
-        </div>
-        <div class="railspark">${railSpark(nw.hist.slice(-40))}</div>
-        ${nw.hist.length>1?`<div class="raildates"><span>${fmtDay(nw.hist.slice(-40)[0][0])}</span><span>${fmtDay(nw.hist[nw.hist.length-1][0])}</span></div>`:""}
       </div>
 
       <div class="railsec">

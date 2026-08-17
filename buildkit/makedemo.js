@@ -103,7 +103,7 @@ out=out.replace(/const SUPABASE_ANON_KEY\s*=\s*"[^"]*";/,'const SUPABASE_ANON_KE
 out=out.replace(/const CARD_IMG = \{[\s\S]*?\n\}/,'const CARD_IMG = {}');
 out=out.replace('<title>Financial Plan</title>','<title>Financial Plan — Demo</title>');
 out=out.replace('<span class="wm-thin">Plan</span>','<span class="wm-thin">Plan</span><span class="demoflag">Demo data</span>');
-out=out.replace('.wm-year{','.demoflag{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#E3D3A0;border:1px solid rgba(227,211,160,.45);border-radius:3px;padding:3px 7px;margin-left:8px}\n  .wm-year{');
+out=out.replace('.wm-year{','.demoflag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#201e1d;background:#bab6b6;border-radius:0;padding:3px 7px;margin-left:9px;white-space:nowrap}\n  .wm-year{');
 /* The live file sits one level ABOVE the repo, so the demo must be written
    into the repo (buildkit's parent) rather than next to the source. */
 const OUT=process.argv[3]||process.env.DEMO_OUT||path.join(__dirname,'..','demo.html');

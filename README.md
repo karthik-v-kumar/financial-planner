@@ -9,6 +9,20 @@ leaves your browser.
 
 ---
 
+## Two versions
+
+Both are the same app and read the same saved plan — only the interface
+differs, so a plan entered in one opens unchanged in the other.
+
+| | Interface | File | Tag |
+|---|---|---|---|
+| **V2** | Modernist: Archivo, square corners, rules rather than boxes, red kept for what needs attention | [`demo.html`](demo.html) | [`v2`](../../releases/tag/v2) |
+| **V1** | The original: navy and moss green, serif headings, rounded cards | [`v1/demo.html`](v1/demo.html) | [`v1`](../../releases/tag/v1) |
+
+V1 is kept as it shipped and is not maintained. New work goes into V2.
+
+---
+
 ## What it does
 
 Six tabs, each fed by the others so a figure is entered once and flows

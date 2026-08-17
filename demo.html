@@ -275,28 +275,6 @@
   .dashmain .card h3{margin-bottom:4px}
   .subhead{font-size:11.5px;color:var(--muted);margin:0 0 16px}
 
-  /* The same treatment for a whole tab. A .ledger turns its top-level cards
-     into bands of one continuous document — no boxes, 2px rules separating
-     the sections and 1px hairlines dividing a pair. Only direct children are
-     touched, so a grid nested inside a section keeps its own spacing. */
-  .ledger > .card{
-    background:transparent;border:0;border-top:2px solid rgba(32,30,29,.4);
-    border-radius:0;padding:26px 0 10px;
-  }
-  .ledger > .grid2{
-    gap:0;margin-top:0;border-top:2px solid rgba(32,30,29,.4);
-  }
-  .ledger > .grid2 > .card{
-    background:transparent;border:0;border-right:1px solid var(--rule-2);
-    border-radius:0;padding:26px 26px 10px;
-  }
-  .ledger > .grid2 > .card:first-child{padding-left:0}
-  .ledger > .grid2 > .card:last-child{border-right:0;padding-right:0}
-  .ledger > .kpis{border-top:2px solid rgba(32,30,29,.4)}
-  .ledger > .card > h3,.ledger > .grid2 > .card > h3{font-size:17px;margin-bottom:14px}
-  /* The tab's last band should not leave a rule hanging under the content */
-  .ledger > .card:last-child{padding-bottom:40px}
-
   /* Net worth trend, sitting beside its composition in the first band */
   .trendbig{font-family:var(--mono);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-top:2px}
   .trendsub{font-size:12.5px;font-weight:600;margin-top:2px}
@@ -762,17 +740,17 @@
     /* These carry the same specificity as the band rules above, so they have
        to name themselves — a bare .grid2 here would lose to .dashmain .grid2
        whatever the order, and the charts would stay squeezed side by side. */
-    .dashmain .grid2,.ledger > .grid2{grid-template-columns:1fr}
+    .dashmain .grid2{grid-template-columns:1fr}
     .kpi{padding:18px 16px}
     .kpi:nth-child(odd){padding-left:0;border-left:0}
     .kpi:nth-child(even){padding-right:0}
     .kpi .v{font-size:30px}
     .kpis.sticky{position:static;box-shadow:none;margin-top:0}
     .grid2{grid-template-columns:1fr}
-    .dashmain .grid2 > .card,.ledger > .grid2 > .card{
+    .dashmain .grid2 > .card{
       border-right:0;border-bottom:1px solid var(--rule-2);padding:20px 0;
     }
-    .dashmain .grid2 > .card:last-child,.ledger > .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
+    .dashmain .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
     main{padding:0 14px 60px}
     header.top{padding:12px 14px 0}
     .pagehead{padding-top:22px}
@@ -2831,7 +2809,6 @@ function spend(){
   <div class="pagehead"><h2 class="section">Spending plan</h2>
   <p class="section-note">Net income pulls from the income plan. Each section is measured against a target share of take-home pay. Guilt-free spending is whatever the other three leave behind.</p></div>
 
-  <div class="ledger">
   <div class="card">
     <h3>Income <span class="tag ok">100%</span></h3>
     <table>
@@ -2842,7 +2819,7 @@ function spend(){
     </table>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>Fixed costs ${band("fixed",m.pct.fixed)}</h3>
     <table>
       ${head}
@@ -2865,7 +2842,7 @@ function spend(){
     <button class="addrow" data-add="fixed">+ Add a new category</button>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
       <h3>Investing ${band("invest",m.pct.invest)}</h3>
       <table>
         ${head}
@@ -2878,7 +2855,7 @@ function spend(){
       <button class="addrow" data-add="invest">+ Add investment</button>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
       <h3>Savings ${band("savings",m.pct.savings)}</h3>
       <table>
         ${head}
@@ -2891,7 +2868,7 @@ function spend(){
       <button class="addrow" data-add="savings">+ Add savings goal</button>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>Guilt-free spending ${band("free",m.pct.free, m.free<0 || m.pct.free>S.caps.free.max)}</h3>
     <table>
       <tbody>
@@ -2902,7 +2879,7 @@ function spend(){
       </tbody>
     </table>
   </div>
-  </div>`;
+  `;
 }
 
 /* ============================================================
@@ -3498,7 +3475,6 @@ function taxview(){
   <p class="section-note">Wages come from the income plan. Update the investment figures and withholding here; everything else recalculates. A plain-language walkthrough sits at the bottom of this tab.</p></div>
   <p class="plainline">On <strong>${usd(t.agi)}</strong> of total income, tax comes to <strong>${usd(t.totalTax)}</strong> — about <strong>${pct(t.effRate)}</strong> overall, with the next dollar taxed at <strong>${pct(t.marginal)}</strong>. Withholding and payments so far cover <strong>${usd(t.fedPaid + t.caPaid)}</strong>, leaving a projected ${t.combinedBal>=0?"refund":"balance due"} of <strong>${usd(Math.abs(t.combinedBal))}</strong>.</p>
 
-  <div class="ledger">
   <div class="kpis six sticky">
     <div class="kpi accent">
       <div class="eyebrow">Total tax</div>
@@ -3534,7 +3510,7 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>Inputs <span class="caprule">Everything the calculation below is built from</span></h3>
     <div class="inputwrap">
 
@@ -3731,7 +3707,7 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
       <h3>Withholding <span class="caprule">Tax already taken out of your paychecks</span></h3>
       <div class="grid2" style="margin-top:0">
         <div>${whBlock("whK", S.people[1].name)}</div>
@@ -3810,7 +3786,7 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>What the next $1,000 of gain costs</h3>
     <div class="calcband">Each rate that applies</div>
     <table class="calctbl">
@@ -3852,7 +3828,7 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>Tax-loss harvesting estimator <span class="caprule">Price a trade before you make it</span></h3>
     <p class="plainline">Selling <strong>${usd(Math.abs(T.scenAmount))}</strong> of ${T.scenTerm==="ST"?"short-term":"long-term"} ${T.scenAmount<0?"losses":"gains"} ${t.scenBenefit>=0?"lowers":"raises"} total tax by <strong>${usd(Math.abs(t.scenBenefit))}</strong> — ${pct(Math.abs(t.scenRate))} of the amount.</p>
     <div class="logrow" style="margin-bottom:14px">
@@ -3894,7 +3870,7 @@ function taxview(){
         <div class="sub">${t.scen.agi > TPF().saltThresh ? "above" : "below"} the ${usd(TPF().saltThresh)} SALT threshold</div></div>
     </div>
   </div>
-  <div class="card">
+  <div class="card" style="margin-top:14px">
     <h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3>
     <div class="calcflow">
       <div class="cf-line"><span><span class="yearly">yearly</span> marks the figures that change every January — brackets, standard deductions, and the three thresholds below. Everything else is set by statute and only changes if the law does.</span></div>
@@ -3975,7 +3951,7 @@ function taxview(){
     </table>
   </div>
 
-  <div class="card guide">
+  <div class="card guide" style="margin-top:14px">
     <h3>How this tab works</h3>
     <p>Tax is worked out in four stages, and the cards above follow that order.</p>
 
@@ -3993,7 +3969,7 @@ function taxview(){
 
     <p class="guide-note">This is a planning model built from published rates, not a tax return. It does not handle alternative minimum tax, and a preparer has the final word.</p>
   </div>
-  </div>`;
+  `;
 }
 
 function cardsview(){

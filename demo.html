@@ -40,6 +40,10 @@
     --accent-400:#ff9783;
     --green:#2d2b2b;         /* "all clear" reads as neutral, not as a colour */
     --green-bg:#f8f4f4;
+    /* Movement up. Its own token rather than --green, which is the neutral
+       "within guardrails" tone and must stay colourless. 5.9:1 on card
+       white, 5.3:1 on paper. */
+    --pos:#17724a;
     /* One family throughout. The three slots stay so the intent of each
        piece of type is still legible in the CSS. */
     --serif:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -260,11 +264,18 @@
   .legend .lab{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
   .legend .lab.off{color:var(--red)}
 
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  /* minmax(0,…) rather than a bare 1fr throughout. A bare 1fr is
+     minmax(auto,1fr), and that auto minimum is the item's min-content — which
+     a grid item does not collapse just because its contents scroll. The cards
+     here hold tables that scroll sideways inside themselves on a phone, so a
+     bare 1fr inflates the track to the table's full natural width and drags
+     the whole document past the viewport with it. */
+  .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;margin-top:14px}
   /* On the dashboard these are bands of one ledger rather than a deck, so the
      cards drop their borders and the grid's own rules do the dividing. */
   .dashmain .grid2{
-    gap:0;margin-top:0;border-top:2px solid rgba(32,30,29,.4);grid-template-columns:1fr 1fr;
+    gap:0;margin-top:0;border-top:2px solid rgba(32,30,29,.4);
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   }
   .dashmain .grid2.first{margin-top:34px}
   .dashmain .grid2 > .card{
@@ -278,6 +289,7 @@
   /* Net worth trend, sitting beside its composition in the first band */
   .trendbig{font-family:var(--mono);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-top:2px}
   .trendsub{font-size:12.5px;font-weight:600;margin-top:2px}
+  .trendsub .up{color:var(--pos)}
   .trendsub .down{color:var(--red)}
 
   /* The chart frame. The plot stretches to whatever box it is given while the
@@ -384,7 +396,9 @@
      sits in; the label column right-sizes to its text. */
   .brk{display:flex;flex-direction:column;gap:5px;margin:6px 0 0}
   .brk-row{
-    display:grid;grid-template-columns:18px minmax(90px,3fr) minmax(max-content,2fr);
+    /* The label track takes the slack but is allowed to shrink: a max-content
+       minimum here would push the whole panel wide if a bracket label grew. */
+    display:grid;grid-template-columns:18px minmax(60px,3fr) minmax(0,2fr);
     align-items:center;gap:12px;font-size:12px;color:var(--muted);
   }
   .brk-rate{font-family:var(--mono);font-weight:600;font-size:11px;color:var(--ink);text-align:right}
@@ -477,9 +491,9 @@
   }
   .ig{min-width:0}
   .ig-head, .ig-row{
-    display:grid;grid-template-columns:1fr 92px 92px;gap:9px;align-items:center;
+    display:grid;grid-template-columns:minmax(0,1fr) 92px 92px;gap:9px;align-items:center;
   }
-  .ig.one .ig-head, .ig.one .ig-row{grid-template-columns:1fr 108px}
+  .ig.one .ig-head, .ig.one .ig-row{grid-template-columns:minmax(0,1fr) 108px}
   .ig-head{
     padding-bottom:7px;margin-bottom:2px;border-bottom:1px solid var(--rule-2);
   }
@@ -570,8 +584,8 @@
     font-family:var(--serif);font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.015em;
     margin:30px 0 10px;padding-bottom:9px;border-bottom:2px solid rgba(32,30,29,.4);
   }
-  .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;align-items:start}
-  .cardgrid.flat{grid-template-columns:repeat(3,1fr)}
+  .cardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px;align-items:start}
+  .cardgrid.flat{grid-template-columns:repeat(3,minmax(0,1fr))}
   .cardpane{padding:0;overflow:hidden}
   /* Issuer visual language, not their artwork */
   .cardface{
@@ -656,9 +670,16 @@
   @media (max-width:900px){
     .cardgrid,.cardgrid.flat{grid-template-columns:1fr}
   }
-  .delta{font-family:var(--mono);font-weight:700}
-  .delta.up{color:var(--ink)} .delta.down{color:var(--red)}
+  .delta{font-family:var(--mono);font-weight:700;white-space:nowrap}
+  .delta.up{color:var(--pos)} .delta.down{color:var(--red)}
   .kpi .v .delta{font-size:38px;font-weight:800}
+  /* ▲ and ▼ are not in Archivo. As text they fall back to a system font with
+     a taller line box — enough to double the height of a stat row — so they
+     are drawn instead, taking the surrounding colour and metrics. */
+  .arw{
+    width:.58em;height:.46em;display:inline-block;
+    vertical-align:.06em;margin-right:.18em;flex:none;
+  }
   .rangebar{margin-left:auto;display:flex;gap:0}
   .rangebtn{
     font:inherit;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
@@ -740,13 +761,13 @@
     /* These carry the same specificity as the band rules above, so they have
        to name themselves — a bare .grid2 here would lose to .dashmain .grid2
        whatever the order, and the charts would stay squeezed side by side. */
-    .dashmain .grid2{grid-template-columns:1fr}
+    .dashmain .grid2{grid-template-columns:minmax(0,1fr)}
     .kpi{padding:18px 16px}
     .kpi:nth-child(odd){padding-left:0;border-left:0}
     .kpi:nth-child(even){padding-right:0}
     .kpi .v{font-size:30px}
     .kpis.sticky{position:static;box-shadow:none;margin-top:0}
-    .grid2{grid-template-columns:1fr}
+    .grid2{grid-template-columns:minmax(0,1fr)}
     .dashmain .grid2 > .card{
       border-right:0;border-bottom:1px solid var(--rule-2);padding:20px 0;
     }
@@ -798,11 +819,16 @@
   }
 
   @media (max-width:480px){
-    .kpi .v{font-size:26px}
-    .kpis.five .kpi .v,.kpis.six .kpi .v{font-size:22px}
+    /* Two columns of a 26px figure no longer fit: "▲ $105,100" needs more
+       than half of a 375px screen and was wrapping mid-figure. One stat per
+       row, divided by a rule instead of by the column edge. */
+    .kpis,.kpis.three,.kpis.five,.kpis.six,.legend{grid-template-columns:minmax(0,1fr)}
+    .kpi{padding:16px 0;border-left:0;border-top:1px solid var(--rule-2)}
+    .kpi:first-child{border-top:0;padding-top:14px}
+    .kpi .v,.kpis.five .kpi .v,.kpis.six .kpi .v{font-size:28px}
+    .legend div{margin-top:2px}
     .hero .hl{font-size:24px}
-    .railnw{font-size:28px}
-    .cardstats{grid-template-columns:repeat(2,1fr)}
+    .cardstats{grid-template-columns:repeat(2,minmax(0,1fr))}
     .masthead{row-gap:8px}
     .toolbar{width:100%;margin-top:2px}
   }
@@ -2248,6 +2274,9 @@ const usd2 = n => (n<0?"−":"") + "$" + Math.abs(n).toLocaleString("en-US",{min
 const pct  = (n,d=1) => (n*100).toFixed(d) + "%";
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtDay = iso => new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+// Drawn rather than typed — see .arw for why
+const arrow = up => `<svg class="arw" viewBox="0 0 10 8" aria-hidden="true">`
+  + `<path d="${up ? "M5 0 10 8 0 8Z" : "M5 8 10 0 0 0Z"}" fill="currentColor"/></svg>`;
 
 /* ============================================================
    DASHBOARD CHARTS
@@ -2509,8 +2538,8 @@ function dash(){
         <p class="subhead">${nw.last ? `Last logged ${fmtDay(nw.last[0])}` : "Nothing logged yet"}</p>
         <div class="trendbig">${usd(nw.total)}</div>
         <div class="trendsub">
-          <span class="${nw.sinceLast>=0?"":"down"}">${nw.sinceLast>=0?"▲":"▼"} ${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
-          <span class="${nw.ytd>=0?"":"down"}">${nw.ytd>=0?"▲":"▼"} ${usd(Math.abs(nw.ytd))} YTD</span>
+          <span class="${nw.sinceLast>=0?"up":"down"}">${arrow(nw.sinceLast>=0)}${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
+          <span class="${nw.ytd>=0?"up":"down"}">${arrow(nw.ytd>=0)}${usd(Math.abs(nw.ytd))} YTD</span>
         </div>
         ${chart(nw.hist.slice(-40), {height:196, ticks:3})}
       </div>
@@ -3313,7 +3342,7 @@ function headSpark(hist, w=120, h=26){
 
 function networth(){
   const n = nwModel();
-  const delta = (v) => `<span class="delta ${v>=0?"up":"down"}">${v>=0?"▲":"▼"} ${usd(Math.abs(v))}</span>`;
+  const delta = (v) => `<span class="delta ${v>=0?"up":"down"}">${arrow(v>=0)}${usd(Math.abs(v))}</span>`;
   const cut = { all:0, y1:Date.now()-365*864e5, ytd:new Date(new Date().getFullYear()+"-01-01").getTime() }[nwRange];
   const shown = n.hist.filter(p=>new Date(p[0]).getTime() >= cut);
 
@@ -3342,7 +3371,7 @@ function networth(){
     <div class="kpi"><div class="eyebrow">Since last entry</div><div class="v">${delta(n.sinceLast)}</div><div class="sub">${n.prev?`from ${usd(n.prev[1])}`:"—"}</div></div>
     <div class="kpi"><div class="eyebrow">Year to date</div><div class="v">${delta(n.ytd)}</div><div class="sub">${pct(n.last&&n.ytd?n.ytd/(n.last[1]-n.ytd):0)} change</div></div>
     <div class="kpi"><div class="eyebrow">${n.total>=n.peak?"New high":"Off peak"}</div>
-      <div class="v" style="color:${n.total>=n.peak?"var(--green)":"var(--red)"}">${n.total>=n.peak?"+":"−"}${usd(Math.abs(n.total-n.peak))}</div>
+      <div class="v"><span class="delta ${n.total>=n.peak?"up":"down"}">${n.total>=n.peak?"+":"−"}${usd(Math.abs(n.total-n.peak))}</span></div>
       <div class="sub">previous peak ${usd(n.peak)}</div></div>
   </div>
 

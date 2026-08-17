@@ -12,243 +12,278 @@
 <link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
 <link rel="manifest" href="manifest.json">
 <title>Financial Plan — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
 <style>
+  /* Modernist: one typeface (Archivo) at several weights, no rounded corners,
+     2px rules doing the organising, and red held back for what needs
+     attention. Semantic names are kept from the previous palette so every
+     view keeps working — only the values underneath them changed. */
   :root{
-    --ink:#0F2233;
-    --ink-2:#1C3A52;
-    --moss:#1E4034;
-    --moss-2:#2F6B4F;
-    --paper:#F4F6F3;
+    --ink:#201e1d;
+    --ink-2:#444141;
+    --moss:#201e1d;          /* was the second brand colour; now plain ink */
+    --moss-2:#605d5d;
+    --paper:#f3f2f2;
     --card:#FFFFFF;
-    --rule:#E1E5E0;
-    --rule-2:#CDD3CC;
-    --text:#16211C;
-    --muted:#6A756E;
-    --blue:#1B4FA8;
-    --amber:#8E6410;
-    --amber-bg:#FBF3E0;
-    --red:#A2372A;
-    --red-bg:#FAECE9;
-    --green:#2C6E4E;
-    --green-bg:#EAF3ED;
-    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+    --rule:#eae7e7;
+    --rule-2:#d7d3d3;
+    --text:#201e1d;
+    --muted:#605d5d;
+    --blue:#1B4FA8;          /* the "type here" convention survives the reskin */
+    --amber:#9e3526;
+    --amber-bg:#ffe0da;
+    --red:#ae1800;
+    --red-bg:#ffe0d9;
+    --accent:#ec3013;
+    --accent-400:#ff9783;
+    --green:#2d2b2b;         /* "all clear" reads as neutral, not as a colour */
+    --green-bg:#f8f4f4;
+    /* One family throughout. The three slots stay so the intent of each
+       piece of type is still legible in the CSS. */
+    --serif:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --sans:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
     background:var(--paper);color:var(--text);
-    font-family:var(--sans);font-size:14px;line-height:1.45;
+    font-family:var(--sans);font-size:14px;line-height:1.5;
     -webkit-font-smoothing:antialiased;
   }
   .num{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
   .eyebrow{
-    font-size:10px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;
+    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;
   }
 
   /* ---------- chrome ---------- */
-  /* Masthead: navy warms toward the moss of the brand mark, so the two
-     brand colours read as one family rather than two unrelated blocks. */
+  /* One flat block of ink. The only colour in the masthead is the red rule
+     under whichever tab is open. */
   header.top{
-    background:
-      radial-gradient(120% 180% at 88% 0%, rgba(47,107,79,.30) 0%, rgba(47,107,79,0) 62%),
-      linear-gradient(103deg, #0C1E2E 0%, #10283A 46%, #123128 100%);
-    color:#fff;position:sticky;top:0;z-index:20;
-    padding:max(14px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) 0 max(24px, env(safe-area-inset-left));
-    box-shadow:0 1px 0 rgba(255,255,255,.06) inset, 0 6px 18px -12px rgba(8,20,14,.7);
-  }
-  header.top::after{
-    content:"";position:absolute;left:0;right:0;bottom:0;height:2px;
-    background:linear-gradient(90deg,#2F6B4F 0%,#7FC3A0 22%,rgba(127,195,160,.16) 60%,transparent 100%);
+    background:#201e1d;
+    color:#f3f2f2;position:sticky;top:0;z-index:20;
+    padding:max(13px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) 0 max(24px, env(safe-area-inset-left));
   }
   .masthead{
-    max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    max-width:1320px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
   }
-  .mark{display:flex;flex:0 0 auto;filter:drop-shadow(0 2px 5px rgba(0,0,0,.3))}
-  .wordmark{display:flex;align-items:center;gap:10px;margin:0;font-weight:400}
+  .mark{display:flex;flex:0 0 auto}
+  .wordmark{display:flex;align-items:baseline;gap:14px;margin:0;font-weight:400}
   .wm-name{
-    font-family:var(--serif);font-size:25px;line-height:1.1;letter-spacing:-.005em;color:#F2F6F3;
+    font-size:19px;font-weight:800;line-height:1.1;letter-spacing:-.02em;
+    text-transform:uppercase;color:#f3f2f2;
   }
-  /* Second word set lighter so the lockup has an internal rhythm rather than one flat block */
-  .wm-thin{color:#93B7A4;font-style:italic;margin-left:.3em}
-  /* The year is data, so it takes the mono face used for every other figure */
+  .wm-thin{margin-left:.34em}
   .demoflag{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#E3D3A0;border:1px solid rgba(227,211,160,.45);border-radius:3px;padding:3px 7px;margin-left:8px}
   .wm-year{
-    font-size:12px;letter-spacing:.06em;color:#9FD3B7;
-    border:1px solid rgba(127,195,160,.42);border-radius:3px;
-    padding:3px 8px;background:rgba(127,195,160,.10);
+    font-size:11px;font-weight:500;letter-spacing:.16em;color:#9b9797;
   }
   .stamp{
-    font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:#8FA6B8;
-    padding-left:14px;border-left:1px solid rgba(255,255,255,.14);
+    font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#bab6b6;
   }
   .syncbadge{
-    font-size:10px;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;
-    border-radius:20px;border:1px solid rgba(255,255,255,.2);color:#8FA6B8;white-space:nowrap;
+    font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;
+    border:1px solid rgba(243,242,242,.22);color:#9b9797;white-space:nowrap;
   }
-  .syncbadge.saved{color:#9FD3B7;border-color:rgba(127,195,160,.45);background:rgba(127,195,160,.12)}
-  .syncbadge.saving{color:#E3D3A0;border-color:rgba(227,211,160,.4)}
-  .syncbadge.error{color:#E8A79A;border-color:rgba(232,167,154,.45);background:rgba(232,167,154,.1)}
-  .syncbadge.signedout{color:#8FA6B8}
+  .syncbadge.saved{color:#f3f2f2;border-color:rgba(243,242,242,.45)}
+  .syncbadge.saving{color:#bab6b6;border-color:rgba(243,242,242,.3)}
+  .syncbadge.error{color:#fff;background:var(--accent);border-color:var(--accent)}
+  .syncbadge.signedout{color:#9b9797}
   /* `hidden` must win over the display:flex below, or the overlay never goes away */
   .authgate[hidden]{display:none !important}
   .authgate{
     position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
-    background:radial-gradient(120% 140% at 70% 0%, rgba(47,107,79,.28) 0%, rgba(47,107,79,0) 60%),
-               linear-gradient(103deg,#0C1E2E 0%,#10283A 46%,#123128 100%);
-    padding:24px;
+    background:#201e1d;padding:24px;
   }
   .authbox{
-    background:var(--card);border-radius:6px;padding:32px 30px 28px;max-width:400px;width:100%;
-    box-shadow:0 24px 60px -20px rgba(0,0,0,.55);text-align:center;
+    background:var(--card);border-radius:0;padding:32px 30px 28px;max-width:400px;width:100%;
+    text-align:center;
   }
-  .authbox h1{font-family:var(--serif);font-size:24px;font-weight:600;margin:14px 0 6px;color:var(--ink)}
+  .authbox h1{font-family:var(--serif);font-size:26px;font-weight:800;letter-spacing:-.02em;margin:14px 0 6px;color:var(--ink)}
   .authbox p{font-size:13px;color:var(--muted);margin:0 0 20px;line-height:1.5}
   .authbox input{
     width:100%;font:inherit;font-size:14px;padding:11px 13px;border:1px solid var(--rule-2);
-    border-radius:3px;margin-bottom:10px;background:#FBFCFA;
+    border-radius:0;margin-bottom:10px;background:#f8f4f4;
   }
-  .authbox input:focus{outline:2px solid var(--moss-2);outline-offset:-1px;background:#fff}
+  .authbox input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:#fff}
   .authbtn{
-    width:100%;font:inherit;font-size:14px;font-weight:600;padding:11px;cursor:pointer;
-    background:var(--moss);color:#fff;border:0;border-radius:3px;transition:background .15s;
+    width:100%;font:inherit;font-size:14px;font-weight:800;padding:12px;cursor:pointer;
+    background:var(--accent);color:#fff;border:0;border-radius:0;transition:background .15s;
   }
-  .authbtn:hover{background:var(--moss-2)}
-  .authmsg{font-size:12.5px;color:var(--moss);margin-top:14px;min-height:18px;line-height:1.45}
+  .authbtn:hover{background:#dd2b0f}
+  .authmsg{font-size:12.5px;color:var(--ink);margin-top:14px;min-height:18px;line-height:1.45}
   .authmsg.bad{color:var(--red)}
   .offlinebtn{
     display:block;width:100%;margin-top:12px;font:inherit;font-size:12.5px;cursor:pointer;
-    background:transparent;border:1px solid var(--rule-2);border-radius:3px;padding:9px;color:var(--muted);
+    background:transparent;border:1px solid var(--rule-2);border-radius:0;padding:9px;color:var(--muted);
   }
-  .offlinebtn:hover{border-color:var(--moss-2);color:var(--moss)}
+  .offlinebtn:hover{border-color:var(--ink);color:var(--ink)}
   .offlinebtn[hidden]{display:none}
   .authalt{margin-top:18px;padding-top:16px;border-top:1px solid var(--rule)}
   .authalt > span{font-size:11.5px;color:var(--muted);display:block;margin-bottom:9px}
   .authcode{display:flex;gap:8px}
   .authcode input{margin:0;flex:1;font-family:var(--mono);letter-spacing:.24em;text-align:center}
   .authbtn.small{width:auto;padding:11px 18px;font-size:13px}
-  .toolbar{margin-left:auto;display:flex;gap:7px}
+  .toolbar{margin-left:auto;display:flex;gap:6px}
   .btn{
-    font:inherit;font-size:12px;font-weight:500;color:#D6E4DC;background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.16);border-radius:3px;
-    padding:6px 13px;cursor:pointer;transition:background .15s,border-color .15s,color .15s;
+    font:inherit;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#bab6b6;
+    background:transparent;border:1px solid rgba(243,242,242,.22);border-radius:0;
+    padding:6px 12px;cursor:pointer;transition:background .15s,border-color .15s,color .15s;
   }
-  .btn:hover{background:rgba(127,195,160,.20);border-color:rgba(127,195,160,.55);color:#fff}
-  .btn.ghost{background:transparent;color:#8FA6B8}
-  .btn.ghost:hover{background:rgba(255,255,255,.08);color:#D6E4DC;border-color:rgba(255,255,255,.3)}
-  .btn:focus-visible{outline:2px solid #8FD0AE;outline-offset:2px}
+  .btn:hover{background:rgba(243,242,242,.1);border-color:rgba(243,242,242,.5);color:#fff}
+  .btn.ghost{background:transparent;color:#9b9797;border-color:transparent}
+  .btn.ghost:hover{color:#f3f2f2;border-color:rgba(243,242,242,.3)}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   .headfoot{
-    max-width:1180px;margin:11px auto 0;display:flex;align-items:flex-end;gap:16px;
+    max-width:1320px;margin:16px auto 0;display:flex;align-items:flex-end;gap:16px;
   }
-  nav.tabs{display:flex;gap:2px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}
+  nav.tabs{display:flex;gap:28px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}
   nav.tabs::-webkit-scrollbar{display:none}
   nav.tabs button{
-    font:inherit;font-size:13px;font-weight:600;letter-spacing:.015em;white-space:nowrap;
-    background:transparent;border:0;border-bottom:3px solid transparent;
-    color:#8FA6B8;padding:9px 15px 10px;cursor:pointer;border-radius:3px 3px 0 0;
-    transition:color .15s,background .15s;
+    font:inherit;font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+    white-space:nowrap;background:transparent;border:0;border-bottom:3px solid transparent;
+    color:#9b9797;padding:0 0 9px;cursor:pointer;border-radius:0;
+    transition:color .15s,border-color .15s;
   }
-  nav.tabs button:hover{color:#E4EFE8;background:rgba(255,255,255,.05)}
-  nav.tabs button[aria-selected="true"]{color:#fff;border-bottom-color:#7FC3A0;background:rgba(127,195,160,.10)}
-  nav.tabs button:focus-visible{outline:2px solid #8FD0AE;outline-offset:-2px}
+  nav.tabs button:hover{color:#f3f2f2}
+  nav.tabs button[aria-selected="true"]{color:#fff;font-weight:700;border-bottom-color:var(--accent)}
+  nav.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   /* Live net worth readout — the masthead ornament is the data itself */
   .ticker{
-    display:flex;align-items:center;gap:9px;padding-bottom:7px;flex:0 0 auto;
+    display:flex;align-items:center;gap:10px;padding-bottom:7px;flex:0 0 auto;
   }
   .ticker .tk-lab{
-    font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#7A93A6;
+    font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7d7979;
   }
-  .ticker .tk-val{font-family:var(--mono);font-size:14px;color:#EAF3ED;letter-spacing:-.01em}
-  .ticker .tk-chg{font-family:var(--mono);font-size:11.5px}
-  .ticker .tk-chg.up{color:#7FC3A0}
-  .ticker .tk-chg.down{color:#E39B8F}
-  .ticker svg{display:block;opacity:.9}
+  .ticker .tk-val{font-family:var(--mono);font-weight:700;font-size:14px;color:#f3f2f2;letter-spacing:-.01em}
+  .ticker .tk-chg{font-family:var(--mono);font-weight:600;font-size:11.5px}
+  .ticker .tk-chg.up{color:#f3f2f2}
+  .ticker .tk-chg.down{color:var(--accent-400)}
+  .ticker svg{display:block}
 
-  main{max-width:1180px;margin:0 auto;padding:26px max(24px, env(safe-area-inset-right)) max(80px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left))}
+  main{max-width:1320px;margin:0 auto;padding:0 max(24px, env(safe-area-inset-right)) max(80px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left))}
   .view[hidden]{display:none}
 
+  /* Every tab opens with the same masthead-to-content transition: a big
+     800-weight title on a 2px rule, with the qualifying line beside it. */
   h2.section{
-    font-family:var(--serif);font-size:19px;font-weight:600;
-    margin:0 0 2px;letter-spacing:.01em;
+    font-family:var(--serif);font-size:30px;font-weight:800;
+    margin:0;letter-spacing:-.025em;line-height:1.1;
   }
-  .section-note{color:var(--muted);font-size:12.5px;margin:0 0 16px;max-width:62ch}
+  .section-note{color:var(--muted);font-size:13px;margin:0;max-width:70ch}
+  .pagehead{
+    display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+    border-bottom:2px solid rgba(32,30,29,.4);padding:30px 0 11px;margin-bottom:20px;
+  }
 
   .card{
-    background:var(--card);border:1px solid var(--rule);border-radius:3px;
-    padding:16px 18px;
+    background:var(--card);border:1px solid var(--rule-2);border-radius:0;
+    padding:18px 20px;
   }
   .card h3{
-    font-family:var(--serif);font-size:15px;font-weight:600;margin:0 0 12px;
+    font-family:var(--serif);font-size:15px;font-weight:800;margin:0 0 14px;letter-spacing:-.01em;
     display:flex;align-items:baseline;gap:8px;
   }
   .card h3 .tag{margin-left:auto}
 
   /* ---------- dashboard ---------- */
-  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+  /* The dashboard is a ledger, not a deck of cards: one main column ruled
+     into bands, and a rail down the right for whatever needs attention. */
+  .dashgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px}
+  .dashmain{border-right:2px solid rgba(32,30,29,.4);padding:0 28px 40px 0;min-width:0}
+  .dashrail{padding:0 0 40px 0;min-width:0}
+  .dashmain .pagehead{margin-bottom:0}
+
+  /* The four vitals, divided by hairlines rather than boxed into cards */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid rgba(32,30,29,.4)}
   .kpis.five{grid-template-columns:repeat(5,1fr)}
   .kpis.six{grid-template-columns:repeat(6,1fr)}
   @media (max-width:1150px){ .kpis.six{grid-template-columns:repeat(3,1fr)} }
   /* Keeps the summary visible while inputs below are being edited */
   .kpis.sticky{
-    position:sticky;top:104px;z-index:10;
-    background:var(--paper);padding:10px 0;margin-top:-10px;
-    box-shadow:0 10px 12px -10px rgba(16,34,51,.16);
+    position:sticky;top:100px;z-index:10;background:var(--paper);
+    border-top:2px solid rgba(32,30,29,.4);margin-bottom:20px;
   }
-  .kpi{
-    background:var(--card);border:1px solid var(--rule);border-radius:3px;
-    padding:13px 15px 14px;
+  .kpi{padding:22px 22px 24px;border-left:1px solid var(--rule-2)}
+  .kpi:first-child{padding-left:0;border-left:0}
+  .kpi:last-child{padding-right:0}
+  .kpi .v{
+    font-family:var(--mono);font-weight:800;font-size:38px;letter-spacing:-.03em;
+    margin-top:8px;color:var(--ink);line-height:1;
   }
-  .kpi .v{font-family:var(--mono);font-size:25px;letter-spacing:-.02em;margin-top:5px;color:var(--ink)}
-  .kpis.six .kpi .v{font-size:21px}
-  .kpis.six .kpi .sub{font-size:11px;line-height:1.4}
-  .kpi .sub{font-size:11.5px;color:var(--muted);margin-top:3px}
-  .kpi.accent{background:var(--moss);border-color:var(--moss)}
-  .kpi.accent .eyebrow{color:#9DC7B0}
-  .kpi.accent .v{color:#fff}
-  .kpi.accent .sub{color:#B7D3C3}
+  .kpis.five .kpi .v,.kpis.six .kpi .v{font-size:27px}
+  .kpis.six .kpi .sub{font-size:11.5px;line-height:1.4}
+  .kpi .sub{font-size:12.5px;color:var(--muted);margin-top:5px}
+  /* The lead figure earns its emphasis from a red rule, not a filled block */
+  .kpi.accent{box-shadow:inset 0 3px 0 var(--accent)}
 
   /* signature: allocation ribbon */
-  .ribbon-wrap{position:relative;margin:22px 0 0}
-  .ribbon{display:flex;height:52px;border-radius:2px;overflow:hidden;border:1px solid var(--rule-2)}
-  .seg{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;transition:flex-basis .5s cubic-bezier(.2,.7,.3,1)}
-  .seg .pct{font-family:var(--mono);font-size:13px;color:#fff;opacity:.95}
-  .seg-fixed{background:var(--ink-2)}
-  .seg-invest{background:var(--moss-2)}
-  .seg-save{background:#7A9C86}
-  .seg-free{background:#C6D2C9}
+  .ribbon-wrap{position:relative;margin:26px 0 0}
+  .ribbon{display:flex;height:44px;border-radius:0}
+  .seg{position:relative;display:flex;align-items:center;min-width:0;padding-left:12px;transition:flex-basis .5s cubic-bezier(.2,.7,.3,1)}
+  .seg .pct{font-family:var(--mono);font-weight:700;font-size:13px;color:#f3f2f2}
+  .seg-fixed{background:#201e1d}
+  .seg-invest{background:#605d5d}
+  .seg-save{background:#9b9797}
+  .seg-free{background:#d7d3d3}
   .seg-free .pct{color:var(--ink)}
-  .cap{position:absolute;top:-8px;bottom:-8px;width:1px;background:var(--red);z-index:3}
+  .cap{position:absolute;top:-12px;bottom:-12px;width:2px;background:var(--accent);z-index:3}
   .cap::after{
-    content:attr(data-label);position:absolute;top:-15px;left:4px;white-space:nowrap;
-    font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--red);font-weight:600;
+    content:attr(data-label);position:absolute;top:-16px;left:6px;white-space:nowrap;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700;
   }
-  .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
-  .legend div{border-top:2px solid var(--rule);padding-top:7px}
-  .legend .sw{display:inline-block;width:9px;height:9px;border-radius:1px;margin-right:6px;vertical-align:baseline}
-  .legend .amt{font-family:var(--mono);font-size:15px;margin-top:2px;display:block}
-  .legend .lab{font-size:11.5px;color:var(--muted)}
+  .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:22px}
+  .legend div{border-top:2px solid var(--rule-2);padding-top:9px}
+  .legend div.l-fixed{border-top-color:#201e1d}
+  .legend div.l-invest{border-top-color:#605d5d}
+  .legend div.l-save{border-top-color:#9b9797}
+  .legend div.l-free{border-top-color:#d7d3d3}
+  .legend .name{font-size:12px;font-weight:600;color:var(--ink)}
+  .legend .amt{font-family:var(--mono);font-weight:800;font-size:19px;margin-top:3px;display:block}
+  .legend .lab{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+  .legend .lab.off{color:var(--red)}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
   .grid3{display:grid;grid-template-columns:1.05fr 1fr 1fr;gap:12px;margin-top:14px}
+  /* On the dashboard these grids are bands of one ledger, so the cards drop
+     their borders and the grid's own rules do the dividing. */
+  .dashmain .grid3,.dashmain .grid2{
+    gap:0;margin-top:34px;border-top:2px solid rgba(32,30,29,.4);
+  }
+  .dashmain .grid2{grid-template-columns:1fr 1fr;margin-top:0}
+  .dashmain .grid3 > .card,.dashmain .grid2 > .card{
+    border:0;border-right:1px solid var(--rule-2);padding:22px 24px 8px;background:transparent;
+  }
+  .dashmain .grid3 > .card:first-child,.dashmain .grid2 > .card:first-child{padding-left:0}
+  .dashmain .grid3 > .card:last-child,.dashmain .grid2 > .card:last-child{border-right:0;padding-right:0}
+  .dashmain .card h3{margin-bottom:4px}
+  .subhead{font-size:11.5px;color:var(--muted);margin:0 0 16px}
 
   /* 401k gauges */
-  .gauge{margin-bottom:14px}
+  .gauge{margin-bottom:18px}
   .gauge:last-child{margin-bottom:0}
   .gauge .row{display:flex;align-items:baseline;gap:8px;font-size:12.5px}
-  .gauge .who{font-weight:600;letter-spacing:.03em;text-transform:uppercase;font-size:11px}
-  .gauge .amt{margin-left:auto;font-family:var(--mono)}
-  .track{height:9px;background:#EDF0EC;border-radius:1px;margin:6px 0 4px;position:relative;overflow:hidden}
-  .fill{height:100%;background:var(--moss-2);transition:width .5s ease}
-  .fill.over{background:var(--red)}
+  .gauge .who{font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:11px}
+  .gauge .amt{margin-left:auto;font-family:var(--mono);font-weight:600;font-size:13px}
+  .track{height:10px;background:var(--rule);border-radius:0;margin:8px 0 6px;position:relative}
+  .fill{height:100%;background:#201e1d;transition:width .5s ease}
+  .fill.over{background:var(--accent)}
+  /* The hatched run is what the current rate will still add by year end */
+  .track .proj{
+    position:absolute;top:0;height:100%;
+    background:repeating-linear-gradient(90deg,#9b9797 0 3px,transparent 3px 6px);
+  }
   .gauge .hint{font-size:11.5px;color:var(--muted)}
+  .gauge .hint strong{color:var(--red);font-weight:600}
 
   .tag{
-    font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-    padding:3px 7px;border-radius:2px;white-space:nowrap;
+    font-size:11px;font-weight:600;letter-spacing:.02em;
+    padding:3px 10px;border-radius:0;white-space:nowrap;
   }
   .tag.ok{background:var(--green-bg);color:var(--green)}
   .tag.warn{background:var(--amber-bg);color:var(--amber)}
@@ -260,29 +295,110 @@
   }
   ul.alerts li:last-child{border-bottom:0}
   ul.alerts .dot{width:6px;height:6px;border-radius:50%;margin-top:6px;flex:0 0 auto}
-  ul.alerts .dot.bad{background:var(--red)}
+  ul.alerts .dot.bad{background:var(--accent)}
   ul.alerts .dot.warn{background:var(--amber)}
-  ul.alerts .dot.ok{background:var(--green)}
+  ul.alerts .dot.ok{background:var(--muted)}
+
+  /* ---------- dashboard: the rail ---------- */
+  /* One red block, and only one. Whatever is most urgent gets it; when
+     nothing is urgent the block turns to ink and says so. */
+  .hero{background:var(--accent);color:#fff;padding:26px 24px 24px}
+  .hero.calm{background:#201e1d}
+  .hero .eyebrow{color:rgba(255,255,255,.85)}
+  .hero .hl{font-size:29px;font-weight:800;line-height:1.12;letter-spacing:-.02em;margin-top:10px;text-wrap:balance}
+  .hero .hs{font-size:13px;line-height:1.55;margin-top:10px;opacity:.95}
+  .hero button{
+    font:inherit;font-size:13px;font-weight:800;background:#fff;color:var(--ink);
+    border:0;border-radius:0;padding:11px 15px;margin-top:16px;cursor:pointer;
+  }
+  .hero button:hover{background:var(--paper)}
+  .hero button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .railbody{padding:22px 0 0 24px}
+  .railsec{border-top:2px solid rgba(32,30,29,.4);margin-top:18px;padding-top:16px}
+  .railsec:first-child{border-top:0;margin-top:0;padding-top:0}
+  .railsec .eyebrow{display:block;margin-bottom:10px}
+  .railnote{padding:11px 0;border-bottom:1px solid var(--rule);font-size:12.5px;line-height:1.5}
+  .railnote:last-child{border-bottom:0}
+  .railnote strong{font-weight:700}
+  .railnote.bad strong{color:var(--red)}
+  .railnw{font-family:var(--mono);font-weight:800;font-size:32px;letter-spacing:-.03em;margin-top:6px}
+  .railnw-sub{font-size:12.5px;font-weight:600;margin-top:2px}
+  .railnw-sub .down{color:var(--red)}
+  .railspark{margin-top:14px}
+  .railspark svg{display:block}
+  .raildates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
+  .railrow{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:8px 0;border-bottom:1px solid var(--rule);font-size:12.5px;
+  }
+  .railrow:last-child{border-bottom:0}
+  .railrow b{font-family:var(--mono);font-weight:700;font-size:12.5px}
+  .railrow .when{font-size:11px;color:var(--muted);display:block;font-weight:400}
+  .simrow{display:flex;align-items:center;gap:8px}
+  .simrow .simlab{font-size:12.5px;flex:1}
+  .simrow .simunit{font-size:12px;color:var(--muted)}
+  .simrow input.cell{width:82px}
+  .simout{font-size:11.5px;line-height:1.5;color:var(--muted);margin-top:8px}
+
+  /* ---------- dashboard: charts ---------- */
+  /* Bar length is the width of the bracket, so the ladder says something
+     true about the shape of the schedule. The red outline is how far into
+     the current bracket the last ordinary dollar reaches. */
+  .brk{display:flex;flex-direction:column;gap:4px;margin:4px 0 0}
+  .brk-row{
+    display:grid;grid-template-columns:16px minmax(60px,104px) 1fr;align-items:center;
+    gap:10px;font-size:11px;color:var(--muted);
+  }
+  .brk-rate{font-family:var(--mono);font-weight:600;font-size:10.5px;color:var(--ink);text-align:right}
+  .brk-bar{height:16px;position:relative}
+  .brk-bar i{display:block;height:100%;background:var(--rule-2)}
+  .brk-row.on .brk-bar i{background:#201e1d}
+  .brk-row.on .brk-lab{color:var(--ink);font-weight:600}
+  .brk-rest{position:absolute;top:0;height:100%;background:#9b9797}
+  .brk-mark{position:absolute;top:-4px;height:24px;width:2px;background:var(--accent)}
+  .brk-foot{
+    font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    color:var(--red);margin-top:12px;
+  }
+  .ratestrip{display:flex;gap:20px;border-top:1px solid var(--rule-2);padding-top:12px;margin-top:12px}
+  .ratestrip .rl{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+  .ratestrip .rv{font-family:var(--mono);font-weight:800;font-size:20px}
+  .ratestrip .rv.bad{color:var(--red)}
+  .stackbar{display:flex;height:26px;margin-bottom:8px}
+  .complist{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+  .complist:last-child{margin-bottom:0}
+  .complist div{display:flex;align-items:center;gap:8px;font-size:12px}
+  .complist .sw{width:9px;height:9px;flex:0 0 auto}
+  .complist b{margin-left:auto;font-family:var(--mono);font-weight:600}
+  .compfoot{display:flex;justify-content:space-between;border-top:2px solid var(--ink);margin-top:14px;padding-top:10px}
+  .compfoot span{font-size:13px;font-weight:700}
+  .compfoot b{font-family:var(--mono);font-weight:800;font-size:17px}
+  .barrow .bl{display:flex;justify-content:space-between;font-size:12.5px;gap:10px}
+  .barrow .bl b{font-family:var(--mono);font-weight:600;white-space:nowrap}
+  .barrow .bt{height:6px;background:var(--rule);margin:4px 0 10px}
+  .barrow .bt i{display:block;height:100%;background:#201e1d}
+  .barrow.buffer{border-top:1px solid var(--rule-2);padding-top:10px;margin-top:2px;color:var(--muted)}
 
   /* ---------- tables ---------- */
   table{width:100%;border-collapse:collapse}
-  th,td{padding:5px 8px;text-align:right;font-size:13px}
+  th,td{padding:6px 8px;text-align:right;font-size:13px}
   th:first-child,td:first-child{text-align:left}
   thead th{
-    font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
-    font-weight:700;border-bottom:1px solid var(--rule-2);padding-bottom:7px;
+    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+    font-weight:700;border-bottom:2px solid rgba(32,30,29,.4);padding-bottom:8px;
   }
-  tbody tr:hover{background:#FAFBF9}
+  tbody tr:hover{background:#f8f4f4}
   td.lab{color:var(--text)}
-  td.calc{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--text)}
-  tr.total td{border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);font-weight:700;background:#FBFCFA}
-  tr.sub td{border-top:1px solid var(--rule);font-weight:600;color:var(--moss)}
+  td.calc{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;color:var(--text)}
+  tr.total td{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:700;background:transparent}
+  tr.sub td{border-top:1px solid var(--rule-2);font-weight:700;color:var(--ink)}
   tr.group td{
-    padding-top:16px;font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ink);
+    padding-top:18px;font-family:var(--serif);font-size:13px;font-weight:800;color:var(--ink);
+    letter-spacing:.02em;
   }
   td .note{font-size:11px;color:var(--muted);display:block}
   .rowdel{
-    border:0;background:transparent;color:#C4CAC3;cursor:pointer;font-size:14px;
+    border:0;background:transparent;color:var(--rule-2);cursor:pointer;font-size:14px;
     padding:0 2px;line-height:1;visibility:hidden;
   }
   tr:hover .rowdel{visibility:visible}
@@ -290,29 +406,29 @@
 
   /* inputs: blue = editable, mirroring the workbook's convention */
   input.cell{
-    font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;
-    color:var(--blue);background:#F3F7FD;border:1px solid #D3E0F2;border-radius:2px;
-    padding:3px 7px;width:104px;text-align:right;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;
+    color:var(--blue);background:#f0f5fd;border:1px solid #c3d6f0;border-radius:0;
+    padding:4px 8px;width:104px;text-align:right;
   }
-  input.cell.wide{width:100%;text-align:left;font-family:var(--sans)}
-  input.cell.pct{width:74px;border-right:0;border-radius:2px 0 0 2px}
+  input.cell.wide{width:100%;text-align:left;font-weight:400}
+  input.cell.pct{width:74px;border-right:0;border-radius:0}
   .pctwrap{display:inline-flex;align-items:stretch;white-space:nowrap}
   .pctwrap .suffix{
-    display:flex;align-items:center;padding:0 6px;font-family:var(--mono);font-size:12px;
-    color:var(--blue);background:#E7EFFA;border:1px solid #D3E0F2;border-left:0;border-radius:0 2px 2px 0;
+    display:flex;align-items:center;padding:0 7px;font-family:var(--mono);font-size:12px;font-weight:600;
+    color:var(--blue);background:#e3edfa;border:1px solid #c3d6f0;border-left:0;border-radius:0;
   }
   input.cell.note-in{
-    color:var(--muted);background:transparent;border:1px solid transparent;font-size:11.5px;
+    color:var(--muted);background:transparent;border:1px solid transparent;font-size:11.5px;font-weight:400;
   }
-  input.cell.note-in:hover{border-color:var(--rule);background:#FBFCFA}
-  input.cell.note-in:focus{color:var(--blue);background:#F3F7FD;border-color:#D3E0F2}
-  .caprule{font-size:11.5px;color:var(--muted);font-weight:400;font-family:var(--sans)}
+  input.cell.note-in:hover{border-color:var(--rule-2);background:#f8f4f4}
+  input.cell.note-in:focus{color:var(--blue);background:#f0f5fd;border-color:#c3d6f0}
+  .caprule{font-size:11.5px;color:var(--muted);font-weight:400;font-family:var(--sans);letter-spacing:0}
   .plainline{
-    font-size:14px;line-height:1.55;color:#33413A;background:#F2F6F3;
-    border-left:3px solid var(--moss-2);padding:11px 15px;border-radius:0 2px 2px 0;
+    font-size:14px;line-height:1.55;color:var(--text);background:transparent;
+    border-left:3px solid var(--ink);padding:10px 0 10px 15px;border-radius:0;
     margin:0 0 16px;max-width:none;
   }
-  .plainline strong{color:var(--moss);font-family:var(--mono);font-size:13.5px}
+  .plainline strong{color:var(--ink);font-family:var(--mono);font-weight:700;font-size:13.5px}
 
   /* Tax inputs: independent field groups rather than three tables in a
      grid. Tables stretched to the tallest sibling, which opened ragged
@@ -348,11 +464,11 @@
   .inputs-tbl .pctwrap{display:flex;width:100%}
   .inputs-tbl .pctwrap input.cell{flex:1;width:auto;min-width:0}
   .inputs-tbl td{vertical-align:middle}
-  .ig-row.sub{border-top:1px solid var(--rule-2);font-weight:600}
-  .ig-row.sub .ig-lab{color:var(--moss);font-weight:600}
+  .ig-row.sub{border-top:1px solid var(--rule-2);font-weight:700}
+  .ig-row.sub .ig-lab{color:var(--ink);font-weight:700}
   .ig-row.grand{
-    border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
-    background:#FBFCFA;font-weight:700;margin-top:2px;
+    border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+    background:transparent;font-weight:700;margin-top:2px;
   }
   @media (max-width:980px){
     .inputwrap{grid-template-columns:1fr}
@@ -374,35 +490,35 @@
   .cf-line b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
   .cf-line.muted b{white-space:normal;text-align:right}
   .cf-line.muted{align-items:flex-start}
-  .cf-line.result{border-top:1px solid var(--rule-2);border-bottom:0;color:var(--moss)}
-  .cf-line.result b{color:var(--moss)}
+  .cf-line.result{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:700;margin-top:2px}
+  .cf-line.result b{font-weight:700}
   .cf-line.grand{
-    border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);
-    background:#FBFCFA;font-weight:700;padding:9px 8px;font-size:14px;
+    border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);
+    background:transparent;font-weight:700;padding:9px 0;font-size:14px;margin-top:2px;
   }
   .cf-line.muted{border-bottom:0;color:var(--muted);font-size:12px}
   .cf-line.muted b{font-weight:400;color:var(--muted);font-size:12px}
   .calcband{
-    font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ink);
-    background:#F1F4F1;border-left:3px solid var(--moss-2);
-    padding:6px 11px;margin:16px 0 2px;border-radius:0 2px 2px 0;
+    font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    background:transparent;border-left:0;
+    padding:0;margin:18px 0 6px;border-radius:0;
   }
-  .card.guide{background:#FBFCFA}
-  .card.guide p{font-size:13.5px;line-height:1.6;color:#33413A;margin:0 0 12px}
+  .card.guide{background:transparent}
+  .card.guide p{font-size:13.5px;line-height:1.65;color:var(--text);margin:0 0 12px}
   .guide-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 34px;margin-top:4px}
   .guide-grid p{margin:0 0 16px}
   @media (max-width:820px){ .guide-grid{grid-template-columns:1fr} }
   .card.guide p strong{color:var(--ink)}
   .card.guide .guide-note{
-    font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:11px;
+    font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule-2);padding-top:11px;
   }
-  .card.guide .guide-note strong{color:var(--moss)}
+  .card.guide .guide-note strong{color:var(--ink)}
   .yearly{
     font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
-    color:var(--amber);background:var(--amber-bg);border-radius:2px;padding:2px 5px;
+    color:var(--amber);background:var(--amber-bg);border-radius:0;padding:2px 5px;
     margin-left:6px;vertical-align:1px;font-family:var(--sans);
   }
-  .calcband.tight{margin:0 0 6px;font-size:13px;padding:5px 10px}
+  .calcband.tight{margin:0 0 8px}
   .calctbl{table-layout:fixed}
   .calctbl td.rate b{font-family:var(--mono);font-size:13px}
   .calctbl td.rate em{
@@ -413,8 +529,8 @@
 
   /* ---------- card benefits ---------- */
   .subsection{
-    font-family:var(--serif);font-size:16px;font-weight:600;color:var(--ink);
-    margin:26px 0 10px;
+    font-family:var(--serif);font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.015em;
+    margin:30px 0 10px;padding-bottom:9px;border-bottom:2px solid rgba(32,30,29,.4);
   }
   .cardgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px;align-items:start}
   .cardgrid.flat{grid-template-columns:repeat(3,1fr)}
@@ -438,7 +554,7 @@
   .theme-costco{background:linear-gradient(118deg,#5D6069 0%,#6D6D77 55%,#74747D 78%,#9E2A22 100%)}
   .theme-chase{background:linear-gradient(118deg,#0366A5 0%,#0777AE 45%,#00A1D0 78%,#00AED9 100%)}
   .cf-issuer{font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;font-weight:600}
-  .cf-name{font-family:var(--serif);font-size:19px;line-height:1.2;margin-top:3px}
+  .cf-name{font-family:var(--serif);font-size:19px;font-weight:800;letter-spacing:-.015em;line-height:1.2;margin-top:3px}
   .cf-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;font-size:11.5px;opacity:.95;font-family:var(--mono)}
   .cf-chip{
     width:30px;height:21px;border-radius:3px;
@@ -472,8 +588,8 @@
   .credit-amt .per{font-size:10.5px;color:var(--muted);margin-left:1px}
   .credit-meta{display:flex;align-items:center;gap:8px;margin:5px 0 8px;font-size:11.5px;color:var(--muted)}
   .credit-meta .missed{color:var(--red)}
-  .credit-meta .bar{flex:1;height:4px;background:#EDF0EC;border-radius:2px;overflow:hidden;min-width:36px}
-  .credit-meta .bar-fill{display:block;height:100%;background:var(--moss-2);transition:width .3s ease}
+  .credit-meta .bar{flex:1;height:5px;background:var(--rule);border-radius:0;overflow:hidden;min-width:36px}
+  .credit-meta .bar-fill{display:block;height:100%;background:#201e1d;transition:width .3s ease}
   .credit-meta .pctlab{width:32px;text-align:right}
   .offerblock{border-top:1px solid var(--rule-2);padding-top:12px}
   .offertbl{margin-top:6px}
@@ -485,92 +601,106 @@
   .annualuse .au-of{font-family:var(--mono);font-size:12px;color:var(--muted)}
   .pills{display:flex;flex-wrap:wrap;gap:4px}
   .pill{
-    font:inherit;font-family:var(--mono);font-size:11px;letter-spacing:-.01em;
-    padding:4px 7px;border-radius:3px;cursor:pointer;border:1px solid var(--rule-2);
+    font:inherit;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:-.01em;
+    padding:4px 7px;border-radius:0;cursor:pointer;border:1px solid var(--rule-2);
     background:#fff;color:var(--muted);transition:.13s;min-width:38px;
   }
-  .pill:hover{border-color:var(--moss-2);color:var(--moss)}
-  .pill.used{background:var(--green-bg);border-color:#9CC7AE;color:var(--green);font-weight:600}
-  .pill.missed{background:var(--red-bg);border-color:#E0B4AC;color:var(--red)}
-  .pill.now{border:2px solid var(--ink);color:var(--ink);font-weight:600;background:#fff}
-  .pill.now.used{border-color:var(--green);background:var(--green-bg);color:var(--green)}
-  .pill.future{background:#FAFBF9;color:#A6B0A9}
-  .pill:focus-visible{outline:2px solid var(--moss-2);outline-offset:1px}
+  .pill:hover{border-color:var(--ink);color:var(--ink)}
+  .pill.used{background:#201e1d;border-color:#201e1d;color:#f3f2f2}
+  .pill.missed{background:var(--red-bg);border-color:var(--accent-400);color:var(--red)}
+  .pill.now{border:2px solid var(--accent);color:var(--ink);background:#fff}
+  .pill.now.used{border-color:var(--accent);background:#201e1d;color:#f3f2f2}
+  .pill.future{background:var(--paper);color:#9b9797}
+  .pill:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   .flatline{font-size:12.5px;color:var(--text);line-height:1.5}
-  .flatnote{display:block;font-size:11.5px;color:var(--muted);margin-top:5px;padding-top:5px;border-top:1px solid var(--rule)}
+  .flatnote{display:block;font-size:11.5px;color:var(--muted);margin-top:5px;padding-top:5px;border-top:1px solid var(--rule-2)}
   .theme-coinbase{background:linear-gradient(118deg,#393938 0%,#1E1E1E 42%,#2B2B2B 74%,#3A3A3A 100%)}
   @media (max-width:900px){
     .cardgrid,.cardgrid.flat{grid-template-columns:1fr}
   }
-  .delta{font-family:var(--mono)}
-  .delta.up{color:var(--green)} .delta.down{color:var(--red)}
-  .kpi .v .delta{font-size:25px}
-  .rangebar{margin-left:auto;display:flex;gap:4px}
+  .delta{font-family:var(--mono);font-weight:700}
+  .delta.up{color:var(--ink)} .delta.down{color:var(--red)}
+  .kpi .v .delta{font-size:38px;font-weight:800}
+  .rangebar{margin-left:auto;display:flex;gap:0}
   .rangebtn{
-    font:inherit;font-size:11px;letter-spacing:.04em;color:var(--muted);background:transparent;
-    border:1px solid var(--rule);border-radius:2px;padding:3px 9px;cursor:pointer;
+    font:inherit;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--muted);background:transparent;
+    border:1px solid var(--rule-2);border-left:0;border-radius:0;padding:4px 10px;cursor:pointer;
   }
-  .rangebtn:hover{border-color:var(--moss-2);color:var(--moss)}
-  .rangebtn.on{background:var(--moss);border-color:var(--moss);color:#fff}
+  .rangebtn:first-child{border-left:1px solid var(--rule-2)}
+  .rangebtn:hover{color:var(--ink)}
+  .rangebtn.on{background:var(--ink);border-color:var(--ink);color:#f3f2f2}
   .logrow{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
   .logrow .cell{width:auto;flex:1 1 120px}
   .scroller{max-height:290px;overflow-y:auto}
   .scroller thead th{position:sticky;top:0;background:var(--card)}
-  .sparkwrap{margin-top:4px}
-  .nwstrip{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
-  .nwleft{flex:0 0 auto}
-  .nwright{flex:1 1 380px;min-width:240px}
-  .nwbig{font-size:31px;letter-spacing:-.02em;color:var(--ink);margin:4px 0 8px}
-  .nwdeltas{display:flex;gap:22px}
-  .nwdeltas > span{display:flex;flex-direction:column;gap:2px}
-  .nwdeltas .delta{font-size:14px}
   input.cell:focus{outline:2px solid var(--blue);outline-offset:-1px;background:#fff}
   select.cell{
-    font-family:var(--sans);font-size:12px;color:var(--blue);background:#F3F7FD;
-    border:1px solid #D3E0F2;border-radius:2px;padding:3px 5px;
+    font-family:var(--sans);font-size:12px;font-weight:600;color:var(--blue);background:#f0f5fd;
+    border:1px solid #c3d6f0;border-radius:0;padding:4px 6px;
   }
   .addrow{
-    font:inherit;font-size:12px;color:var(--moss-2);background:transparent;
-    border:1px dashed var(--rule-2);border-radius:2px;padding:5px 10px;cursor:pointer;margin-top:10px;
+    font:inherit;font-size:12px;font-weight:600;color:var(--muted);background:transparent;
+    border:1px dashed var(--rule-2);border-radius:0;padding:6px 11px;cursor:pointer;margin-top:10px;
   }
-  .addrow:hover{background:#F1F6F2;border-color:var(--moss-2)}
+  .addrow:hover{border-color:var(--ink);color:var(--ink)}
   .addrow.tiny{font-size:11px;padding:3px 8px;margin:2px 0 4px;border-style:dotted}
   .addrow-row td{padding-top:0;padding-bottom:2px}
   tbody tr.addrow-row:hover{background:transparent}
 
   .callout{
-    border-left:3px solid var(--moss-2);background:#F2F6F3;padding:11px 14px;
-    font-size:12.5px;color:#3A4A42;margin-top:14px;border-radius:0 2px 2px 0;
+    border-left:3px solid var(--ink);background:transparent;padding:10px 0 10px 14px;
+    font-size:12.5px;color:var(--text);margin-top:14px;border-radius:0;
   }
-  .callout strong{color:var(--moss)}
-  .callout.warn{border-left-color:var(--amber);background:var(--amber-bg);color:#5C4310}
-  .callout.warn strong{color:var(--amber)}
+  .callout strong{color:var(--ink)}
+  .callout.warn{border-left-color:var(--accent);color:var(--text)}
+  .callout.warn strong{color:var(--red)}
   footer.note{
-    max-width:1180px;margin:0 auto;padding:0 24px;color:var(--muted);font-size:11.5px;
+    max-width:1320px;margin:0 auto;padding:0 24px;color:var(--muted);font-size:11.5px;
   }
   footer.note.refreshed{
-    color:var(--moss);background:#EAF3ED;border-left:3px solid var(--moss-2);
-    padding:9px 14px;margin:0 auto 20px;max-width:1132px;border-radius:0 2px 2px 0;
+    color:var(--text);background:transparent;border-left:3px solid var(--accent);
+    padding:9px 0 9px 14px;margin:0 auto 20px;max-width:1272px;border-radius:0;
   }
   .flash{
     position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(14px);
-    background:var(--ink);color:#fff;padding:9px 17px;border-radius:3px;font-size:13px;
+    background:var(--ink);color:#fff;padding:11px 18px;border-radius:0;font-size:13px;font-weight:600;
     opacity:0;pointer-events:none;transition:.25s;z-index:50;
   }
   .flash.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+  /* The rail is a sidebar only while there is room for one. Below that the
+     grid unpacks into a column: the urgent block leads, because that is what
+     it is for, and the rest of the rail settles under the ledger. */
+  @media (max-width:1180px){
+    .dashgrid{display:flex;flex-direction:column}
+    .dashrail{display:contents}
+    .hero{order:1;margin-top:20px}
+    .dashmain{order:2;border-right:0;padding-right:0;padding-bottom:0}
+    .railbody{order:3;padding:24px 0 40px}
+  }
   @media (max-width:820px){
     .ticker{display:none}
-    .stamp{border-left:0;padding-left:0;width:100%;order:5}
-    .wm-name{font-size:21px}
+    .stamp{width:100%;order:5}
+    .wm-name{font-size:16px}
     .toolbar{margin-left:auto}
   }
   @media (max-width:900px){
     .kpis,.legend,.kpis.five,.kpis.six{grid-template-columns:repeat(2,1fr)}
-    .kpis.sticky{position:static;box-shadow:none;padding:0;margin-top:0}
+    .kpi{padding:18px 16px}
+    .kpi:nth-child(odd){padding-left:0;border-left:0}
+    .kpi:nth-child(even){padding-right:0}
+    .kpi .v{font-size:30px}
+    .kpis.sticky{position:static;box-shadow:none;margin-top:0}
     .grid2,.grid3{grid-template-columns:1fr}
-    main{padding:20px 14px 60px}
+    .dashmain .grid3 > .card,.dashmain .grid2 > .card{
+      border-right:0;border-bottom:1px solid var(--rule-2);padding:20px 0;
+    }
+    .dashmain .grid3 > .card:last-child,.dashmain .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
+    main{padding:0 14px 60px}
     header.top{padding:12px 14px 0}
+    .pagehead{padding-top:22px}
+    h2.section{font-size:24px}
   }
   /* Delete buttons rely on :hover to appear — touch screens rarely fire
      hover reliably, so without this rows become permanently undeletable
@@ -614,8 +744,10 @@
   }
 
   @media (max-width:480px){
-    .kpi .v{font-size:21px}
-    .nwbig{font-size:26px}
+    .kpi .v{font-size:26px}
+    .kpis.five .kpi .v,.kpis.six .kpi .v{font-size:22px}
+    .hero .hl{font-size:24px}
+    .railnw{font-size:28px}
     .cardstats{grid-template-columns:repeat(2,1fr)}
     .masthead{row-gap:8px}
     .toolbar{width:100%;margin-top:2px}
@@ -627,10 +759,10 @@
 <div class="authgate" id="authGate" hidden>
   <div class="authbox">
     <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
-      <rect width="40" height="40" rx="9" fill="#24503E"/>
-      <path d="M7 28 L13 25 L17 29 L22 20 L27 21 L33 12" fill="none" stroke="#EAF3ED"
-            stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="33" cy="12" r="3.4" fill="#7FC3A0"/>
+      <rect width="40" height="40" fill="#201e1d"/>
+      <path d="M7 28 L13 25 L17 29 L22 20 L27 21 L33 12" fill="none" stroke="#f3f2f2"
+            stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+      <rect x="30" y="9" width="6" height="6" fill="#ec3013"/>
     </svg>
     <h1>Financial Plan</h1>
     <p>Sign in to open the household plan.</p>
@@ -646,15 +778,15 @@
   <div class="masthead">
     <span class="mark" aria-hidden="true">
       <svg viewBox="0 0 40 40" width="34" height="34">
-        <rect width="40" height="40" rx="9" fill="#24503E"/>
-        <path d="M7 28 L13 25 L17 29 L22 20 L27 21 L33 12" fill="none" stroke="#EAF3ED"
-              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="33" cy="12" r="3.4" fill="#7FC3A0"/>
+        <rect width="40" height="40" fill="#201e1d"/>
+        <path d="M7 28 L13 25 L17 29 L22 20 L27 21 L33 12" fill="none" stroke="#f3f2f2"
+              stroke-width="2.6" stroke-linecap="square" stroke-linejoin="miter"/>
+        <rect x="30" y="9" width="6" height="6" fill="#ec3013"/>
       </svg>
     </span>
     <h1 class="wordmark">
       <span class="wm-name">Financial<span class="wm-thin">Plan</span><span class="demoflag">Demo data</span></span>
-      <span class="wm-year num" id="brandYear"></span>
+      <span class="wm-year" id="brandYear"></span>
     </h1>
     <span class="stamp" id="stamp"></span>
     <span class="syncbadge local" id="syncBadge">Saved to this device</span>
@@ -696,7 +828,7 @@
    ============================================================ */
 const DEFAULTS = {
   "dataVersion": 1,
-  "updated": "2026-08-15",
+  "updated": "2026-08-17",
   "irsLimit": 24500,
   "iraTotal": 15000,
   "miscPct": 0.15,
@@ -705,6 +837,8 @@ const DEFAULTS = {
       "key": "alex",
       "name": "Alex",
       "salary": 142000,
+      "newSalary": 0,
+      "raiseChecks": 0,
       "bonus": 10000,
       "paychecks": 24,
       "pre401k": 0.1,
@@ -720,6 +854,8 @@ const DEFAULTS = {
       "key": "jordan",
       "name": "Jordan",
       "salary": 128000,
+      "newSalary": 0,
+      "raiseChecks": 0,
       "bonus": 15000,
       "paychecks": 26,
       "pre401k": 0.12,
@@ -1660,7 +1796,7 @@ const DEFAULTS = {
         561600
       ],
       [
-        "2026-08-15",
+        "2026-08-17",
         630000
       ]
     ],
@@ -2057,188 +2193,413 @@ const usd  = n => (n<0?"−":"") + "$" + Math.abs(n).toLocaleString("en-US",{min
 const usd2 = n => (n<0?"−":"") + "$" + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct  = (n,d=1) => (n*100).toFixed(d) + "%";
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtDay = iso => new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+
+/* ============================================================
+   DASHBOARD CHARTS
+   ============================================================ */
+
+/* Where the next dollar is taxed. Bar length is the width of each federal
+   ordinary bracket, so the chart says something true about the shape of the
+   schedule rather than being a decorative ladder. The top bracket is
+   open-ended and gets a nominal width. */
+function bracketBars(tx){
+  const ord = TPF().ord;
+  const rows = ord.map((b,i) => ({
+    lo: b[0], rate: b[1],
+    hi: i+1 < ord.length ? ord[i+1][0] : null
+  }));
+  const spans = rows.map(r => r.hi === null ? null : r.hi - r.lo);
+  const maxSpan = Math.max(1, ...spans.filter(s => s !== null));
+  const barW = s => s === null ? 34 : Math.max(12, (s/maxSpan) * 100);
+  // The bracket the last ordinary dollar falls in
+  let cur = 0;
+  rows.forEach((r,i) => { if(tx.ordTaxable >= r.lo) cur = i; });
+
+  // Drawn in HTML rather than SVG so the labels stay at reading size however
+  // wide the column happens to be.
+  const body = rows.map((r,i) => {
+    const here = i === cur, w = barW(spans[i]);
+    // How far into the bracket you are stands in for "the next dollar is here"
+    const into = spans[i] === null ? 100
+               : Math.max(4, Math.min(100, (tx.ordTaxable - r.lo)/spans[i] * 100));
+    const label = r.hi === null ? `${pct(r.rate,0)} · above`
+                : here          ? `${pct(r.rate,0)} · you are here`
+                :                 `${pct(r.rate,0)} · to ${usd(r.hi)}`;
+    // In the current bracket the bar splits: filled to where the last
+    // ordinary dollar lands, grey for the room still left inside it.
+    const at = w * into / 100;
+    return `<div class="brk-row${here?" on":""}">
+      <span class="brk-rate">${(r.rate*100).toFixed(0)}</span>
+      <span class="brk-bar"><i style="width:${(here?at:w).toFixed(1)}%"></i>${here
+        ? `<b class="brk-rest" style="left:${at.toFixed(1)}%;width:${(w-at).toFixed(1)}%"></b>
+           <b class="brk-mark" style="left:${at.toFixed(1)}%"></b>` : ""}</span>
+      <span class="brk-lab">${label}</span>
+    </div>`;
+  }).join("");
+
+  const foot = tx.bracketHeadroom === Infinity
+    ? `Taxable ${usd(tx.ordTaxable)} · top bracket`
+    : `Taxable ${usd(tx.ordTaxable)} · ${usd(tx.bracketHeadroom)} of room left`;
+
+  return `<div class="brk" role="img"
+       aria-label="Federal ordinary brackets. ${foot}.">${body}</div>
+    <div class="brk-foot">${foot}</div>`;
+}
+
+/* What net worth is made of. Assets group into property, the liquid and
+   invested pile, and everything else; debts are the largest line on its own
+   with the rest gathered behind it. The owed bar is drawn to the same scale
+   as the held bar, so its stub is the leverage, at a glance. */
+function nwComposition(){
+  const named = list => list.filter(x => x.a > 0);
+  const isProp = n => /home|house|real estate|land|propert|condo/i.test(n);
+  const prop  = named(S.nw.assets.filter(a =>  isProp(a.n)));
+  const other = named(S.nw.assets.filter(a => !isProp(a.n)));
+  const otherName = other.length > 3
+    ? other.slice(0,3).map(x=>x.n).join(", ") + "…"
+    : other.map(x=>x.n).join(", ");
+  const held = [
+    {n: prop.length === 1 ? prop[0].n : "Property", a: sum(prop, x=>x.a), c:"#201e1d"},
+    {n: "Cash + investments",                       a: sum(S.nw.cash, x=>x.a), c:"#605d5d"},
+    {n: otherName || "Other assets",                a: sum(other, x=>x.a), c:"#bab6b6"}
+  ].filter(x => x.a > 0);
+
+  const debts = named(S.nw.debt).sort((a,b) => b.a - a.a);
+  const owed = debts.length <= 2
+    ? debts.map((d,i) => ({n:d.n, a:d.a, c:i ? "#ff9783" : "#ec3013"}))
+    : [{n:debts[0].n, a:debts[0].a, c:"#ec3013"},
+       {n:debts.slice(1).map(d=>d.n).join(" + "), a:sum(debts.slice(1), d=>d.a), c:"#ff9783"}];
+
+  const heldTotal = sum(held, x=>x.a), owedTotal = sum(owed, x=>x.a);
+  const bar = (list,total) => `<div class="stackbar">${list.map((x,i) =>
+    `<div style="flex:${i === list.length-1 ? "1 1 auto" : `0 0 ${total ? (x.a/total*100).toFixed(2) : 0}%`};background:${x.c}"
+          title="${esc(x.n)}: ${usd(x.a)}"></div>`).join("")}</div>`;
+  const list = arr => `<div class="complist">${arr.map(x =>
+    `<div><span class="sw" style="background:${x.c}"></span>${esc(x.n)}<b>${usd(x.a)}</b></div>`).join("")}</div>`;
+
+  return {
+    heldTotal, owedTotal,
+    html: `
+      <div class="eyebrow">Held</div>
+      ${bar(held, heldTotal)}
+      ${list(held)}
+      <div class="eyebrow" style="color:var(--red)">Owed</div>
+      <div style="width:${heldTotal ? Math.min(100, owedTotal/heldTotal*100).toFixed(1) : 0}%">${bar(owed, owedTotal)}</div>
+      ${list(owed)}`
+  };
+}
+
+/* The rail's trend line: one stroke, one rule, one red dot on today. */
+function railSpark(hist, w=292, h=76){
+  if(hist.length < 2) return `<div class="simout">Log at least two entries to see the trend.</div>`;
+  const ys = hist.map(p=>p[1]);
+  let lo = Math.min(...ys), hi = Math.max(...ys);
+  if(hi === lo){ hi += 1; lo -= 1; }
+  const px = i => (i/(hist.length-1))*w;
+  const py = v => 4 + (1-(v-lo)/(hi-lo))*(h-14);
+  const pts = hist.map((p,i)=>`${px(i).toFixed(1)},${py(p[1]).toFixed(1)}`).join(" ");
+  const end = [px(hist.length-1), py(ys[ys.length-1])];
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="Net worth trend">
+    <polyline points="${pts}" fill="none" stroke="#201e1d" stroke-width="2" stroke-linejoin="round"></polyline>
+    <line x1="0" y1="${h-2}" x2="${w}" y2="${h-2}" stroke="#d7d3d3" stroke-width="1"></line>
+    <circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="3.5" fill="#ec3013"></circle>
+  </svg>`;
+}
 
 /* ============================================================
    VIEWS
    ============================================================ */
+/* The rail's what-if: dollars moved out of guilt-free and into savings.
+   null means untouched, in which case it opens at whatever closes the
+   savings floor. Deliberately not persisted — it is a question, not a plan. */
+let simMove = null;
+const simDefault = m => Math.max(0, Math.round(m.netTotal * S.caps.savings.min - m.savingsTotal));
+
 function dash(){
   const m = model();
   const nw = nwModel();
   const cardSoon = expiringSoon();
   const cap = S.caps.fixed.max;
 
+  // Each alert carries a key so whichever one is promoted to the rail's red
+  // block can be dropped from the list below it rather than said twice.
   const alerts = [];
   m.P.forEach(p=>{
-    if(p.dataGap) alerts.push(["warn", `${p.name}: 401k year-to-date is $0 with ${p.checksLeft} of ${p.paychecks} paychecks left. Enter the paystub figure.`]);
-    else if(p.room > 0) alerts.push(["warn", `${p.name}: 401k projects ${usd(p.total401k)} at ${pct(p.pre401k,1)} — ${usd(p.room)} short of the ${usd(S.irsLimit)} max. Recommender: ${pct(p.recPct,2)}.`]);
-    else if(p.room >= -500) alerts.push(["ok", `${p.name}: 401k reaches the ${usd(S.irsLimit)} max at ${pct(p.pre401k,1)}.`]);
-    else alerts.push(["bad", `${p.name}: 401k projects ${usd(p.total401k)} at ${pct(p.pre401k,1)} — ${usd(-p.room)} past the max. Recommender: ${pct(p.recPct,2)}.`]);
+    if(p.dataGap) alerts.push(["warn", `${p.name}: 401k year-to-date is $0 with ${p.checksLeft} of ${p.paychecks} paychecks left. Enter the paystub figure.`, "k401k:"+p.name]);
+    else if(p.room > 0) alerts.push(["warn", `${p.name}'s 401k lands <strong>${usd(p.room)}</strong> under the max. Recommender says ${pct(p.recPct,2)}.`, "k401k:"+p.name]);
+    else if(p.room >= -500) alerts.push(["ok", `${p.name}: 401k reaches the ${usd(S.irsLimit)} max at ${pct(p.pre401k,1)}.`, "k401k:"+p.name]);
+    else alerts.push(["bad", `${p.name}: 401k projects ${usd(p.total401k)} at ${pct(p.pre401k,1)} — <strong>${usd(-p.room)}</strong> past the max. Recommender: ${pct(p.recPct,2)}.`, "k401k:"+p.name]);
   });
-  if(m.pct.fixed > cap) alerts.push(["bad", `Fixed costs are ${pct(m.pct.fixed)} of take-home, ${usd(m.fixedTotal - m.netTotal*cap)}/mo above the ${pct(cap,0)} ceiling.`]);
-  else alerts.push(["ok", `Fixed costs are ${pct(m.pct.fixed)} of take-home, ${usd(m.netTotal*cap - m.fixedTotal)}/mo under the ${pct(cap,0)} ceiling.`]);
-  if(m.free < 0) alerts.push(["bad", `Allocations exceed net income by ${usd(-m.free)}/mo.`]);
+  if(m.pct.fixed > cap) alerts.push(["bad", `Fixed costs are ${pct(m.pct.fixed)} of take-home, <strong>${usd(m.fixedTotal - m.netTotal*cap)}</strong>/mo above the ${pct(cap,0)} ceiling.`, "fixed"]);
+  else alerts.push(["ok", `Fixed costs are ${pct(m.pct.fixed)} of take-home, ${usd(m.netTotal*cap - m.fixedTotal)}/mo under the ${pct(cap,0)} ceiling.`, "fixed"]);
+  if(m.free < 0) alerts.push(["bad", `Allocations exceed net income by <strong>${usd(-m.free)}</strong>/mo.`, "free"]);
+  if(m.pct.savings < S.caps.savings.min) alerts.push(["warn",
+    `Savings sits at ${pct(m.pct.savings)}, under the ${pct(S.caps.savings.min,0)} floor. <strong>${usd(m.netTotal*S.caps.savings.min - m.savingsTotal)}/mo</strong> closes it.`, "savings"]);
 
   m.P.filter(p=>p.raisePending).forEach(p=>alerts.push(["warn",
-    `${p.name} has a new salary of ${usd(p.newSalary)} entered but no paychecks assigned to it, so every figure still uses ${usd(p.salary)}.`]));
+    `${p.name} has a new salary of ${usd(p.newSalary)} entered but no paychecks assigned to it, so every figure still uses ${usd(p.salary)}.`, "raise:"+p.name]));
 
   // ---- tax ----
   const tx = taxModel();
   if(S.tax.priorFed === 0 || S.tax.priorCA === 0){
-    alerts.push(["warn", `Prior-year tax is $0 on the tax tab, so the safe harbor target computes as $0. Enter last year's federal and California totals.`]);
+    alerts.push(["warn", `Prior-year tax is $0 on the tax tab, so the safe harbor target computes as $0. Enter last year's federal and California totals.`, "harbor"]);
   } else if(tx.fedShort > 0 || tx.caShort > 0){
-    if(tx.fedShort > 0) alerts.push(["bad", `Federal safe harbor is ${usd(tx.fedShort)} short — ${usd(tx.fedPerQuarter)} per remaining quarter.`]);
-    if(tx.caShort > 0)  alerts.push(["bad", `California safe harbor is ${usd(tx.caShort)} short.`]);
+    if(tx.fedShort > 0) alerts.push(["bad", `Federal safe harbor is <strong>${usd(tx.fedShort)}</strong> short — ${usd(tx.fedPerQuarter)} per remaining quarter.`, "harbor"]);
+    if(tx.caShort > 0)  alerts.push(["bad", `California safe harbor is <strong>${usd(tx.caShort)}</strong> short.`, "harbor"]);
   } else {
-    alerts.push(["ok", `Safe harbor met on both federal and California. Further estimates are optional.`]);
+    alerts.push(["ok", `Safe harbour met on both federal and California. Further estimates are optional.`, "harbor"]);
   }
 
   alerts.push(tx.combinedBal >= 0
-    ? ["ok",   `Tax projects a ${usd(tx.combinedBal)} refund at current withholding and payments.`]
-    : ["warn", `Tax projects ${usd(-tx.combinedBal)} still owed at current withholding and payments.`]);
+    ? ["ok",   `Tax projects a <strong>${usd(tx.combinedBal)}</strong> refund at current withholding and payments.`, "bal"]
+    : ["warn", `Tax projects <strong>${usd(-tx.combinedBal)}</strong> owed at current withholding and payments.`, "bal"]);
 
   const inPhaseout = tx.agi > TPF().saltThresh && tx.agi < saltFloorAt();
-  if(inPhaseout) alerts.push(["warn", `AGI of ${usd(tx.agi)} sits inside the SALT phase-out, putting the marginal rate at ${pct(tx.marginal)}.`]);
-  else if(tx.headroom > 0) alerts.push(["ok", `${usd(tx.headroom)} of income before the SALT phase-out begins at ${usd(TPF().saltThresh)}.`]);
+  if(inPhaseout) alerts.push(["warn", `AGI of ${usd(tx.agi)} sits inside the SALT phase-out, putting the marginal rate at ${pct(tx.marginal)}.`, "salt"]);
+  else if(tx.headroom > 0) alerts.push(["ok", `${usd(tx.headroom)} of income before the SALT phase-out begins at ${usd(TPF().saltThresh)}.`, "salt"]);
 
-  if(tx.netCap > 0) alerts.push(["warn", `${usd(tx.netCap)} of net realized gains so far, carrying about ${usd(tx.netCap * tx.marginal)} of tax at the current marginal rate.`]);
-  else if(tx.carryforward < 0) alerts.push(["ok", `${usd(-tx.carryforward)} of capital losses carrying forward to next year.`]);
-  const topFixed = [...S.fixed].sort((a,b)=>mo(b)-mo(a)).slice(0,6);
+  if(tx.netCap > 0) alerts.push(["warn", `${usd(tx.netCap)} of net realized gains so far, carrying about ${usd(tx.netCap * tx.marginal)} of tax at the current marginal rate.`, "gains"]);
+  else if(tx.carryforward < 0) alerts.push(["ok", `${usd(-tx.carryforward)} of capital losses carrying forward to next year.`, "gains"]);
+  const topFixed = [...S.fixed].sort((a,b)=>mo(b)-mo(a)).slice(0,5);
+  const cm = cardModel();
+  const comp = nwComposition();
+
+  // ---- the rail's one urgent block ----
+  // Everything on the dashboard competes for the same red box, so they are
+  // ranked once, here, and only the winner gets it.
+  const overCap = m.pct.fixed - cap;
+  const savingsShort = Math.max(0, m.netTotal * S.caps.savings.min - m.savingsTotal);
+  const nearest = cardSoon.length ? cardSoon.filter(x => x.days === cardSoon[0].days) : [];
+  const worst401k = m.P.find(p => p.dataGap) || m.P.find(p => p.room < -500);
+  let hero;
+  if(m.free < 0){
+    hero = {k:"free", t:"Over budget", l:`Allocations run ${usd(-m.free)} past what comes in`,
+            s:`Fixed costs, investing and savings together exceed net income every month.`, go:"spend", cta:"Open spending plan"};
+  } else if(overCap > 0){
+    hero = {k:"fixed", t:"Over the cap", l:`Fixed costs are ${pct(overCap)} above the ceiling`,
+            s:`${usd(m.fixedTotal)} a month against a ${pct(cap,0)} ceiling of ${usd(m.netTotal*cap)}.`, go:"spend", cta:"Open spending plan"};
+  } else if(worst401k){
+    hero = worst401k.dataGap
+      ? {k:"k401k:"+worst401k.name, t:"Missing figure", l:`${worst401k.name}'s 401k year-to-date is still $0`,
+         s:`With ${worst401k.checksLeft} of ${worst401k.paychecks} paychecks left, every 401k figure here is unreliable.`, go:"income", cta:"Open income plan"}
+      : {k:"k401k:"+worst401k.name, t:"Over the limit", l:`${worst401k.name}'s 401k lands ${usd(-worst401k.room)} past the max`,
+         s:`Projected ${usd(worst401k.total401k)} against a ${usd(S.irsLimit)} limit. Recommender says ${pct(worst401k.recPct,2)}.`, go:"income", cta:"Open income plan"};
+  } else if(tx.fedShort > 0 || tx.caShort > 0){
+    hero = {k:"harbor", t:"Safe harbour short", l:`${usd(tx.fedShort + tx.caShort)} of estimated tax is still due`,
+            s:`Federal ${usd(tx.fedShort)}, California ${usd(tx.caShort)}. The federal share splits to ${usd(tx.fedPerQuarter)} a quarter.`, go:"tax", cta:"Open tax planning"};
+  } else if(nearest.length){
+    hero = {t:"Needs attention",
+            l:`${nearest.length === 1 ? "One credit" : nearest.length + " credits"} worth ${usd(sum(nearest,x=>x.amt))} close in ${nearest[0].days} days`,
+            s:`${usd(cm.totalMissed)} has already closed unused this year. ${usd(cm.totalOpen)} is still open.`, go:"cards", cta:"Open card benefits"};
+  } else if(savingsShort > 0){
+    hero = {k:"savings", t:"Under the floor", l:`Savings sits ${usd(savingsShort)}/mo under the ${pct(S.caps.savings.min,0)} floor`,
+            s:`${usd(m.savingsTotal)} a month against ${usd(m.netTotal*S.caps.savings.min)}. The what-if below shows what closing it costs.`, go:"spend", cta:"Open spending plan"};
+  } else {
+    hero = {calm:true, t:"All clear", l:`Every band is inside its guardrail`,
+            s:`Fixed ${pct(m.pct.fixed)}, investing ${pct(m.pct.invest)}, savings ${pct(m.pct.savings)}, guilt-free ${pct(m.pct.free)}.`, go:"spend", cta:"Open spending plan"};
+  }
+  const rest = alerts.filter(a => a[2] !== hero.k);
+
+  // ---- the what-if ----
+  const move = simMove === null ? simDefault(m) : simMove;
+  const simSave = m.savingsTotal + move, simFree = m.free - move;
+  const simSavePct = m.netTotal ? simSave/m.netTotal : 0;
+  const simFreePct = m.netTotal ? simFree/m.netTotal : 0;
+  const simOk = simSavePct >= S.caps.savings.min && simFreePct >= S.caps.free.min && m.pct.fixed <= cap;
+
+  const band = (val, key) => {
+    const c = S.caps[key];
+    return c.rule === "max" ? (val <= c.max) : (val >= c.min);
+  };
+  const allOk = band(m.pct.fixed,"fixed") && band(m.pct.invest,"invest")
+             && band(m.pct.savings,"savings") && band(m.pct.free,"free");
 
   const seg = (cls,label,val,p) => `<div class="seg ${cls}" style="flex:0 0 ${Math.max(0,p*100).toFixed(2)}%" title="${label}: ${usd(val)}">${p>0.07?`<span class="pct num">${pct(p,0)}</span>`:""}</div>`;
+  const leg = (cls,name,val,p,key,extra="") => {
+    const c = S.caps[key], ok = c.rule === "max" ? p <= c.max : p >= c.min;
+    return `<div class="l-${cls}">
+      <div class="name">${name}</div>
+      <span class="amt">${usd(val)}</span>
+      <span class="lab${ok?"":" off"}">${pct(p)} · target ${pct(c.min,0)}–${pct(c.max,0)}${extra}</span>
+    </div>`;
+  };
+  const asOf = new Date().toLocaleDateString("en-US",{month:"long",year:"numeric"});
 
   return `
-  <div class="kpis">
-    <div class="kpi accent">
-      <div class="eyebrow">Net income / month</div>
-      <div class="v">${usd(m.netTotal)}</div>
-      <div class="sub">${m.P.map(p=>`${p.name} ${usd(p.monthly)}`).join(" · ")}</div>
+  <div class="dashgrid">
+  <div class="dashmain">
+    <div class="pagehead">
+      <h2 class="section">Dashboard</h2>
+      <p class="section-note">${asOf}, at the salaries in effect now</p>
     </div>
-    <div class="kpi">
-      <div class="eyebrow">Savings rate</div>
-      <div class="v">${pct(m.savingsRate)}</div>
-      <div class="sub">${usd(m.savedYr)} saved + invested this year</div>
+
+    <div class="kpis">
+      <div class="kpi accent">
+        <div class="eyebrow">Net income / month</div>
+        <div class="v">${usd(m.netTotal)}</div>
+        <div class="sub">${m.P.map(p=>`${esc(p.name)} ${usd(p.monthly)}`).join(" · ")}</div>
+      </div>
+      <div class="kpi">
+        <div class="eyebrow">Savings rate</div>
+        <div class="v">${pct(m.savingsRate)}</div>
+        <div class="sub">${usd(m.savedYr)} saved + invested</div>
+      </div>
+      <div class="kpi">
+        <div class="eyebrow">Fixed costs</div>
+        <div class="v">${pct(m.pct.fixed)}</div>
+        <div class="sub">${usd(m.fixedTotal)}/mo · ceiling ${pct(cap,0)}</div>
+      </div>
+      <div class="kpi">
+        <div class="eyebrow">Guilt-free left</div>
+        <div class="v">${usd(m.free)}</div>
+        <div class="sub">After fixed, investing, savings</div>
+      </div>
     </div>
-    <div class="kpi">
-      <div class="eyebrow">Fixed costs</div>
-      <div class="v">${pct(m.pct.fixed)}</div>
-      <div class="sub">${usd(m.fixedTotal)}/mo · ceiling ${pct(cap,0)}</div>
+
+    <div style="padding-top:28px">
+      <div style="display:flex;align-items:baseline;gap:12px">
+        <h3 style="font-size:17px;font-weight:800;letter-spacing:-.01em;margin:0">Where every dollar goes</h3>
+        <span class="tag ${allOk?"ok":"bad"}" style="margin-left:auto">${allOk?"Within guardrails":"Outside a guardrail"}</span>
+      </div>
+      <div class="ribbon-wrap">
+        <div class="ribbon">
+          ${seg("seg-fixed","Fixed costs",m.fixedTotal,m.pct.fixed)}
+          ${seg("seg-invest","Investing",m.investTotal,m.pct.invest)}
+          ${seg("seg-save","Savings",m.savingsTotal,m.pct.savings)}
+          ${seg("seg-free","Guilt-free",m.free,Math.max(0,m.pct.free))}
+        </div>
+        <div class="cap" style="left:${cap*100}%" data-label="${pct(cap,0)} fixed cap"></div>
+      </div>
+      <div class="legend">
+        ${leg("fixed","Fixed costs",m.fixedTotal,m.pct.fixed,"fixed")}
+        ${leg("invest","Investing",m.investTotal,m.pct.invest,"invest","+")}
+        ${leg("save","Savings",m.savingsTotal,m.pct.savings,"savings")}
+        ${leg("free","Guilt-free",m.free,m.pct.free,"free")}
+      </div>
     </div>
-    <div class="kpi">
-      <div class="eyebrow">Guilt-free left</div>
-      <div class="v">${usd(m.free)}</div>
-      <div class="sub">after fixed, investing and savings</div>
+
+    <div class="grid3">
+      <div class="card">
+        <h3>401k limit tracker</h3>
+        <p class="subhead">Against this year's ${usd(S.irsLimit)} IRS deferral limit</p>
+        ${m.P.map(p=>{
+          const inSoFar = Math.min(1, p.ytd401k/S.irsLimit);
+          const toCome  = Math.max(0, Math.min(1 - inSoFar, (p.fromRemaining + p.fromBonus)/S.irsLimit));
+          return `<div class="gauge">
+            <div class="row"><span class="who">${esc(p.name)}</span>
+              <span class="amt">${usd(p.total401k)} / ${usd(S.irsLimit)}</span></div>
+            <div class="track">
+              <div class="fill ${p.room<-500?"over":""}" style="width:${(inSoFar*100).toFixed(1)}%"></div>
+              <div class="proj" style="left:${(inSoFar*100).toFixed(1)}%;width:${(toCome*100).toFixed(1)}%"></div>
+            </div>
+            <div class="hint">${usd(p.ytd401k)} in · ${usd(p.fromRemaining+p.fromBonus)} to come at ${pct(p.pre401k,1)} over ${p.checksLeft} checks · ${
+              p.dataGap ? `<strong>enter YTD</strong>` : `<strong>set ${pct(p.recPct,2)}</strong>`}</div>
+          </div>`;
+        }).join("")}
+      </div>
+
+      <div class="card">
+        <h3>This year at current rates</h3>
+        <p class="subhead">Both salaries, blended across the year</p>
+        <div class="calcflow">
+          <div class="cf-line"><span>Combined gross</span><b>${usd(sum(m.P,p=>p.annualGross))}</b></div>
+          <div class="cf-line"><span>Taxes withheld</span><b style="color:var(--red)">−${usd(sum(m.P,p=>p.annualTax))}</b></div>
+          <div class="cf-line result"><span>Combined net</span><b>${usd(m.netYr)}</b></div>
+        </div>
+        <div class="calcband">Saved or invested</div>
+        <div class="calcflow">
+          <div class="cf-line"><span>Pre-tax 401k</span><b>${usd(m.pre401kYr)}</b></div>
+          <div class="cf-line"><span>Backdoor Roth IRA</span><b>${usd(S.iraTotal)}</b></div>
+          <div class="cf-line"><span>Brokerage</span><b>${usd(m.brokerageYr)}</b></div>
+          <div class="cf-line grand"><span>Saved and invested</span><b>${usd(m.savedYr)}</b></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Largest fixed costs</h3>
+        <p class="subhead">Monthly, share of ${usd(m.fixedTotal)}</p>
+        ${topFixed.map(i=>{
+          const share = m.fixedTotal > 0 ? mo(i)/m.fixedTotal : 0;
+          return `<div class="barrow">
+            <div class="bl"><span>${esc(i.n)}</span><b>${usd(mo(i))} · ${pct(share,0)}</b></div>
+            <div class="bt"><i style="width:${(share*100).toFixed(1)}%"></i></div>
+          </div>`;
+        }).join("")}
+        <div class="barrow buffer">
+          <div class="bl"><span>Forgotten-things buffer (${pct(S.miscPct,0)})</span><b>${usd(m.misc)}</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Where the next dollar is taxed</h3>
+        <p class="subhead">Federal ordinary brackets, married filing jointly</p>
+        ${bracketBars(tx)}
+        <div class="ratestrip">
+          <div><div class="rl">MARGINAL</div><div class="rv">${pct(tx.marginal)}</div></div>
+          <div><div class="rl">EFFECTIVE</div><div class="rv">${pct(tx.agi > 0 ? tx.totalTax/tx.agi : 0)}</div></div>
+          <div><div class="rl">${tx.combinedBal >= 0 ? "REFUND" : "STILL OWED"}</div>
+               <div class="rv ${tx.combinedBal >= 0 ? "" : "bad"}">${usd(Math.abs(tx.combinedBal))}</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>What net worth is made of</h3>
+        <p class="subhead">${usd(comp.heldTotal)} held against ${usd(comp.owedTotal)} owed</p>
+        ${comp.html}
+        <div class="compfoot"><span>Net worth</span><b>${usd(nw.total)}</b></div>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h3>Where every dollar goes <span class="tag ${m.pct.fixed<=cap?"ok":"bad"}">${m.pct.fixed<=cap?"Within guardrails":"Over the fixed-cost cap"}</span></h3>
-    <div class="ribbon-wrap">
-      <div class="ribbon">
-        ${seg("seg-fixed","Fixed costs",m.fixedTotal,m.pct.fixed)}
-        ${seg("seg-invest","Investing",m.investTotal,m.pct.invest)}
-        ${seg("seg-save","Savings",m.savingsTotal,m.pct.savings)}
-        ${seg("seg-free","Guilt-free",m.free,Math.max(0,m.pct.free))}
-      </div>
-      <div class="cap" style="left:${cap*100}%" data-label="60% fixed cap"></div>
+  <div class="dashrail">
+    <div class="hero${hero.calm?" calm":""}">
+      <div class="eyebrow">${hero.t}</div>
+      <div class="hl">${hero.l}</div>
+      <div class="hs">${hero.s}</div>
+      <button type="button" data-goto="${hero.go}">${hero.cta}</button>
     </div>
-    <div class="legend">
-      <div><span class="lab"><span class="sw" style="background:var(--ink-2)"></span>Fixed costs</span><span class="amt">${usd(m.fixedTotal)}</span><span class="lab">${pct(m.pct.fixed)} · target ${pct(S.caps.fixed.min,0)}–${pct(S.caps.fixed.max,0)}</span></div>
-      <div><span class="lab"><span class="sw" style="background:var(--moss-2)"></span>Investing</span><span class="amt">${usd(m.investTotal)}</span><span class="lab">${pct(m.pct.invest)} · target ${pct(S.caps.invest.min,0)}–${pct(S.caps.invest.max,0)}+</span></div>
-      <div><span class="lab"><span class="sw" style="background:#7A9C86"></span>Savings</span><span class="amt">${usd(m.savingsTotal)}</span><span class="lab">${pct(m.pct.savings)} · target ${pct(S.caps.savings.min,0)}–${pct(S.caps.savings.max,0)}</span></div>
-      <div><span class="lab"><span class="sw" style="background:#C6D2C9"></span>Guilt-free</span><span class="amt">${usd(m.free)}</span><span class="lab">${pct(m.pct.free)} · target ${pct(S.caps.free.min,0)}–${pct(S.caps.free.max,0)}</span></div>
+    <div class="railbody">
+      <div class="railsec">
+        <span class="eyebrow">Also worth a look</span>
+        ${rest.map(([k,t])=>`<div class="railnote${k==="bad"?" bad":""}">${t}</div>`).join("")}
+      </div>
+
+      <div class="railsec">
+        <span class="eyebrow">Net worth</span>
+        <div class="railnw">${usd(nw.total)}</div>
+        <div class="railnw-sub">
+          <span class="${nw.sinceLast>=0?"":"down"}">${nw.sinceLast>=0?"▲":"▼"} ${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
+          <span class="${nw.ytd>=0?"":"down"}">${nw.ytd>=0?"▲":"▼"} ${usd(Math.abs(nw.ytd))} YTD</span>
+        </div>
+        <div class="railspark">${railSpark(nw.hist.slice(-40))}</div>
+        ${nw.hist.length>1?`<div class="raildates"><span>${fmtDay(nw.hist.slice(-40)[0][0])}</span><span>${fmtDay(nw.hist[nw.hist.length-1][0])}</span></div>`:""}
+      </div>
+
+      <div class="railsec">
+        <span class="eyebrow">Try a change</span>
+        <div class="simrow">
+          <span class="simlab">Move to savings</span>
+          <input class="cell" type="text" inputmode="decimal" data-sim="1" data-num="1"
+                 value="${nf(move)}" aria-label="Dollars a month moved from guilt-free into savings">
+          <span class="simunit">/mo</span>
+        </div>
+        <div class="simout">Savings ${pct(simSavePct)} · guilt-free ${usd(simFree)}. ${
+          simOk ? "Every band inside its guardrail."
+                : simFree < 0 ? "More than guilt-free spending can cover."
+                : `Savings still ${simSavePct < S.caps.savings.min ? "under its floor" : "fine"}, guilt-free ${pct(simFreePct)}.`}</div>
+      </div>
+
+      <div class="railsec">
+        <span class="eyebrow">Credits closing soonest</span>
+        ${cardSoon.length ? cardSoon.slice(0,4).map(x=>`<div class="railrow">
+          <span>${esc(x.credit)}<span class="when">${esc(x.card)} · ${x.days}d left</span></span>
+          <b>${usd(x.amt)}</b></div>`).join("")
+          : `<div class="railnote">All current windows are marked used.</div>`}
+      </div>
     </div>
   </div>
-
-  <div class="card nwstrip" style="margin-top:14px">
-    <div class="nwleft">
-      <div class="eyebrow">Net worth</div>
-      <div class="nwbig num">${usd(nw.total)}</div>
-      <div class="nwdeltas">
-        <span><span class="eyebrow">Since last entry</span><span class="delta ${nw.sinceLast>=0?"up":"down"}">${nw.sinceLast>=0?"+":"−"}${usd(Math.abs(nw.sinceLast))}</span></span>
-        <span><span class="eyebrow">Year to date</span><span class="delta ${nw.ytd>=0?"up":"down"}">${nw.ytd>=0?"+":"−"}${usd(Math.abs(nw.ytd))}</span></span>
-        <span><span class="eyebrow">Debt</span><span class="delta down">${usd(nw.debt)}</span></span>
-      </div>
-    </div>
-    <div class="nwright sparkwrap">${chart(nw.hist.slice(-40), 620, 96, {bare:true})}</div>
-  </div>
-
-  <div class="grid3">
-    <div class="card">
-      <h3>401k limit tracker <span class="caprule">Against this year's IRS contribution limit</span></h3>
-      ${m.P.map(p=>{
-        const f = Math.min(1, p.total401k/S.irsLimit);
-        return `<div class="gauge">
-          <div class="row"><span class="who">${esc(p.name)}</span>
-            <span class="tag ${p.status}">${p.statusText}</span>
-            <span class="amt">${usd(p.total401k)} / ${usd(S.irsLimit)}</span></div>
-          <div class="track"><div class="fill ${p.room<-500?"over":""}" style="width:${f*100}%"></div></div>
-          <div class="hint">${usd(p.ytd401k)} contributed, ${usd(p.fromRemaining+p.fromBonus)} to come at ${pct(p.pre401k,1)} over ${p.checksLeft} paychecks.${p.dataGap ? ` <strong style="color:var(--amber)">Enter YTD.</strong>` : ` Recommender: <strong class="num">${pct(p.recPct,2)}</strong>.`}</div>
-        </div>`;
-      }).join("")}
-    </div>
-
-    <div class="card">
-      <h3>This year at current rates</h3>
-      <div class="calcband">What came in</div>
-      <div class="calcflow">
-        <div class="cf-line"><span>Combined gross</span><b>${usd(sum(m.P,p=>p.annualGross))}</b></div>
-        <div class="cf-line"><span>Taxes withheld</span><b>−${usd(sum(m.P,p=>p.annualTax))}</b></div>
-        <div class="cf-line result"><span>Combined net<em>Excluding bonus</em></span><b>${usd(m.netYr)}</b></div>
-      </div>
-      <div class="calcband">What was saved or invested</div>
-      <div class="calcflow">
-        <div class="cf-line"><span>Pre-tax 401k</span><b>${usd(m.pre401kYr)}</b></div>
-        <div class="cf-line"><span>Backdoor Roth IRA</span><b>${usd(S.iraTotal)}</b></div>
-        <div class="cf-line"><span>Brokerage</span><b>${usd(m.brokerageYr)}</b></div>
-        <div class="cf-line grand"><span>Saved and invested</span><b>${usd(m.savedYr)}</b></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Largest fixed costs</h3>
-      <table class="calctbl">
-        <colgroup><col><col style="width:82px"><col style="width:52px"></colgroup>
-        <tbody>
-          ${topFixed.map(i=>`<tr><td class="lab">${esc(i.n)}</td>
-            <td class="calc">${usd2(mo(i))}</td>
-            <td class="calc" style="color:var(--muted);width:52px">${m.fixedTotal>0?pct(mo(i)/m.fixedTotal,0):"—"}</td></tr>`).join("")}
-          <tr class="sub"><td>Forgotten-things buffer (${pct(S.miscPct,0)})</td><td class="calc">${usd2(m.misc)}</td><td></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
-      <h3>Card credits closing soon <span class="tag ${cardSoon.length && cardSoon[0].days<=10 ? "bad":"ok"}">${usd(sum(cardSoon,x=>x.amt))} open</span></h3>
-      <table class="calctbl">
-        <colgroup><col><col style="width:76px"><col style="width:82px"></colgroup>
-        <tbody>
-          ${cardSoon.slice(0,6).map(x=>`<tr>
-            <td class="lab">${esc(x.credit)}<span class="note">${esc(x.card)}</span></td>
-            <td class="calc">${usd(x.amt)}</td>
-            <td class="calc" style="width:76px"><span class="tag ${x.days<=7?"bad":x.days<=21?"warn":"ok"}">${x.days}d left</span></td></tr>`).join("")}
-          ${cardSoon.length===0?`<tr><td class="lab" style="color:var(--muted)">All current windows marked used.</td></tr>`:""}
-        </tbody>
-      </table>
-    </div>
-    <div class="card">
-      <h3>Key highlights and things to watch</h3>
-      <ul class="alerts">
-        ${alerts.map(([k,t])=>`<li><span class="dot ${k}"></span><span>${t}</span></li>`).join("")}
-      </ul>
-    </div>
-    <div class="card">
-      <h3>Where each month's income goes</h3>
-      <div class="calcflow">
-        <div class="cf-line"><span>Net income<em>Both take-home, after tax and 401k</em></span><b>${usd2(m.netTotal)}</b></div>
-        <div class="cf-line"><span>less fixed costs</span><b>−${usd2(m.fixedTotal)}</b></div>
-        <div class="cf-line result"><span>Remaining</span><b>${usd2(m.afterFixed)}</b></div>
-        <div class="cf-line"><span>less investing</span><b>−${usd2(m.investTotal)}</b></div>
-        <div class="cf-line"><span>less savings</span><b>−${usd2(m.savingsTotal)}</b></div>
-        <div class="cf-line grand"><span>Guilt-free spending</span><b>${usd2(m.free)}</b></div>
-      </div>
-    </div>
   </div>`;
 }
 
@@ -2253,8 +2614,8 @@ function income(){
     `<tr class="${cls}"><td class="lab">${label}${note?`<span class="note">${note}</span>`:""}</td>${cells.map(c=>`<td class="calc">${c}</td>`).join("")}</tr>`;
 
   return `
-  <h2 class="section">Income plan</h2>
-  <p class="section-note">Edit the blue cells. Take-home pay, 401k projections and the monthly figure used by the spending plan all calculate from these.</p>
+  <div class="pagehead"><h2 class="section">Income plan</h2>
+  <p class="section-note">Edit the blue cells. Take-home pay, 401k projections and the monthly figure used by the spending plan all calculate from these.</p></div>
 
   <div class="card">
     <h3>Pay and deductions <span class="caprule">Edit the blue cells; everything else follows</span></h3>
@@ -2431,8 +2792,8 @@ function spend(){
   };
 
   return `
-  <h2 class="section">Spending plan</h2>
-  <p class="section-note">Net income pulls from the income plan. Each section is measured against a target share of take-home pay. Guilt-free spending is whatever the other three leave behind.</p>
+  <div class="pagehead"><h2 class="section">Spending plan</h2>
+  <p class="section-note">Net income pulls from the income plan. Each section is measured against a target share of take-home pay. Guilt-free spending is whatever the other three leave behind.</p></div>
 
   <div class="card">
     <h3>Income <span class="tag ok">100%</span></h3>
@@ -2862,20 +3223,17 @@ function chart(hist, w, h, opts={}){
   const py = v => pad.t + (1-(v-y0)/(y1-y0))*(h-pad.t-pad.b);
   const pts = hist.map((p,i)=>[px(xs[i]), py(p[1])]);
   const line = pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
-  const area = line + ` L${pts[pts.length-1][0].toFixed(1)} ${h-pad.b} L${pts[0][0].toFixed(1)} ${h-pad.b} Z`;
   const gridVals = opts.bare ? [] : [y0+(y1-y0)*0.15, (y0+y1)/2, y1-(y1-y0)*0.15];
   const yr = t => new Date(t).getFullYear();
   const ticks = opts.bare ? [] : [...new Set(xs.map(yr))].map(y=>({y, t:new Date(y+"-01-01").getTime()})).filter(d=>d.t>=x0);
-  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="Net worth over time">
-    <defs><linearGradient id="nwg${opts.bare?"s":""}" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2F6B4F" stop-opacity=".26"/>
-      <stop offset="100%" stop-color="#2F6B4F" stop-opacity="0"/></linearGradient></defs>
-    ${gridVals.map(v=>`<line x1="${pad.l}" x2="${w-pad.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}" stroke="#E7EAE6"/>
-      <text x="${pad.l-8}" y="${(py(v)+4).toFixed(1)}" text-anchor="end" font-size="10" fill="#8A948E" font-family="ui-monospace,Menlo,monospace">${"$"+(v/1e6).toFixed(2)}M</text>`).join("")}
-    ${ticks.map(d=>`<text x="${px(d.t).toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="10" fill="#8A948E">${d.y}</text>`).join("")}
-    <path d="${area}" fill="url(#nwg${opts.bare?"s":""})"/>
-    <path d="${line}" fill="none" stroke="#2F6B4F" stroke-width="${opts.bare?1.5:1.8}" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${pts[pts.length-1][0].toFixed(1)}" cy="${pts[pts.length-1][1].toFixed(1)}" r="3.5" fill="#2F6B4F"/>
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="Net worth over time"
+       font-family="Archivo, system-ui, sans-serif">
+    ${gridVals.map(v=>`<line x1="${pad.l}" x2="${w-pad.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}" stroke="#eae7e7"/>
+      <text x="${pad.l-8}" y="${(py(v)+4).toFixed(1)}" text-anchor="end" font-size="10" font-weight="600" fill="#605d5d">${"$"+(v/1e6).toFixed(2)}M</text>`).join("")}
+    ${ticks.map(d=>`<text x="${px(d.t).toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="10" font-weight="600" fill="#605d5d">${d.y}</text>`).join("")}
+    <line x1="${pad.l}" x2="${w-pad.r}" y1="${(h-pad.b).toFixed(1)}" y2="${(h-pad.b).toFixed(1)}" stroke="#d7d3d3"/>
+    <path d="${line}" fill="none" stroke="#201e1d" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${pts[pts.length-1][0].toFixed(1)}" cy="${pts[pts.length-1][1].toFixed(1)}" r="3.5" fill="#ec3013"/>
     ${opts.bare?"":hist.map((p,i)=>`<circle cx="${pts[i][0].toFixed(1)}" cy="${pts[i][1].toFixed(1)}" r="6" fill="transparent"><title>${p[0]} — ${usd(p[1])}</title></circle>`).join("")}
   </svg>`;
 }
@@ -2890,15 +3248,10 @@ function headSpark(hist, w=120, h=26){
   const py = v => h-3 - ((v-lo)/(hi-lo))*(h-8);
   const pts = hist.map((p,i)=>[px(i), py(p[1])]);
   const line = pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
-  const area = line + ` L${(w-2).toFixed(1)} ${h} L2 ${h} Z`;
   const end = pts[pts.length-1];
   return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true">
-    <defs><linearGradient id="hsg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#7FC3A0" stop-opacity=".34"/>
-      <stop offset="100%" stop-color="#7FC3A0" stop-opacity="0"/></linearGradient></defs>
-    <path d="${area}" fill="url(#hsg)"/>
-    <path d="${line}" fill="none" stroke="#7FC3A0" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="2.4" fill="#EAF3ED"/>
+    <path d="${line}" fill="none" stroke="#9b9797" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="2.6" fill="#ec3013"/>
   </svg>`;
 }
 
@@ -2921,8 +3274,8 @@ function networth(){
   const gainTotal = c => sum(g.rows, r=>r.v[c]||0);
 
   return `
-  <h2 class="section">Net worth</h2>
-  <p class="section-note">Update the balances below, then log the total to add a point to the chart. Debts are entered as positive numbers and subtracted automatically.</p>
+  <div class="pagehead"><h2 class="section">Net worth</h2>
+  <p class="section-note">Update the balances below, then log the total to add a point to the chart. Debts are entered as positive numbers and subtracted automatically.</p></div>
 
   <div class="kpis">
     <div class="kpi accent">
@@ -3062,8 +3415,8 @@ function taxview(){
   const qLabels = ["Q1 — Apr 15","Q2 — Jun 15","Q3 — Sep 15","Q4 — Jan 15"];
 
   return `
-  <h2 class="section">Tax planning</h2>
-  <p class="section-note">Wages come from the income plan. Update the investment figures and withholding here; everything else recalculates. A plain-language walkthrough sits at the bottom of this tab.</p>
+  <div class="pagehead"><h2 class="section">Tax planning</h2>
+  <p class="section-note">Wages come from the income plan. Update the investment figures and withholding here; everything else recalculates. A plain-language walkthrough sits at the bottom of this tab.</p></div>
   <p class="plainline">On <strong>${usd(t.agi)}</strong> of total income, tax comes to <strong>${usd(t.totalTax)}</strong> — about <strong>${pct(t.effRate)}</strong> overall, with the next dollar taxed at <strong>${pct(t.marginal)}</strong>. Withholding and payments so far cover <strong>${usd(t.fedPaid + t.caPaid)}</strong>, leaving a projected ${t.combinedBal>=0?"refund":"balance due"} of <strong>${usd(Math.abs(t.combinedBal))}</strong>.</p>
 
   <div class="kpis six sticky">
@@ -3649,8 +4002,8 @@ function cardsview(){
     </div>`;
 
   return `
-  <h2 class="section">Card benefits</h2>
-  <p class="section-note">Tap a month, quarter or half to mark a credit used. Grey is still ahead, outlined is the window you are in now, red is a window that closed unused. Credits that run for a full year take a dollar amount instead, so partial use can be recorded.</p>
+  <div class="pagehead"><h2 class="section">Card benefits</h2>
+  <p class="section-note">Tap a month, quarter or half to mark a credit used. Grey is still ahead, outlined is the window you are in now, red is a window that closed unused. Credits that run for a full year take a dollar amount instead, so partial use can be recorded.</p></div>
 
   <div class="kpis">
     <div class="kpi accent">
@@ -3741,14 +4094,17 @@ function render(){
   authUI();
 }
 
+function goTab(view){
+  const b = document.querySelector(`nav.tabs button[data-view="${view}"]`);
+  if(!b) return;
+  current = view;
+  document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
+  document.querySelectorAll(".view").forEach(v=>v.hidden = v.id !== "view-"+current);
+  render();
+  window.scrollTo({top:0});
+}
 document.querySelectorAll("nav.tabs button").forEach(b=>{
-  b.onclick = () => {
-    current = b.dataset.view;
-    document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
-    document.querySelectorAll(".view").forEach(v=>v.hidden = v.id !== "view-"+current);
-    render();
-    window.scrollTo({top:0});
-  };
+  b.onclick = () => goTab(b.dataset.view);
 });
 
 // Thousands separators inside the blue input cells
@@ -3763,6 +4119,22 @@ const parseNum = s => {
 document.addEventListener("input", e=>{
   const el = e.target;
   if(!el.matches(".cell")) return;
+
+  // The dashboard's what-if is a question, not a plan: it re-renders but is
+  // never written to the saved figures, so it can't drift into the record.
+  if(el.dataset.sim){
+    simMove = parseNum(el.value);
+    const typed = el.value, pos = el.selectionStart;
+    render();
+    const next = document.querySelector('[data-sim="1"]');
+    if(next){
+      next.value = typed;
+      next.focus();
+      if(pos !== null) try{ next.setSelectionRange(pos,pos); }catch(_){}
+    }
+    return;
+  }
+
   const num  = el.dataset.num === "1";
   const isPct = el.dataset.pct === "1";
   const val  = num ? (isPct ? parseNum(el.value)/100 : parseNum(el.value)) : el.value;
@@ -3850,6 +4222,10 @@ document.addEventListener("change", e=>{
 });
 
 document.addEventListener("click", e=>{
+  // The rail's red block always names the tab where the thing can be fixed
+  const goto = e.target.closest("[data-goto]");
+  if(goto){ goTab(goto.dataset.goto); return; }
+
   const addbrk = e.target.closest("[data-addbrk]");
   if(addbrk){
     const list = S.tax.params[addbrk.dataset.addbrk].ord;

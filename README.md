@@ -15,9 +15,13 @@ Six tabs, each fed by the others so a figure is entered once and flows
 everywhere it matters.
 
 **Dashboard** — net income, savings rate, fixed-cost share and a ribbon
-showing where every dollar goes against 50/60/10/30 guardrails. Surfaces
-what needs attention: a 401k running over the IRS limit, fixed costs
-through their ceiling, card credits about to expire.
+showing where every dollar goes against 50/60/10/30 guardrails, plus charts
+for the federal bracket the next dollar falls in and what net worth is
+actually made of. A rail down the right ranks everything competing for
+attention and gives the single most urgent item — a 401k running over the
+IRS limit, fixed costs through their ceiling, card credits about to expire —
+the one red block on the page, along with a what-if for moving money into
+savings that recalculates without touching the saved plan.
 
 **Income plan** — per-paycheck take-home built up line by line: gross, 401k
 deferral, pre-tax deductions, tax, after-tax deductions. Handles a mid-year

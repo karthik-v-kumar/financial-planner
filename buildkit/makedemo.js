@@ -20,10 +20,12 @@ eval(code+';global.D=DEFAULTS;');
 const D=JSON.parse(JSON.stringify(global.D));
 
 /* ---- people ---- */
-D.people[0]={key:"alex",name:"Alex",salary:142000,bonus:10000,paychecks:24,
+// newSalary/raiseChecks are zero rather than absent: these replace the person
+// wholesale, and a missing field renders as "undefined" in its input cell.
+D.people[0]={key:"alex",name:"Alex",salary:142000,newSalary:0,raiseChecks:0,bonus:10000,paychecks:24,
   pre401k:0.10,post401k:0,taxRate:0.32,otherPre:5.20,otherPost:8.00,
   ytd401k:9500,checksLeft:9,bonusLeft:10000};
-D.people[1]={key:"jordan",name:"Jordan",salary:128000,bonus:15000,paychecks:26,
+D.people[1]={key:"jordan",name:"Jordan",salary:128000,newSalary:0,raiseChecks:0,bonus:15000,paychecks:26,
   pre401k:0.12,post401k:0,taxRate:0.295,otherPre:14.00,otherPost:11.50,
   ytd401k:12800,checksLeft:9,bonusLeft:0};
 D.notes={salary:"Annualized from current gross per paycheck",bonus:"",

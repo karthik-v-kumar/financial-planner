@@ -84,11 +84,16 @@
   .stamp{
     font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#bab6b6;
   }
+  /* The one green in the app, and a pill rather than a square: this is a
+     status light, not part of the document, and green reading as "safe" is
+     worth more here than consistency with the system's right angles. */
   .syncbadge{
-    font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;
-    border:1px solid rgba(243,242,242,.22);color:#9b9797;white-space:nowrap;
+    font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;
+    border:1px solid rgba(243,242,242,.22);border-radius:999px;color:#9b9797;white-space:nowrap;
   }
-  .syncbadge.saved{color:#f3f2f2;border-color:rgba(243,242,242,.45)}
+  .syncbadge.local,.syncbadge.saved{
+    color:#8fdcae;background:rgba(122,214,159,.16);border-color:rgba(122,214,159,.38);
+  }
   .syncbadge.saving{color:#bab6b6;border-color:rgba(243,242,242,.3)}
   .syncbadge.error{color:#fff;background:var(--accent);border-color:var(--accent)}
   .syncbadge.signedout{color:#9b9797}
@@ -292,13 +297,41 @@
   /* The tab's last band should not leave a rule hanging under the content */
   .ledger > .card:last-child{padding-bottom:40px}
 
-  /* Net worth trend, sitting beside the 401k tracker in the first band */
+  /* Net worth trend, sitting beside its composition in the first band */
   .trendbig{font-family:var(--mono);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-top:2px}
   .trendsub{font-size:12.5px;font-weight:600;margin-top:2px}
   .trendsub .down{color:var(--red)}
-  .trendspark{margin-top:16px}
-  .trendspark svg{display:block}
-  .trenddates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:2px}
+
+  /* The chart frame. The plot stretches to whatever box it is given while the
+     axis labels stay real text at a real size — see chart() for why. */
+  .nwchart{margin:20px 0 0;padding-left:52px}
+  .nwc-area{position:relative;height:var(--plot-h,200px)}
+  .nwc-area svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+  .nwc-grid{position:absolute;left:0;right:0;border-top:1px solid var(--rule);pointer-events:none}
+  .nwc-grid.base{border-top-color:var(--rule-2)}
+  .nwc-grid i{
+    position:absolute;right:calc(100% + 10px);top:-8px;font-style:normal;white-space:nowrap;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;color:var(--muted);
+  }
+  .nwc-dot{
+    position:absolute;width:8px;height:8px;border-radius:50%;background:var(--accent);
+    transform:translate(-50%,-50%);
+  }
+  .nwc-x{position:relative;height:15px;margin-top:7px}
+  .nwc-x span{
+    position:absolute;transform:translateX(-50%);white-space:nowrap;
+    font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--muted);
+  }
+  .chart-empty{color:var(--muted);font-size:12px;padding:20px 0}
+
+  /* The way out of a panel to the tab that can act on it */
+  .panelbtn{
+    font:inherit;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--ink);
+    background:transparent;border:1px solid var(--ink);border-radius:0;
+    padding:8px 14px;cursor:pointer;margin-top:18px;transition:background .15s,color .15s;
+  }
+  .panelbtn:hover{background:var(--ink);color:var(--paper)}
+  .panelbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   /* 401k gauges */
   .gauge{margin-bottom:18px}
@@ -364,11 +397,6 @@
   .railrow:last-child{border-bottom:0}
   .railrow b{font-family:var(--mono);font-weight:700;font-size:12.5px}
   .railrow .when{font-size:11px;color:var(--muted);display:block;font-weight:400}
-  .simrow{display:flex;align-items:center;gap:8px}
-  .simrow .simlab{font-size:12.5px;flex:1}
-  .simrow .simunit{font-size:12px;color:var(--muted)}
-  .simrow input.cell{width:82px}
-  .simout{font-size:11.5px;line-height:1.5;color:var(--muted);margin-top:8px}
 
   /* ---------- dashboard: charts ---------- */
   /* Bar length is the width of the bracket, so the ladder says something
@@ -731,6 +759,10 @@
   }
   @media (max-width:900px){
     .kpis,.legend,.kpis.three,.kpis.five,.kpis.six{grid-template-columns:repeat(2,1fr)}
+    /* These carry the same specificity as the band rules above, so they have
+       to name themselves — a bare .grid2 here would lose to .dashmain .grid2
+       whatever the order, and the charts would stay squeezed side by side. */
+    .dashmain .grid2,.ledger > .grid2{grid-template-columns:1fr}
     .kpi{padding:18px 16px}
     .kpi:nth-child(odd){padding-left:0;border-left:0}
     .kpi:nth-child(even){padding-right:0}
@@ -2334,32 +2366,9 @@ function nwComposition(){
   };
 }
 
-/* The rail's trend line: one stroke, one rule, one red dot on today. */
-function railSpark(hist, w=292, h=76){
-  if(hist.length < 2) return `<div class="simout">Log at least two entries to see the trend.</div>`;
-  const ys = hist.map(p=>p[1]);
-  let lo = Math.min(...ys), hi = Math.max(...ys);
-  if(hi === lo){ hi += 1; lo -= 1; }
-  const px = i => (i/(hist.length-1))*w;
-  const py = v => 4 + (1-(v-lo)/(hi-lo))*(h-14);
-  const pts = hist.map((p,i)=>`${px(i).toFixed(1)},${py(p[1]).toFixed(1)}`).join(" ");
-  const end = [px(hist.length-1), py(ys[ys.length-1])];
-  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="Net worth trend">
-    <polyline points="${pts}" fill="none" stroke="#201e1d" stroke-width="2" stroke-linejoin="round"></polyline>
-    <line x1="0" y1="${h-2}" x2="${w}" y2="${h-2}" stroke="#d7d3d3" stroke-width="1"></line>
-    <circle cx="${end[0].toFixed(1)}" cy="${end[1].toFixed(1)}" r="3.5" fill="#ec3013"></circle>
-  </svg>`;
-}
-
 /* ============================================================
    VIEWS
    ============================================================ */
-/* The rail's what-if: dollars moved out of guilt-free and into savings.
-   null means untouched, in which case it opens at whatever closes the
-   savings floor. Deliberately not persisted — it is a question, not a plan. */
-let simMove = null;
-const simDefault = m => Math.max(0, Math.round(m.netTotal * S.caps.savings.min - m.savingsTotal));
-
 function dash(){
   const m = model();
   const nw = nwModel();
@@ -2438,19 +2447,12 @@ function dash(){
             s:`${usd(cm.totalMissed)} has already closed unused this year. ${usd(cm.totalOpen)} is still open.`, go:"cards", cta:"Open card benefits"};
   } else if(savingsShort > 0){
     hero = {k:"savings", t:"Under the floor", l:`Savings sits ${usd(savingsShort)}/mo under the ${pct(S.caps.savings.min,0)} floor`,
-            s:`${usd(m.savingsTotal)} a month against ${usd(m.netTotal*S.caps.savings.min)}. The what-if below shows what closing it costs.`, go:"spend", cta:"Open spending plan"};
+            s:`${usd(m.savingsTotal)} a month against ${usd(m.netTotal*S.caps.savings.min)} — the floor is ${pct(S.caps.savings.min,0)} of take-home.`, go:"spend", cta:"Open spending plan"};
   } else {
     hero = {calm:true, t:"All clear", l:`Every band is inside its guardrail`,
             s:`Fixed ${pct(m.pct.fixed)}, investing ${pct(m.pct.invest)}, savings ${pct(m.pct.savings)}, guilt-free ${pct(m.pct.free)}.`, go:"spend", cta:"Open spending plan"};
   }
   const rest = alerts.filter(a => a[2] !== hero.k);
-
-  // ---- the what-if ----
-  const move = simMove === null ? simDefault(m) : simMove;
-  const simSave = m.savingsTotal + move, simFree = m.free - move;
-  const simSavePct = m.netTotal ? simSave/m.netTotal : 0;
-  const simFreePct = m.netTotal ? simFree/m.netTotal : 0;
-  const simOk = simSavePct >= S.caps.savings.min && simFreePct >= S.caps.free.min && m.pct.fixed <= cap;
 
   const band = (val, key) => {
     const c = S.caps[key];
@@ -2532,8 +2534,7 @@ function dash(){
           <span class="${nw.sinceLast>=0?"":"down"}">${nw.sinceLast>=0?"▲":"▼"} ${usd(Math.abs(nw.sinceLast))} since ${nw.prev?fmtDay(nw.prev[0]):"last entry"}</span> ·
           <span class="${nw.ytd>=0?"":"down"}">${nw.ytd>=0?"▲":"▼"} ${usd(Math.abs(nw.ytd))} YTD</span>
         </div>
-        <div class="trendspark">${railSpark(nw.hist.slice(-40))}</div>
-        ${nw.hist.length>1?`<div class="trenddates"><span>${fmtDay(nw.hist.slice(-40)[0][0])}</span><span>${fmtDay(nw.hist[nw.hist.length-1][0])}</span></div>`:""}
+        ${chart(nw.hist.slice(-40), {height:196, ticks:3})}
       </div>
 
       <div class="card">
@@ -2562,6 +2563,7 @@ function dash(){
               p.dataGap ? `<strong>enter YTD</strong>` : `<strong>set ${pct(p.recPct,2)}</strong>`}</div>
           </div>`;
         }).join("")}
+        <button type="button" class="panelbtn" data-goto="income" data-focus="rec401k">Adjust 401k contribution</button>
       </div>
 
       <div class="card">
@@ -2623,20 +2625,6 @@ function dash(){
       <div class="railsec">
         <span class="eyebrow">Also worth a look</span>
         ${rest.map(([k,t])=>`<div class="railnote${k==="bad"?" bad":""}">${t}</div>`).join("")}
-      </div>
-
-      <div class="railsec">
-        <span class="eyebrow">Try a change</span>
-        <div class="simrow">
-          <span class="simlab">Move to savings</span>
-          <input class="cell" type="text" inputmode="decimal" data-sim="1" data-num="1"
-                 value="${nf(move)}" aria-label="Dollars a month moved from guilt-free into savings">
-          <span class="simunit">/mo</span>
-        </div>
-        <div class="simout">Savings ${pct(simSavePct)} · guilt-free ${usd(simFree)}. ${
-          simOk ? "Every band inside its guardrail."
-                : simFree < 0 ? "More than guilt-free spending can cover."
-                : `Savings still ${simSavePct < S.caps.savings.min ? "under its floor" : "fine"}, guilt-free ${pct(simFreePct)}.`}</div>
       </div>
 
       <div class="railsec">
@@ -2721,7 +2709,7 @@ function income(){
     </div>
 
     <div class="card">
-      <h3>401k contribution recommender</h3>
+      <h3 id="rec401k">401k contribution recommender</h3>
       <table class="calctbl">
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
@@ -3259,31 +3247,74 @@ function nwModel(){
   };
 }
 
-function chart(hist, w, h, opts={}){
-  if(hist.length < 2) return `<div style="color:var(--muted);font-size:12px;padding:20px 0">Log at least two entries to see the trend.</div>`;
-  const pad = opts.bare ? {t:4,r:4,b:4,l:4} : {t:12,r:14,b:22,l:56};
-  const xs = hist.map(p=>new Date(p[0]).getTime());
-  const ys = hist.map(p=>p[1]);
-  const x0=Math.min(...xs), x1=Math.max(...xs);
-  let y0=Math.min(...ys), y1=Math.max(...ys);
-  const padY=(y1-y0)*0.12 || 1000; y0-=padY; y1+=padY;
-  const px = t => pad.l + (x1===x0?0:(t-x0)/(x1-x0))*(w-pad.l-pad.r);
-  const py = v => pad.t + (1-(v-y0)/(y1-y0))*(h-pad.t-pad.b);
-  const pts = hist.map((p,i)=>[px(xs[i]), py(p[1])]);
-  const line = pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
-  const gridVals = opts.bare ? [] : [y0+(y1-y0)*0.15, (y0+y1)/2, y1-(y1-y0)*0.15];
-  const yr = t => new Date(t).getFullYear();
-  const ticks = opts.bare ? [] : [...new Set(xs.map(yr))].map(y=>({y, t:new Date(y+"-01-01").getTime()})).filter(d=>d.t>=x0);
-  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" role="img" aria-label="Net worth over time"
-       font-family="Archivo, system-ui, sans-serif">
-    ${gridVals.map(v=>`<line x1="${pad.l}" x2="${w-pad.r}" y1="${py(v).toFixed(1)}" y2="${py(v).toFixed(1)}" stroke="#eae7e7"/>
-      <text x="${pad.l-8}" y="${(py(v)+4).toFixed(1)}" text-anchor="end" font-size="10" font-weight="600" fill="#605d5d">${"$"+(v/1e6).toFixed(2)}M</text>`).join("")}
-    ${ticks.map(d=>`<text x="${px(d.t).toFixed(1)}" y="${h-6}" text-anchor="middle" font-size="10" font-weight="600" fill="#605d5d">${d.y}</text>`).join("")}
-    <line x1="${pad.l}" x2="${w-pad.r}" y1="${(h-pad.b).toFixed(1)}" y2="${(h-pad.b).toFixed(1)}" stroke="#d7d3d3"/>
-    <path d="${line}" fill="none" stroke="#201e1d" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-    <circle cx="${pts[pts.length-1][0].toFixed(1)}" cy="${pts[pts.length-1][1].toFixed(1)}" r="3.5" fill="#ec3013"/>
-    ${opts.bare?"":hist.map((p,i)=>`<circle cx="${pts[i][0].toFixed(1)}" cy="${pts[i][1].toFixed(1)}" r="6" fill="transparent"><title>${p[0]} — ${usd(p[1])}</title></circle>`).join("")}
-  </svg>`;
+/* A round step for an axis: 1, 2, 2.5 or 5 times a power of ten, whichever
+   lands closest to the number of gridlines asked for. */
+function niceStep(range, target){
+  const raw = (range || 1) / Math.max(1, target);
+  const mag = Math.pow(10, Math.floor(Math.log10(Math.abs(raw) || 1)));
+  const n = raw / mag;
+  return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 2.5 ? 2.5 : n <= 5 ? 5 : 10) * mag;
+}
+/* One unit for the whole axis, and exactly enough decimals for the step to
+   be visible in it: a plan in the hundreds of thousands reads $200k, one in
+   the millions reads $1.4M, and a $250k step reads $1.00M / $1.25M rather
+   than rounding to a repeated $1.3M. */
+function axisScale(marks, step){
+  const max = Math.max(...marks.map(Math.abs));
+  // Abbreviate only once the figures are big enough to earn it — $800 beats
+  // $0.8k, and a plan that small should read in whole dollars.
+  const unit = max >= 1e6 ? 1e6 : max >= 1e5 ? 1e3 : 1;
+  const suffix = unit === 1e6 ? "M" : unit === 1e3 ? "k" : "";
+  const s = Math.abs(step) / unit;
+  const dp = Number.isInteger(s) ? 0 : Number.isInteger(s*10) ? 1 : 2;
+  // Sign in front of the currency, as everywhere else; zero carries no unit
+  return v => v === 0 ? "$0"
+    : (v < 0 ? "−$" : "$") + (Math.abs(v)/unit).toLocaleString("en-US",
+        {minimumFractionDigits:dp, maximumFractionDigits:dp}) + suffix;
+}
+
+/* Net worth over time. Laid out in HTML with the plot as a stretched SVG
+   rather than drawn entirely in SVG: a fixed viewBox scaled to fit its
+   column shrinks the type with it, and the chart never fills the box it is
+   given. Here the axis labels are real text at a real size, and the plot
+   stretches to whatever space there is — the stroke stays 2px because it
+   opts out of the scaling. */
+function chart(hist, opts={}){
+  if(hist.length < 2) return `<div class="chart-empty">Log at least two entries to see the trend.</div>`;
+  const xs = hist.map(p => new Date(p[0]).getTime());
+  const ys = hist.map(p => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const lo = Math.min(...ys), hi = Math.max(...ys);
+
+  // The domain rounds out to whole steps so every gridline is a round number
+  const step = niceStep((hi - lo) || Math.abs(hi) || 1000, opts.ticks || 4);
+  const y0 = Math.floor(lo/step) * step;
+  const y1 = Math.max(Math.ceil(hi/step) * step, y0 + step);
+  const marks = [];
+  for(let v = y0; v <= y1 + step*1e-6; v += step) marks.push(v);
+  const money = axisScale(marks, step);
+
+  const fx = t => x1 === x0 ? 0 : (t - x0)/(x1 - x0) * 100;
+  const fy = v => (1 - (v - y0)/(y1 - y0)) * 100;
+  const pts = hist.map((p,i) => `${fx(xs[i]).toFixed(2)},${fy(p[1]).toFixed(2)}`).join(" ");
+  const years = [...new Set(xs.map(t => new Date(t).getFullYear()))]
+    .map(y => ({y, t:new Date(y + "-01-01").getTime()}))
+    .filter(d => d.t >= x0 && d.t <= x1);
+
+  return `<figure class="nwchart" style="--plot-h:${opts.height || 200}px">
+    <div class="nwc-area">
+      ${marks.map((v,i) => `<span class="nwc-grid${i?"":" base"}" style="top:${fy(v).toFixed(2)}%"><i>${money(v)}</i></span>`).join("")}
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img"
+           aria-label="Net worth from ${fmtDay(hist[0][0])} to ${fmtDay(hist[hist.length-1][0])}, ${usd(ys[ys.length-1])} at the latest entry">
+        <polyline points="${pts}" fill="none" stroke="#201e1d" stroke-width="2"
+                  vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></polyline>
+      </svg>
+      <span class="nwc-dot" style="left:${fx(xs[xs.length-1]).toFixed(2)}%;top:${fy(ys[ys.length-1]).toFixed(2)}%"></span>
+    </div>
+    <figcaption class="nwc-x">
+      ${years.map(d => `<span style="left:${fx(d.t).toFixed(2)}%">${d.y}</span>`).join("")}
+    </figcaption>
+  </figure>`;
 }
 
 // Compact sparkline for the masthead — light stroke for the dark background
@@ -3344,7 +3375,7 @@ function networth(){
         ${[["all","All"],["y1","12 mo"],["ytd","YTD"]].map(([k,l])=>`<button class="rangebtn${nwRange===k?" on":""}" data-range="${k}">${l}</button>`).join("")}
       </span>
     </h3>
-    ${chart(shown, 1000, 260)}
+    ${chart(shown, {height:280, ticks:5})}
   </div>
 
   <div class="grid2">
@@ -4143,14 +4174,18 @@ function render(){
   authUI();
 }
 
-function goTab(view){
+// focus is the id of a section to land on rather than the top of the tab —
+// the masthead is sticky, so it is scrolled to by hand rather than with
+// scrollIntoView, which would put its heading underneath the header.
+function goTab(view, focus){
   const b = document.querySelector(`nav.tabs button[data-view="${view}"]`);
   if(!b) return;
   current = view;
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
   document.querySelectorAll(".view").forEach(v=>v.hidden = v.id !== "view-"+current);
   render();
-  window.scrollTo({top:0});
+  const target = focus && document.getElementById(focus);
+  window.scrollTo({top: target ? target.getBoundingClientRect().top + window.scrollY - 120 : 0});
 }
 document.querySelectorAll("nav.tabs button").forEach(b=>{
   b.onclick = () => goTab(b.dataset.view);
@@ -4168,21 +4203,6 @@ const parseNum = s => {
 document.addEventListener("input", e=>{
   const el = e.target;
   if(!el.matches(".cell")) return;
-
-  // The dashboard's what-if is a question, not a plan: it re-renders but is
-  // never written to the saved figures, so it can't drift into the record.
-  if(el.dataset.sim){
-    simMove = parseNum(el.value);
-    const typed = el.value, pos = el.selectionStart;
-    render();
-    const next = document.querySelector('[data-sim="1"]');
-    if(next){
-      next.value = typed;
-      next.focus();
-      if(pos !== null) try{ next.setSelectionRange(pos,pos); }catch(_){}
-    }
-    return;
-  }
 
   const num  = el.dataset.num === "1";
   const isPct = el.dataset.pct === "1";
@@ -4273,7 +4293,7 @@ document.addEventListener("change", e=>{
 document.addEventListener("click", e=>{
   // The rail's red block always names the tab where the thing can be fixed
   const goto = e.target.closest("[data-goto]");
-  if(goto){ goTab(goto.dataset.goto); return; }
+  if(goto){ goTab(goto.dataset.goto, goto.dataset.focus); return; }
 
   const addbrk = e.target.closest("[data-addbrk]");
   if(addbrk){

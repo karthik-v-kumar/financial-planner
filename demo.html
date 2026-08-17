@@ -786,32 +786,28 @@
 
   @media (max-width:640px){
     /* iOS Safari zooms the whole page in when a focused input's font is
-       under 16px. Every .cell input in this app is 13px, so every tap
-       into a table was triggering an involuntary zoom. */
-    /* 16px keeps iOS from zooming on focus; the surrounding text scales up to
-       match so the fields do not tower over their labels. */
-    /* 16px stops iOS zooming on focus; tighter padding and slightly larger
-       surrounding text keep the fields in proportion with the labels */
+       under 16px, so the fields alone stay at 16px. Everything around them
+       keeps its desktop size: scaling the labels up to match made the
+       tables read as though the whole page had been magnified, and left the
+       column headings looking shrunken beside their own data. */
     input.cell, select.cell{font-size:16px; padding:4px 8px; line-height:1.2}
-    td, th, .ig-lab, .cf-line{font-size:15px}
-    td .note, .ig-lab em, .cf-line em{font-size:12.5px}
-    input.cell.wide{font-size:15px}
-    .ig-row input.cell, .ig-row .val{min-width:0}
-    th, td{font-size:14.5px}
-    .ig-lab, .cf-line{font-size:14.5px}
-    .credit-name, .flatline{font-size:14.5px}
-    td .note, .ig-lab em, .cf-line em{font-size:12.5px}
-    .lab{line-height:1.35}
     input.cell.pct{width:86px}
     .pctwrap .suffix{font-size:13px}
+    .ig-row input.cell, .ig-row .val{min-width:0}
+    .credit-name, .flatline{font-size:14.5px}
+    .lab{line-height:1.35}
 
     /* Financial tables here run 3-6 columns wide. Rather than let cells
-       crush down to unreadable widths, the table scrolls sideways
-       inside its own card — the common pattern for dense data on a
-       narrow screen. white-space:normal is restored on the annotation
-       text underneath labels so it still wraps as intended. */
-    table{display:block; width:100%; overflow-x:auto; -webkit-overflow-scrolling:touch}
-    table thead, table tbody{display:table; width:max-content; min-width:100%}
+       crush down to unreadable widths, the table scrolls sideways inside
+       its card — the common pattern for dense data on a narrow screen.
+       The scroll belongs to the card and the table stays a real table: as
+       separate display:table boxes, thead and tbody each sized their own
+       columns, so the heading drifted away from the data underneath it.
+       Only cards that hold a table become scroll containers, since
+       overflow-x:auto forces overflow-y to match and would clip the
+       markers that sit slightly outside their row elsewhere. */
+    .card:has(table){overflow-x:auto; -webkit-overflow-scrolling:touch}
+    table{width:max-content; min-width:100%}
     th, td{white-space:nowrap}
     td .note, .flatnote, .caprule, .plainline{white-space:normal}
 

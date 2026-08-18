@@ -25,3 +25,6 @@ files.zip
 .env
 .env.*
 node_modules/
+
+# Local preview server config — points at the parent dir, which holds real data
+.claude/

@@ -17,13 +17,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
 <style>
   /* Modernist: one typeface (Archivo) at several weights, no rounded corners,
-     2px rules doing the organising, and red held back for what needs
+     2px rules doing the organizing, and red held back for what needs
      attention. Semantic names are kept from the previous palette so every
      view keeps working — only the values underneath them changed. */
   :root{
     --ink:#201e1d;
     --ink-2:#444141;
-    --moss:#201e1d;          /* was the second brand colour; now plain ink */
+    --moss:#201e1d;          /* was the second brand color; now plain ink */
     --moss-2:#605d5d;
     --paper:#f3f2f2;
     --card:#FFFFFF;
@@ -38,10 +38,10 @@
     --red-bg:#ffe0d9;
     --accent:#ec3013;
     --accent-400:#ff9783;
-    --green:#2d2b2b;         /* "all clear" reads as neutral, not as a colour */
+    --green:#2d2b2b;         /* "all clear" reads as neutral, not as a color */
     --green-bg:#f8f4f4;
     /* Movement up. Its own token rather than --green, which is the neutral
-       "within guardrails" tone and must stay colourless. 5.9:1 on card
+       "within guardrails" tone and must stay colorless. 5.9:1 on card
        white, 5.3:1 on paper. */
     --pos:#17724a;
     /* One family throughout. The three slots stay so the intent of each
@@ -64,7 +64,7 @@
   }
 
   /* ---------- chrome ---------- */
-  /* One flat block of ink. The only colour in the masthead is the red rule
+  /* One flat block of ink. The only color in the masthead is the red rule
      under whichever tab is open. */
   header.top{
     background:#201e1d;
@@ -678,7 +678,7 @@
   .kpi .v .delta{font-size:38px;font-weight:800}
   /* ▲ and ▼ are not in Archivo. As text they fall back to a system font with
      a taller line box — enough to double the height of a stat row — so they
-     are drawn instead, taking the surrounding colour and metrics. */
+     are drawn instead, taking the surrounding color and metrics. */
   .arw{
     width:.58em;height:.46em;display:inline-block;
     vertical-align:.06em;margin-right:.18em;flex:none;
@@ -925,7 +925,7 @@
    ============================================================ */
 const DEFAULTS = {
   "dataVersion": 1,
-  "updated": "2026-08-17",
+  "updated": "2026-08-18",
   "irsLimit": 24500,
   "iraTotal": 15000,
   "miscPct": 0.15,
@@ -1893,7 +1893,7 @@ const DEFAULTS = {
         561600
       ],
       [
-        "2026-08-17",
+        "2026-08-18",
         630000
       ]
     ],
@@ -2425,7 +2425,7 @@ function dash(){
     if(tx.fedShort > 0) alerts.push(["bad", `Federal safe harbor is <strong>${usd(tx.fedShort)}</strong> short — ${usd(tx.fedPerQuarter)} per remaining quarter.`, "harbor"]);
     if(tx.caShort > 0)  alerts.push(["bad", `California safe harbor is <strong>${usd(tx.caShort)}</strong> short.`, "harbor"]);
   } else {
-    alerts.push(["ok", `Safe harbour met on both federal and California. Further estimates are optional.`, "harbor"]);
+    alerts.push(["ok", `Safe harbor met on both federal and California. Further estimates are optional.`, "harbor"]);
   }
 
   alerts.push(tx.combinedBal >= 0
@@ -2463,7 +2463,7 @@ function dash(){
       : {k:"k401k:"+worst401k.name, t:"Over the limit", l:`${worst401k.name}'s 401k lands ${usd(-worst401k.room)} past the max`,
          s:`Projected ${usd(worst401k.total401k)} against a ${usd(S.irsLimit)} limit. Recommender says ${pct(worst401k.recPct,2)}.`, go:"income", cta:"Open income plan"};
   } else if(tx.fedShort > 0 || tx.caShort > 0){
-    hero = {k:"harbor", t:"Safe harbour short", l:`${usd(tx.fedShort + tx.caShort)} of estimated tax is still due`,
+    hero = {k:"harbor", t:"Safe harbor short", l:`${usd(tx.fedShort + tx.caShort)} of estimated tax is still due`,
             s:`Federal ${usd(tx.fedShort)}, California ${usd(tx.caShort)}. The federal share splits to ${usd(tx.fedPerQuarter)} a quarter.`, go:"tax", cta:"Open tax planning"};
   } else if(nearest.length){
     hero = {t:"Needs attention",

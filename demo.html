@@ -416,6 +416,10 @@
     color:var(--red);margin-top:14px;
   }
   .ratestrip{display:flex;gap:20px;border-top:1px solid var(--rule-2);padding-top:12px;margin-top:12px}
+  .ratestrip > div{min-width:0}
+  /* Named, because "effective" alone does not say federal-and-California
+     over AGI, and a combined rate reads high against a federal-only one. */
+  .ratestrip .rs{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.3}
   .ratestrip .rl{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
   .ratestrip .rv{font-family:var(--mono);font-weight:800;font-size:20px}
   .ratestrip .rv.bad{color:var(--red)}
@@ -433,6 +437,58 @@
   .barrow .bt{height:6px;background:var(--rule);margin:4px 0 10px}
   .barrow .bt i{display:block;height:100%;background:#201e1d}
   .barrow.buffer{border-top:1px solid var(--rule-2);padding-top:10px;margin-top:2px;color:var(--muted)}
+
+  /* ---------- dashboard: cash flow ---------- */
+  /* A Sankey of the whole path: gross pay, what is taken before you see it,
+     and what is left. Ribbon width is dollars, so every proportion is
+     literal. Layout is measured rather than declared — see paintCashflow. */
+  .cf-band{border-top:2px solid rgba(32,30,29,.4);padding:22px 0 4px}
+  .cf-head{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .cf-head h3{font-size:17px;font-weight:800;letter-spacing:-.01em;margin:0 0 3px}
+  .cf-head .subhead{margin-bottom:0}
+  .cf-ctrls{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
+  .cf-ctrls .rangebar{margin-left:0}
+  /* Four columns of ribbon need room to mean anything. Below the minimum the
+     diagram holds its width and the band scrolls, the same trade the wide
+     tables make, rather than becoming a smear. */
+  .cf-plot{margin-top:18px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .cf-in{position:relative}
+  .cf-plot svg{display:block}
+  .cf-empty{font-size:12.5px;color:var(--muted);padding:20px 0}
+  /* Line names are whatever was typed on the spending plan, so a label is
+     held to the gutter it sits in and elides rather than running out of the
+     plot and putting a scrollbar under a desktop-width diagram. The whole
+     name is still readable — hovering the block spells it out underneath. */
+  .cf-lbl{position:absolute;pointer-events:none;white-space:nowrap}
+  .cf-lbl span{overflow:hidden;text-overflow:ellipsis}
+  .cf-lbl .n{font-size:11.5px;font-weight:600;color:var(--ink);display:block;line-height:1.25}
+  .cf-lbl .v{font-size:11px;font-weight:700;color:var(--muted);display:block;line-height:1.25;
+             font-variant-numeric:tabular-nums}
+  .cf-lbl.alert .v{color:var(--red)}
+  /* A label between the first and last column sits over the ribbons behind
+     it, so it carries the ground colour out to its own edge. */
+  .cf-lbl.mid{background:var(--paper);padding:2px 7px;margin-left:-7px;
+              box-shadow:0 0 0 3px var(--paper)}
+  .cf-lbl.lead .n{font-size:12.5px;font-weight:700}
+  .cf-lbl.lead .v{font-size:13px;color:var(--ink)}
+  .cf-lbl .s{font-size:10px;font-weight:600;letter-spacing:.04em;color:#9b9797;
+             display:block;line-height:1.3;font-variant-numeric:tabular-nums}
+  .cf-rib,.cf-nd{transition:opacity .16s}
+  .cf-dim{opacity:.13}
+  .cf-readout{
+    display:flex;align-items:baseline;gap:10px;min-height:26px;margin-top:16px;
+    border-top:1px solid var(--rule-2);padding-top:12px;font-size:12.5px;color:var(--muted);
+  }
+  .cf-readout b{font-family:var(--mono);font-size:14px;font-weight:800;color:var(--ink);
+                font-variant-numeric:tabular-nums}
+  .cf-readout .off{margin-left:auto;font-size:10.5px;letter-spacing:.1em;
+                   text-transform:uppercase;font-weight:700;color:var(--red)}
+  .cf-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--muted)}
+  .cf-legend span{display:inline-flex;align-items:center;gap:7px}
+  .cf-legend i{width:10px;height:10px;display:inline-block;flex:none}
+  @media (max-width:900px){
+    .cf-ctrls{margin-left:0;width:100%}
+  }
 
   /* ---------- tables ---------- */
   table{width:100%;border-collapse:collapse}
@@ -733,8 +789,10 @@
 
   /* The rail is a sidebar only while there is room for one. Below that the
      grid unpacks into a column: the urgent block leads, because that is what
-     it is for, and the rest of the rail settles under the ledger. */
-  @media (max-width:1180px){
+     it is for, and the rest of the rail settles under the ledger.
+     Held at 1080 rather than 1180 so the rail survives a narrower window and
+     one step of browser zoom, which is where it was being lost. */
+  @media (max-width:1080px){
     .dashgrid{display:flex;flex-direction:column}
     .dashrail{display:contents}
     .hero{order:1;margin-top:20px}
@@ -752,7 +810,9 @@
     }
   }
   /* The tabs need the whole bar once the masthead tightens, and net worth
-     has a panel of its own in the ledger by then anyway. */
+     has a panel of its own in the ledger by then anyway. This is its own
+     threshold, not the rail’s: the ticker runs out of room first, and at
+     1080 it was overlapping the last tab. */
   @media (max-width:1180px){ .ticker{display:none} }
   /* The masthead has five things in it and a phone cannot take them in one
      line. Left to wrap on its own it made a ragged five-row block, so the
@@ -795,7 +855,10 @@
     }
     .dashmain .grid2 > .card:last-child{border-bottom:0;padding:20px 0}
     main{padding:0 14px 60px}
-    header.top{padding:12px 14px 0}
+    header.top{
+      padding:max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right))
+              0 max(14px, env(safe-area-inset-left));
+    }
     .pagehead{padding-top:22px}
     h2.section{font-size:24px}
   }
@@ -832,6 +895,17 @@
     table{width:max-content; min-width:100%}
     th, td{white-space:nowrap}
     td .note, .flatnote, .caprule, .plainline{white-space:normal}
+
+    /* The rate tables are prose in the first column and one figure in each
+       column after it, sized by a colgroup and already table-layout:fixed.
+       Sized to max-content like the data tables above, that prose column
+       grows to the full unwrapped sentence and shoves the figures off the
+       side of the screen. They keep their declared widths and wrap instead. */
+    .calctbl{width:100%}
+    .calctbl th, .calctbl td.lab, .calctbl td.lab .note{white-space:normal}
+    /* and the fields in them shrink with their column rather than pushing
+       out past the card edge */
+    .calctbl input.cell, .calctbl .pctwrap{min-width:0; max-width:100%}
 
   }
 
@@ -2393,6 +2467,306 @@ function nwComposition(){
 /* ============================================================
    VIEWS
    ============================================================ */
+/* ---------- cash flow, gross pay through to guilt-free spending ---------- */
+/* Ribbon width is dollars, so every proportion on screen is literal. Every
+   figure comes from model() and taxModel(), so the diagram widens as the
+   income, spending and tax tabs are filled in — nothing is entered twice.
+   The layout needs a measured width, so dash() builds the graph and stashes
+   it here for paintCashflow() to lay out once the markup is in the document. */
+let cfUnit = "mo", cfDepth = 0, CF = null;
+
+/* Red is otherwise reserved for what needs attention. Tax is the standing
+   exception: it is money gone for good and should always read as a negative,
+   so it takes a muted tint well below the accent, which stays reserved for
+   the one band actually outside its guardrail. */
+const CFC  = {ink:"#201e1d", tax:"#b8301b", committed:"#605d5d", neutral:"#9b9797",
+              alert:"#ec3013", light:"#d7d3d3"};
+const CFOP = {keep:.34, committed:.40, gone:.13, tax:.20, alert:.48, light:.26};
+
+// The same guardrail test the allocation ribbon and its legend use further up
+// the tab, so the two cannot end up disagreeing about what is off.
+const inBand = (val, key) => {
+  const c = S.caps[key];
+  return c.rule === "max" ? val <= c.max : val >= c.min;
+};
+
+const cfFmt = v => cfUnit === "pct" ? (CF.gross ? (v/CF.gross*100).toFixed(1) : "0.0") + "%"
+                 : cfUnit === "yr"  ? usd(v*12) : usd(v);
+const cfShare = v => (CF.gross ? (v/CF.gross*100).toFixed(1) : "0.0") + "% of gross";
+
+function cashflowGraph(m, tx){
+  const T = S.tax;
+  // Per-paycheck figures at the rate now in effect, times checks per year over
+  // twelve — the same basis as model()'s p.monthly, which is what actually
+  // lands in checking from here on.
+  const acc = f => sum(m.P, p => f(p) * p.paychecks / 12);
+  const gross     = acc(p => p.gross);
+  const k401      = acc(p => p.preAmt);
+  const preOther  = acc(p => p.otherPre);
+  const postOther = acc(p => p.otherPost + p.postAmt);
+  const payTax    = acc(p => p.tax);
+
+  // Investment income never touches payroll, so it is a second source sitting
+  // under gross pay. What it costs in tax is the ordinary slice at the app's
+  // own marginal rate and the preferential slice at the long-term one — both
+  // re-derived from the whole return, so NIIT, California and the SALT
+  // feedback loop are already inside them.
+  const ordInv  = Math.max(0, T.interest + (T.ordDiv - T.qualDiv) + Math.max(0, tx.stComp));
+  const prefInv = Math.max(0, T.qualDiv + tx.ltComp);
+  const invIn   = (ordInv + prefInv) / 12;
+  const invTax  = (ordInv * tx.marginal + prefInv * tx.marginalLT) / 12;
+  const ira     = S.iraTotal / 12;
+
+  // Fixed costs by the groups the spending plan already keeps them in, with
+  // the buffer as a group of its own so the detail column still sums to the
+  // fixed total.
+  const groups = [];
+  S.fixed.forEach(it => {
+    let g = groups.find(x => x.n === it.g);
+    if(!g) groups.push(g = {n: it.g, a: 0});
+    g.a += mo(it);
+  });
+  if(m.misc > 0) groups.push({n:"Forgotten-things buffer", a:m.misc});
+
+  const freeOff = !inBand(m.pct.free, "free");
+  const N = [], L = [];
+  const node = (id, label, col, tone, opts={}) => {
+    N.push(Object.assign({id, label, col, tone, ck:id, value:0}, opts)); return id; };
+  const link = (s, t, v) => { if(v > 0.5) L.push({s, t, v}); };
+
+  node("gross","Combined gross pay",0,"keep",
+       {lead:true, ck:"ink", parts: m.P.map(p => [p.name, p.gross * p.paychecks / 12])});
+  node("take","Take-home pay",1,"keep",{lead:true, ck:"ink"});
+  node("k401","Pre-tax 401k",1,"committed",{ck:"committed"});
+  if(cfDepth === 1){ node("preo","Pre-tax deductions",1,"gone",{ck:"neutral"});
+                     node("posto","After-tax deductions",1,"gone",{ck:"neutral"}); }
+  else             { node("othd","Other deductions",1,"gone",{ck:"neutral"}); }
+  node("tax","Taxes",1,"tax",{ck:"tax"});
+  // Declared in this order so taxes end up the bottom-most ribbon off gross pay
+  link("gross","take",m.netTotal);
+  link("gross","k401",k401);
+  if(cfDepth === 1){ link("gross","preo",preOther); link("gross","posto",postOther); }
+  else             { link("gross","othd",preOther + postOther); }
+  link("gross","tax",payTax);
+
+  node("fixed","Fixed costs",2,"keep",{ck:"ink"});
+  node("inv","Investing",2,"committed",{ck:"committed"});
+  node("sav","Savings",2,"committed",{ck:"committed"});
+  node("free","Guilt-free spending",2,freeOff?"alert":"keep",
+       {lead:true, alert:freeOff, ck:freeOff?"alert":"ink"});
+  // A negative free figure means the allocations overrun what comes in. The
+  // ribbon is simply dropped rather than drawn backwards; the rail's red block
+  // is already saying so in words.
+  link("take","fixed",m.fixedTotal); link("take","inv",m.investTotal);
+  link("take","sav",m.savingsTotal); link("take","free",m.free);
+
+  node("invin","Investment income",0,"committed",
+       {lead:true, ck:"committed", sub:"dividends, interest and realized gains"});
+  node("roth","Backdoor Roth IRA",2,"committed",{ck:"committed", sub:"funded as an annual lump"});
+  node("reinv","Stays in the brokerage",2,"committed",{ck:"light"});
+  link("invin","tax",invTax);
+  link("invin","roth",ira);
+  link("invin","reinv",Math.max(0, invIn - invTax - ira));
+
+  if(cfDepth === 1){
+    const detail = (list, from, pre) => list.forEach((g,i) => {
+      if(mo(g) <= 0.5) return;                   // a $0 line would draw a label and no ribbon
+      node(pre+i, g.n, 3, "light", {ck:"light"});
+      link(from, pre+i, mo(g));
+    });
+    detail(groups.map(g => ({n:g.n, a:g.a, c:"m"})), "fixed", "fg");
+    detail(S.invest,  "inv", "iv");
+    detail(S.savings, "sav", "sv");
+  }
+
+  N.forEach(n => {
+    const inc = L.filter(l => l.t === n.id).reduce((t,l) => t + l.v, 0);
+    const out = L.filter(l => l.s === n.id).reduce((t,l) => t + l.v, 0);
+    n.value = Math.max(inc, out);
+  });
+  // Anything that never carries a dollar is dropped whole — an empty savings
+  // list or a plan with no investment income should not leave a stub and a
+  // label behind.
+  const live = N.filter(n => n.value > 0.5);
+  const by = Object.fromEntries(live.map(n => [n.id, n]));
+  return {N: live, L: L.filter(l => by[l.s] && by[l.t]), by, gross, freeOff};
+}
+
+function cfLegend(){
+  if(!CF || !CF.N.length) return "";
+  const items = [[CFC.ink,"Reaches your account"], [CFC.tax,"Taxes"],
+                 [CFC.committed,"Invested or saved"], [CFC.neutral,"Other deductions"]];
+  if(CF.freeOff) items.push([CFC.alert,"Outside its guardrail"]);
+  return items.map(([c,t]) => `<span><i style="background:${c}"></i>${t}</span>`).join("");
+}
+
+/* Laid out against a measured width rather than a fixed viewBox: a viewBox
+   scaled to fit its column would shrink the type with it, the same trap the
+   bracket ladder fell into. Axis-side labels are real HTML text at a real
+   size and the plot is drawn at whatever width it is given. */
+let cfSeen = null, cfPaintedAt = -1;
+function cfWatch(host){
+  if(typeof ResizeObserver !== "function" || cfSeen === host) return;
+  cfSeen = host;                                  // a render replaces the node
+  new ResizeObserver(() => {
+    const w = host.clientWidth;
+    if(w > 0 && w !== cfPaintedAt) paintCashflow();
+  }).observe(host);
+}
+
+function paintCashflow(){
+  const host = document.getElementById("cfPlot");
+  if(!host || !CF) return;
+  cfWatch(host);
+  // A hidden tab measures zero. Leave the last good layout in place rather
+  // than redrawing the whole diagram at a fallback width nobody will see —
+  // but never skip the first paint, which is what the fallback is for.
+  if(host.clientWidth === 0 && host.firstChild) return;
+  cfPaintedAt = host.clientWidth;
+  const out = document.getElementById("cfReadout");
+  if(!CF.N.length){
+    host.innerHTML = `<p class="cf-empty">Enter salaries on the income plan and this fills in.</p>`;
+    if(out) out.innerHTML = "";
+    return;
+  }
+  const {N, L, by} = CF;
+  const W = Math.max(760, host.clientWidth || 900);
+  const narrow  = W < 860;
+  const NODE_W  = narrow ? 9 : 13;
+  const GAP     = narrow ? 9 : 13;
+  const cols    = [...new Set(N.map(n => n.col))].sort((a,b) => a - b);
+  const colTot  = c => N.filter(n => n.col === c).reduce((t,n) => t + n.value, 0);
+  const colCnt  = c => N.filter(n => n.col === c).length;
+  const maxTot  = Math.max(...cols.map(colTot));
+  const maxGaps = Math.max(...cols.map(c => (colCnt(c) - 1) * GAP));
+  const H       = narrow ? 520 : (cfDepth ? 620 : 500);
+  const scale   = maxTot > 0 ? (H - maxGaps) / maxTot : 0;
+
+  const gutL = narrow ? 150 : 218, gutR = narrow ? 110 : 176;
+  const innerW = W - gutL - gutR;
+  const colX = c => gutL + (cols.length > 1 ? cols.indexOf(c) * (innerW - NODE_W) / (cols.length - 1) : 0);
+
+  cols.forEach(c => {
+    const ns = N.filter(n => n.col === c);
+    const tot = ns.reduce((t,n) => t + n.value, 0) * scale + (ns.length - 1) * GAP;
+    let y = (H - tot) / 2;
+    ns.forEach(n => { n.y = y; n.h = Math.max(1.5, n.value * scale); n.x = colX(c); y += n.h + GAP; });
+  });
+
+  // Ribbon endpoints, stacked in node order at both ends so flows do not
+  // needlessly cross one another
+  N.forEach(n => { n._so = n.y; n._to = n.y; });
+  L.forEach(l => { l.src = by[l.s]; l.tgt = by[l.t]; });
+  L.sort((a,b) => a.src.y - b.src.y || a.tgt.y - b.tgt.y);
+  L.slice().sort((a,b) => a.src.col - b.src.col || a.src.y - b.src.y || a.tgt.y - b.tgt.y)
+   .forEach(l => { l.sy = l.src._so; l.src._so += l.v * scale; });
+  L.slice().sort((a,b) => a.tgt.col - b.tgt.col || a.tgt.y - b.tgt.y || a.src.y - b.src.y)
+   .forEach(l => { l.ty = l.tgt._to; l.tgt._to += l.v * scale; });
+
+  const ribbon = l => {
+    const x0 = l.src.x + NODE_W, x1 = l.tgt.x, cx = (x0 + x1) / 2;
+    const sy0 = l.sy, sy1 = l.sy + l.v * scale, ty0 = l.ty, ty1 = l.ty + l.v * scale;
+    return `M${x0},${sy0} C${cx},${sy0} ${cx},${ty0} ${x1},${ty0}`
+         + ` L${x1},${ty1} C${cx},${ty1} ${cx},${sy1} ${x0},${sy1} Z`;
+  };
+  const paint = n => CFC[n.ck] || CFC.light;
+
+  // A first-column-to-last-column flow has to cross the middle one, so the
+  // investment ribbons paint underneath and the tax ribbons on top. The
+  // original indices are kept so hover still finds the right link.
+  const layer = l => l.tgt.ck === "tax" ? 2 : (l.src.id === "invin" ? 0 : 1);
+  const svg = [`<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img"
+      aria-label="Cash flow from gross pay through to guilt-free spending">`];
+  L.map((l,i) => ({l,i})).sort((a,b) => layer(a.l) - layer(b.l)).forEach(({l,i}) => {
+    // The hairline is the ground colour: without it adjacent flows fuse into
+    // one mass, which is what hid the 401k ribbon entirely at first.
+    svg.push(`<path class="cf-rib" data-i="${i}" d="${ribbon(l)}" fill="${paint(l.tgt)}"
+      fill-opacity="${CFOP[l.tgt.tone] || .24}" stroke="#f3f2f2" stroke-width="1.25"
+      stroke-linejoin="round"><title>${esc(l.src.label)} → ${esc(l.tgt.label)}</title></path>`);
+  });
+  N.forEach(n => svg.push(`<rect class="cf-nd" data-n="${n.id}" x="${n.x.toFixed(1)}"
+      y="${n.y.toFixed(1)}" width="${NODE_W}" height="${n.h.toFixed(1)}" fill="${paint(n)}"></rect>`));
+  svg.push(`</svg>`);
+
+  // De-collision measures each label in turn: a lead figure or a sub-line is
+  // three lines, not two, and one fixed height silently overlaps.
+  const lastCol = cols[cols.length - 1];
+  const LH = n => (n.sub || n.parts) ? 54 : n.lead ? 48 : 34;
+  const byCol = {}; N.forEach(n => (byCol[n.col] = byCol[n.col] || []).push(n));
+  Object.values(byCol).forEach(list => {
+    list.sort((a,b) => (a.y + a.h/2) - (b.y + b.h/2));
+    let prev = -1e9;
+    list.forEach(n => { const h = LH(n); let cy = n.y + n.h/2;
+      if(cy - h/2 < prev) cy = prev + h/2;
+      n.lcy = cy; prev = cy + h/2; });
+    const last = list[list.length - 1];
+    const over = (last.lcy + LH(last)/2) - H;
+    if(over > 0){ const room = Math.min(over, list[0].lcy - LH(list[0])/2);
+                  if(room > 0) list.forEach(n => n.lcy -= room); }
+  });
+
+  const labels = N.map(n => {
+    const right = n.col === 0, mid = n.col > 0 && n.col < lastCol;
+    const cls = "cf-lbl" + (n.lead ? " lead" : "") + (n.alert ? " alert" : "") + (mid ? " mid" : "");
+    const room = right ? n.x - 10 : W - (n.x + NODE_W + 10);
+    const style = (right
+      ? `right:${(W - n.x + 10).toFixed(1)}px;text-align:right`
+      : `left:${(n.x + NODE_W + 10).toFixed(1)}px`)
+      + `;top:${n.lcy.toFixed(1)}px;transform:translateY(-50%);max-width:${Math.max(40, room - 1).toFixed(1)}px`;
+    const sub = n.parts ? n.parts.map(([nm,v]) => esc(nm) + " " + cfFmt(v)).join(" · ")
+              : n.sub   ? n.sub
+              : n.lead && cfUnit !== "pct" ? cfShare(n.value) : "";
+    return `<div class="${cls}" data-lbl="${n.id}" style="${style}">
+      <span class="n">${esc(n.label)}</span><span class="v">${cfFmt(n.value)}</span>${
+      sub ? `<span class="s">${sub}</span>` : ""}</div>`;
+  }).join("");
+
+  host.innerHTML = `<div class="cf-in" style="width:${W}px;height:${H}px">${svg.join("")}${labels}</div>`;
+  cfWire(host, out);
+}
+
+/* Hover only elaborates: every name and figure is already on screen as real
+   text, so nothing here is the sole route to a number. Listeners are attached
+   directly because paintCashflow owns this subtree and rebuilds it whole. */
+function cfWire(host, out){
+  const ribs = [...host.querySelectorAll(".cf-rib")];
+  const nds  = [...host.querySelectorAll(".cf-nd")];
+  const lbls = [...host.querySelectorAll(".cf-lbl")];
+  const hint = `<span>Hover over a ribbon or a block to trace it.</span>`;
+  const reset = () => {
+    ribs.concat(nds).forEach(e => e.classList.remove("cf-dim"));
+    lbls.forEach(e => e.style.opacity = "");
+    if(out) out.innerHTML = hint;
+  };
+  if(out) out.innerHTML = hint;
+  ribs.forEach(el => {
+    el.addEventListener("mouseenter", () => {
+      const l = CF.L[+el.dataset.i];
+      ribs.forEach(r => r.classList.toggle("cf-dim", r !== el));
+      nds.forEach(n => n.classList.toggle("cf-dim", n.dataset.n !== l.s && n.dataset.n !== l.t));
+      lbls.forEach(x => x.style.opacity = (x.dataset.lbl === l.s || x.dataset.lbl === l.t) ? "" : ".2");
+      if(out) out.innerHTML = `<span>${esc(l.src.label)} → <strong>${esc(l.tgt.label)}</strong></span>
+        <b>${cfFmt(l.v)}</b><span>${cfShare(l.v)}</span>`;
+    });
+    el.addEventListener("mouseleave", reset);
+  });
+  nds.forEach(el => {
+    el.addEventListener("mouseenter", () => {
+      const id = el.dataset.n, n = CF.by[id];
+      const rel = CF.L.map((l,i) => ({l,i})).filter(o => o.l.s === id || o.l.t === id).map(o => o.i);
+      ribs.forEach(r => r.classList.toggle("cf-dim", !rel.includes(+r.dataset.i)));
+      nds.forEach(x => x.classList.toggle("cf-dim", x !== el));
+      lbls.forEach(x => x.style.opacity = (x.dataset.lbl === id) ? "" : ".2");
+      const c = S.caps.free;
+      if(out) out.innerHTML = `<span><strong>${esc(n.label)}</strong></span><b>${cfFmt(n.value)}</b>
+        <span>${cfShare(n.value)}</span>${n.alert
+          ? `<span class="off">${c.rule === "max" ? `over its ${pct(c.max,0)} ceiling`
+                                                  : `under its ${pct(c.min,0)} floor`}</span>` : ""}`;
+    });
+    el.addEventListener("mouseleave", reset);
+  });
+}
+
 function dash(){
   const m = model();
   const nw = nwModel();
@@ -2478,12 +2852,11 @@ function dash(){
   }
   const rest = alerts.filter(a => a[2] !== hero.k);
 
-  const band = (val, key) => {
-    const c = S.caps[key];
-    return c.rule === "max" ? (val <= c.max) : (val >= c.min);
-  };
-  const allOk = band(m.pct.fixed,"fixed") && band(m.pct.invest,"invest")
-             && band(m.pct.savings,"savings") && band(m.pct.free,"free");
+  const allOk = inBand(m.pct.fixed,"fixed") && inBand(m.pct.invest,"invest")
+             && inBand(m.pct.savings,"savings") && inBand(m.pct.free,"free");
+
+  // Built here, laid out by paintCashflow() once the markup has a width
+  CF = cashflowGraph(m, tx);
 
   const seg = (cls,label,val,p) => `<div class="seg ${cls}" style="flex:0 0 ${Math.max(0,p*100).toFixed(2)}%" title="${label}: ${usd(val)}">${p>0.07?`<span class="pct num">${pct(p,0)}</span>`:""}</div>`;
   const leg = (cls,name,val,p,key,extra="") => {
@@ -2614,10 +2987,13 @@ function dash(){
         <p class="subhead">Federal ordinary brackets, married filing jointly</p>
         ${bracketBars(tx)}
         <div class="ratestrip">
-          <div><div class="rl">MARGINAL</div><div class="rv">${pct(tx.marginal)}</div></div>
-          <div><div class="rl">EFFECTIVE</div><div class="rv">${pct(tx.agi > 0 ? tx.totalTax/tx.agi : 0)}</div></div>
+          <div><div class="rl">MARGINAL</div><div class="rv">${pct(tx.marginal)}</div>
+               <div class="rs">on the next dollar</div></div>
+          <div><div class="rl">EFFECTIVE</div><div class="rv">${pct(tx.agi > 0 ? tx.totalTax/tx.agi : 0)}</div>
+               <div class="rs">federal + California, on AGI</div></div>
           <div><div class="rl">${tx.combinedBal >= 0 ? "REFUND" : "STILL OWED"}</div>
-               <div class="rv ${tx.combinedBal >= 0 ? "" : "bad"}">${usd(Math.abs(tx.combinedBal))}</div></div>
+               <div class="rv ${tx.combinedBal >= 0 ? "" : "bad"}">${usd(Math.abs(tx.combinedBal))}</div>
+               <div class="rs">at current withholding</div></div>
         </div>
       </div>
 
@@ -2635,6 +3011,24 @@ function dash(){
           <div class="bl"><span>Forgotten-things buffer (${pct(S.miscPct,0)})</span><b>${usd(m.misc)}</b></div>
         </div>
       </div>
+    </div>
+
+    <div class="cf-band">
+      <div class="cf-head">
+        <div>
+          <h3>Gross pay to guilt-free spending</h3>
+          <p class="subhead">Ribbon width is dollars throughout, so every proportion here is literal</p>
+        </div>
+        <div class="cf-ctrls">
+          <span class="rangebar">${[["mo","$ / mo"],["yr","$ / yr"],["pct","% of gross"]].map(([k,l])=>
+            `<button class="rangebtn${cfUnit===k?" on":""}" data-cfunit="${k}">${l}</button>`).join("")}</span>
+          <span class="rangebar">${[["0","Summary"],["1","Full detail"]].map(([k,l])=>
+            `<button class="rangebtn${cfDepth===+k?" on":""}" data-cfdepth="${k}">${l}</button>`).join("")}</span>
+        </div>
+      </div>
+      <div class="cf-plot" id="cfPlot"></div>
+      <div class="cf-readout" id="cfReadout"></div>
+      <div class="cf-legend">${cfLegend()}</div>
     </div>
   </div>
 
@@ -3847,9 +4241,9 @@ function taxview(){
           <td class="calc">${pct(t.marginalParts.niit,1)}</td><td class="calc">${pct(t.ltParts.niit,1)}</td></tr>
         <tr><td class="lab">California</td>
           <td class="calc">${pct(t.marginalParts.ca,1)}</td><td class="calc">${pct(t.ltParts.ca,1)}</td></tr>
-        <tr><td class="lab">Additional Medicare<span class="note">Applies to wages only, so investment income does not trigger it</span></td>
+        <tr><td class="lab">Additional Medicare<span class="note">Wages only — investment income does not trigger it</span></td>
           <td class="calc">${pct(t.marginalParts.addMed,1)}</td><td class="calc">—</td></tr>
-        <tr><td class="lab">Federal offset from the larger SALT deduction<span class="note">Extra California tax is itself deductible, while under the cap</span></td>
+        <tr><td class="lab">Offset from the larger SALT deduction<span class="note">California tax is itself deductible under the cap</span></td>
           <td class="calc">${pct(t.marginalParts.saltFeedback,1)}</td><td class="calc">${pct(t.ltParts.saltFeedback,1)}</td></tr>
         <tr class="total"><td>True marginal rate</td>
           <td class="calc">${pct(t.marginal)}</td><td class="calc">${pct(t.marginalLT)}</td></tr>
@@ -4110,7 +4504,7 @@ function cardsview(){
   <div class="kpis">
     <div class="kpi accent">
       <div class="eyebrow">Value captured</div>
-      <div class="v">${usd(m.totalCaptured)}</div>
+      <div class="v" style="color:${m.totalCaptured>0?"var(--pos)":"var(--ink)"}">${usd(m.totalCaptured)}</div>
       <div class="sub">${usd(m.totalUsed)} of ${usd(m.totalAvailable)} in credits${m.totalOffers>0?` · ${usd(m.totalOffers)} from offers`:""}</div>
     </div>
     <div class="kpi">
@@ -4125,7 +4519,7 @@ function cardsview(){
     </div>
     <div class="kpi">
       <div class="eyebrow">Credits less annual fees</div>
-      <div class="v" style="color:${m.net>=0?"var(--green)":"var(--red)"}">${m.net>=0?"+":"−"}${usd(Math.abs(m.net))}</div>
+      <div class="v" style="color:${m.net>=0?"var(--pos)":"var(--red)"}">${m.net>=0?"+":"−"}${usd(Math.abs(m.net))}</div>
       <div class="sub">${usd(m.totalFees)} in fees across ${m.cards.filter(c=>c.totalFee>0).length} cards</div>
     </div>
   </div>
@@ -4194,6 +4588,7 @@ function render(){
   try{ hasBackup = !!localStorage.getItem(KEY + ".backup"); }catch(_){}
   rb.hidden = !hasBackup || cloudOn();
   authUI();
+  paintCashflow();
 }
 
 // focus is the id of a section to land on rather than the top of the tab —
@@ -4376,6 +4771,11 @@ document.addEventListener("click", e=>{
   const range = e.target.closest("[data-range]");
   if(range){ nwRange = range.dataset.range; render(); return; }
 
+  const cfu = e.target.closest("[data-cfunit]");
+  if(cfu){ cfUnit = cfu.dataset.cfunit; render(); return; }
+  const cfd = e.target.closest("[data-cfdepth]");
+  if(cfd){ cfDepth = +cfd.dataset.cfdepth; render(); return; }
+
   const addnw = e.target.closest("[data-addnw]");
   if(addnw){
     const l = addnw.dataset.addnw;
@@ -4401,6 +4801,13 @@ document.addEventListener("click", e=>{
   const delnw = e.target.closest("[data-delnw]");
   if(delnw){ S.nw[delnw.dataset.delnw].splice(+delnw.dataset.i,1); touch(); save(); render(); }
 });
+
+// The diagram is laid out against a measured width, so a change of width has
+// to re-measure. The resize event is the one that matters; the observer above
+// additionally catches a first paint that landed before the column had been
+// laid out and measured zero.
+let cfResize;
+window.addEventListener("resize", ()=>{ clearTimeout(cfResize); cfResize = setTimeout(paintCashflow, 120); });
 
 function flash(msg){
   const f = document.getElementById("flash");

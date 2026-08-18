@@ -3,7 +3,7 @@ const html=fs.readFileSync(SRC,'utf8');
 const code=html.split('<script>')[1].split('</script>')[0];
 const st=new Proxy({},{get:(t,k)=>(k==='style'||k==='dataset'||k==='classList')?new Proxy({},{get:()=>()=>{}}):()=>{},set:()=>true});
 global.document={getElementById:()=>st,querySelectorAll:()=>[],querySelector:()=>null,addEventListener:()=>{},createElement:()=>st};
-global.window={scrollTo:()=>{}};global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};
+global.window={scrollTo:()=>{},addEventListener:()=>{}};global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};
 eval(code+';global.Y={S,model,nwModel};');
 const Y=global.Y, m=Y.model(), nw=Y.nwModel(), S=Y.S;
 let fails=0;

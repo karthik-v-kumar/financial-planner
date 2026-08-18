@@ -3,7 +3,7 @@ const html=fs.readFileSync(SRC,'utf8');
 const code=html.split('<script>')[1].split('</script>')[0];
 const st=new Proxy({},{get:(t,k)=>(k==='style'||k==='dataset'||k==='classList')?new Proxy({},{get:()=>()=>{}}):()=>{},set:()=>true});
 global.document={getElementById:()=>st,querySelectorAll:()=>[],querySelector:()=>null,addEventListener:()=>{},createElement:()=>st};
-global.window={scrollTo:()=>{}};global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};
+global.window={scrollTo:()=>{},addEventListener:()=>{}};global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};
 eval(code+';global.X={S,cardModel,cardsview,expiringSoon,periodsOf,currentSlot};');
 const X=global.X, m=X.cardModel();
 let f=0;const chk=(l,g,w)=>{const ok=Math.abs(g-w)<0.01;if(!ok)f++;console.log((ok?'  PASS ':'  FAIL '),l.padEnd(40),g.toFixed(2).padStart(10),'expect',w.toFixed(2));};

@@ -3,7 +3,7 @@ const html=fs.readFileSync(SRC,'utf8');
 const code=html.split('<script>')[1].split('</script>')[0];
 const st=new Proxy({},{get:(t,k)=>(k==='style'||k==='dataset'||k==='classList')?new Proxy({},{get:()=>()=>{}}):()=>{},set:()=>true});
 global.document={getElementById:()=>st,querySelectorAll:()=>[],querySelector:()=>null,addEventListener:()=>{},createElement:()=>st};
-global.window={scrollTo:()=>{}};global.location={href:'x',search:'',hash:'',pathname:'/'};
+global.window={scrollTo:()=>{},addEventListener:()=>{}};global.location={href:'x',search:'',hash:'',pathname:'/'};
 global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};global.setInterval=()=>0;global.setTimeout=f=>0;global.clearTimeout=()=>{};
 eval(code+';global.X={S,model,income,spend,checkAt};');
 const X=global.X;

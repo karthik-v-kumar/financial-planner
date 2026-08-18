@@ -112,7 +112,8 @@ devices and people, add a database.
    const SUPABASE_ANON_KEY = "eyJ...";
    ```
 
-5. Rename the file `index.html`, put `manifest.json` beside it, and deploy the
+5. Rename the file `index.html`, put `manifest.json` and the icon files beside
+   it, and deploy the
    folder anywhere static — Vercel, Netlify, GitHub Pages. On Vercel this is a
    drag and drop; there is no build step.
 6. In Supabase, set **Authentication → URL Configuration → Site URL** to the
@@ -147,7 +148,8 @@ state to a history table, so a bad overwrite is recoverable.
 |---|---|
 | `demo.html` | The app, with fictional data and no database. What the live demo serves. |
 | `supabase-setup.sql` | Database schema, access rules, and recovery recipes. Safe to publish. |
-| `manifest.json` | Icons and metadata, so it installs as an app on macOS and iOS. |
+| `manifest.json` | Metadata, so it installs as an app on macOS and iOS. |
+| `icon.svg`, `apple-touch-icon*.png`, `icon-*.png`, `favicon-*.png` | The app icon, at the sizes iOS, Android and browsers ask for. Regenerate with `node buildkit/makeicons.js .` |
 | `.gitignore` | Blocks the deployable file, which carries keys and real data, from ever being committed. |
 
 ---

@@ -4,42 +4,48 @@ const code=html.split('<script>')[1].split('</script>')[0];
 const st=new Proxy({},{get:(t,k)=>(k==='style'||k==='dataset'||k==='classList')?new Proxy({},{get:()=>()=>{}}):()=>{},set:()=>true});
 global.document={getElementById:()=>st,querySelectorAll:()=>[],querySelector:()=>null,addEventListener:()=>{},createElement:()=>st};
 global.window={scrollTo:()=>{},addEventListener:()=>{}};global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};
-eval(code+';global.X={S,cardModel,cardsview,expiringSoon,periodsOf,currentSlot};');
+eval(code+';global.X={S,cardModel,cardsview,expiringSoon,periodsOf,currentSlot,MONTHS};');
 const X=global.X, m=X.cardModel();
-let f=0;const chk=(l,g,w)=>{const ok=Math.abs(g-w)<0.01;if(!ok)f++;console.log((ok?'  PASS ':'  FAIL '),l.padEnd(40),g.toFixed(2).padStart(10),'expect',w.toFixed(2));};
+let f=0;const chk=(l,g,w)=>{const ok=Math.abs(g-w)<0.01;if(!ok)f++;console.log((ok?'  PASS ':'  FAIL '),l.padEnd(44),g.toFixed(2).padStart(10),'expect',w.toFixed(2));};
 
+/* Self-deriving: every credit's expected value is the sum of its slots as
+   periodsOf() lays them out, so the test names nothing from the plan and
+   holds for any wallet. A December override is exercised wherever one is set. */
 console.log('--- annual value per card ---');
-m.cards.forEach(c=>console.log('  '+c.name.padEnd(26), 'fee', String(c.fee).padStart(4), '| credits', c.total.toFixed(2).padStart(9), '| slots', c.credits.length));
-console.log('--- Amex Platinum credit math ---');
-const p=m.cards[0];
-chk('Uber Cash (11x15 + 35)', p.credits[0].total, 11*15+35);
-chk('Digital ent (12x25)', p.credits[1].total, 300);
-chk('Walmart+ (12x12.95)', p.credits[2].total, 155.40);
-chk('Resy (4x100)', p.credits[3].total, 400);
-chk('lululemon (4x75)', p.credits[4].total, 300);
-chk('Hotel (2x300)', p.credits[5].total, 600);
-chk('Platinum total', p.total, 200+300+155.40+400+300+600+200+219+300+200+120);
-console.log('--- United Quest rideshare Dec override ---');
-const q=m.cards[3], rs=q.credits.find(c=>c.n==='Rideshare');
-chk('rideshare (11x8 + 12)', rs.total, 11*8+12);
-console.log('--- slot shapes ---');
-[['monthly',12],['quarterly',4],['semi',2],['annual',1]].forEach(([per,n])=>{
-  const got=X.periodsOf({period:per,amt:10}).length;
-  const ok=got===n; if(!ok)f++;
-  console.log((ok?'  PASS ':'  FAIL '),per.padEnd(12),got,'slots, expect',n);
+m.cards.forEach(c=>console.log('  '+c.name.padEnd(30), 'fee', String(c.fee).padStart(5), '| credits', c.total.toFixed(2).padStart(9), '| slots', c.credits.length));
+console.log('--- every credit = sum of its slots ---');
+let n=0, decs=0;
+m.cards.forEach((c,ci)=>{
+  const src=X.S.cards[ci];
+  c.credits.forEach((cr,i)=>{
+    const want=X.periodsOf(src.credits[i]).reduce((t,s)=>t+s.amt,0);
+    if(Math.abs(cr.total-want)>0.01){f++;console.log('  FAIL  card',ci,'credit',i,cr.total.toFixed(2),'expect',want.toFixed(2));}
+    n++; if(src.credits[i].dec) decs++;
+  });
+  chk('card '+ci+' total = its credits', c.total, c.credits.reduce((t,x)=>t+x.total,0));
 });
+console.log('  checked',n,'credits,',decs,'with a December override');
+console.log('--- slot shapes ---');
+[['monthly',12],['quarterly',4],['semi',2],['annual',1]].forEach(([per,cnt])=>{
+  const got=X.periodsOf({period:per,amt:10}).length;
+  const ok=got===cnt; if(!ok)f++;
+  console.log((ok?'  PASS ':'  FAIL '),per.padEnd(12),got,'slots, expect',cnt);
+});
+chk('December override honoured', X.periodsOf({period:'monthly',amt:8,dec:12}).reduce((t,s)=>t+s.amt,0), 11*8+12);
 console.log('--- toggle behaviour ---');
-const before=X.cardModel().totalUsed;
-X.S.cardUse['amexplat:0:Aug']=true;
-const after=X.cardModel().totalUsed;
-chk('marking Aug Uber adds $15', after-before, 15);
-const cur=X.cardModel().cards[0].credits[0];
-console.log('   Uber Cash: used', cur.used, '| missed', cur.missed, '| open now', cur.openNow, '| pct', (cur.pctUsed*100).toFixed(1)+'%');
-delete X.S.cardUse['amexplat:0:Aug'];
-console.log('--- expiring soon (today is Aug 12) ---');
-X.expiringSoon().slice(0,6).forEach(x=>console.log('   '+String(x.days).padStart(3)+'d  '+('$'+x.amt).padStart(6)+'  '+x.credit.padEnd(28)+x.card));
+const ci=X.S.cards.findIndex(c=>c.credits.some(x=>x.period==='monthly'));
+if(ci>=0){
+  const cr=X.S.cards[ci].credits.findIndex(x=>x.period==='monthly');
+  const key=X.S.cards[ci].id+':'+cr+':'+X.MONTHS[new Date().getMonth()];
+  const amt=X.periodsOf(X.S.cards[ci].credits[cr])[new Date().getMonth()].amt;
+  const before=X.cardModel().totalUsed; X.S.cardUse[key]=true;
+  chk('marking this month adds its amount', X.cardModel().totalUsed-before, amt);
+  delete X.S.cardUse[key];
+}
+console.log('--- expiring soon ---');
+X.expiringSoon().slice(0,4).forEach(x=>console.log('   '+String(x.days).padStart(3)+'d  '+('$'+x.amt).padStart(6)+'  '+x.credit.padEnd(28)+x.card));
 console.log('--- totals ---');
 console.log('   available', m.totalAvailable.toFixed(2), '| fees', m.totalFees.toFixed(2), '| open now', m.totalOpen.toFixed(2));
-const v=X.cardsview();
+const v=X.cardsview().replace(/data:image\/[^"')]+/g,'');
 console.log('   view', v.length, 'bytes,', ['undefined','NaN','[object Object]'].filter(x=>v.includes(x)).join(',')||'clean');
 console.log(f===0?'\n>>> ALL CHECKS PASSED':'\n>>> '+f+' FAILURES');

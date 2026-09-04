@@ -34,15 +34,31 @@ D.notes={salary:"Annualized from current gross per paycheck",bonus:"",
   taxRate:"Fed + SS/Medicare + state, applied to TAXABLE pay — not gross",
   otherPre:"Per paycheck",otherPost:"Per paycheck"};
 
-/* ---- spending: keep the shape, generic amounts ---- */
-const fixedDemo={"Mortgage + interest":2850,"HOA":320,"Property tax":7200,
- "Electricity + Gas":240,"Trash":28,"Sewer":0,"Water":65,"Internet":70,"Phone":90,
- "Auto":2400,"Home":1200,"Guardian disability":0,"Umbrella":600,
- "Car loan":410,"Groceries + Costco":750};
-D.fixed=D.fixed.map(i=>{
-  const n=(i.n in MAP.renames)?MAP.renames[i.n]:i.n;
-  return {...i,n,a:(n in fixedDemo)?fixedDemo[n]:i.a,note:i.note};
-});
+/* ---- spending: the same groups, a generic household ---- */
+// Replaced whole, not renamed line by line: the real list is one household's
+// actual subscriptions, with notes on which card covers each. A demo anyone
+// can pick up carries none of that.
+D.fixed=[
+  {g:"Housing",       n:"Mortgage + interest",  a:2850, c:"m"},
+  {g:"Housing",       n:"HOA",                  a:320,  c:"m"},
+  {g:"Housing",       n:"Property tax",         a:7200, c:"y"},
+  {g:"Utilities",     n:"Electricity + gas",    a:240,  c:"m"},
+  {g:"Utilities",     n:"Water + sewer",        a:65,   c:"m"},
+  {g:"Utilities",     n:"Trash",                a:28,   c:"m"},
+  {g:"Utilities",     n:"Internet",             a:70,   c:"m"},
+  {g:"Utilities",     n:"Mobile phones",        a:90,   c:"m"},
+  {g:"Insurance",     n:"Auto",                 a:2400, c:"y", note:"Two cars"},
+  {g:"Insurance",     n:"Home",                 a:1200, c:"y"},
+  {g:"Insurance",     n:"Umbrella",             a:600,  c:"y"},
+  {g:"Loans & living",n:"Car loan",             a:410,  c:"m"},
+  {g:"Loans & living",n:"Groceries",            a:750,  c:"m"},
+  {g:"Subscriptions", n:"Streaming bundle",     a:32,   c:"m"},
+  {g:"Subscriptions", n:"Music",                a:11,   c:"m"},
+  {g:"Subscriptions", n:"Cloud storage",        a:10,   c:"m"},
+  {g:"Subscriptions", n:"Warehouse club",       a:65,   c:"y"},
+  {g:"Subscriptions", n:"News",                 a:0,    c:"m", note:"Covered by a card credit"},
+  {g:"Subscriptions", n:"Gym",                  a:45,   c:"m"}
+];
 D.invest=[{n:"Brokerage — automatic transfer",a:2200,c:"m",note:"Biweekly recurring deposit"},{n:"Other",a:0,c:"m"}];
 D.savings=[{n:"Travel fund",a:600,c:"m"}];
 D.iraTotal=15000;
@@ -84,6 +100,27 @@ D.nw.gains={years:["2025","2026"],rows:[{n:"Dividends",v:[5200,6800]},
  {n:"Short-term gains",v:[14000,11700]},{n:"Long-term gains",v:[22000,6000]},
  {n:"Earned income",v:[268000,295000]}]};
 
+/* ---- cards: a fictional wallet that exercises every credit period ---- */
+D.cards=[
+  {id:"travel", name:"Voyager Card", issuer:"Meridian Bank", fee:550, auFee:175, theme:"silver",
+   reset:"Calendar year", offers:true, credits:[
+     {n:"Rideshare credit",  amt:15,  period:"monthly",   dec:35, note:"Expires end of each month; $35 in December"},
+     {n:"Streaming credit",  amt:20,  period:"monthly",   note:"Eligible services only"},
+     {n:"Airline incidentals", amt:200, period:"annual",  note:"One airline, chosen each January"},
+     {n:"Hotel credit",      amt:200, period:"semi",      note:"Prepaid stays of two nights or more"},
+     {n:"Lounge day passes", amt:50,  period:"quarterly", note:"Two passes per quarter"}
+   ]},
+  {id:"dining", name:"Table Rewards", issuer:"Meridian Bank", fee:95, theme:"navy",
+   reset:"Anniversary — March", offers:true, credits:[
+     {n:"Dining credit",     amt:10,  period:"monthly",   note:"Restaurant charges only"},
+     {n:"Grocery delivery",  amt:120, period:"annual",    basis:"anniversary", note:"Anniversary year"}
+   ]},
+  {id:"cash", name:"Everyday Cash", issuer:"Northgate Credit Union", fee:0, theme:"crimson", credits:[],
+   flat:"3% groceries, 2% gas and transit, 1% elsewhere"},
+  {id:"store", name:"Warehouse Club Card", issuer:"Northgate Credit Union", fee:0, theme:"ink", credits:[],
+   flat:"4% gas, 2% at the club, 1% elsewhere", flatNote:"Fee covered by club membership"}
+];
+D.cardOffers={travel:[],dining:[]};
 D.cardUse={};
 D.updated=new Date().toISOString().slice(0,10);
 D.dataVersion=1;
@@ -101,6 +138,11 @@ out=out.replace(/const SUPABASE_URL\s*=\s*"[^"]*";/,'const SUPABASE_URL      = "
 out=out.replace(/const SUPABASE_ANON_KEY\s*=\s*"[^"]*";/,'const SUPABASE_ANON_KEY = "";');
 // card art belongs to the issuers — the styled fallbacks ship instead
 out=out.replace(/const CARD_IMG = \{[\s\S]*?\n\}/,'const CARD_IMG = {}');
+// The styled fallbacks are named after the real cards. The demo keeps four of
+// the gradients under neutral names and drops the rest of the block.
+const THEME={platinum:"silver",chase:"navy",boa:"crimson",capone:"ink"};
+out=out.split('\n').filter(l=>!/\.theme-[a-z]+/.test(l) || Object.keys(THEME).some(k=>l.includes('.theme-'+k+'{')||l.includes('.theme-'+k+' ')))
+  .map(l=>l.replace(/\.theme-([a-z]+)/g,(m,k)=>'.theme-'+(THEME[k]||k))).join('\n');
 out=out.replace('<title>Financial Plan</title>','<title>Financial Plan — Demo</title>');
 out=out.replace('<span class="wm-thin">Plan</span>','<span class="wm-thin">Plan</span><span class="demoflag">Demo data</span>');
 out=out.replace('.wm-year{','.demoflag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#201e1d;background:#bab6b6;border-radius:0;padding:3px 7px;margin-left:9px;white-space:nowrap}\n  .wm-year{');
@@ -112,7 +154,8 @@ const OUT=process.argv[3]||process.env.DEMO_OUT||path.join(__dirname,'..','demo.
    Card art is stripped above, but base64 can still coincidentally match, so
    scan the markup with data: URIs removed. */
 const scan=out.replace(/data:image\/[^"')]+/g,'');
-const leaked=(MAP.forbidden||[]).filter(t=>new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i').test(scan));
+// Whole words only — a three-letter brand was otherwise found inside "dashboard"
+const leaked=(MAP.forbidden||[]).filter(t=>new RegExp('(?<![A-Za-z0-9])'+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![A-Za-z0-9])','i').test(scan));
 // Always checked, map or no map: a JWT, or a real Supabase project subdomain.
 if(/eyJ[A-Za-z0-9_-]{20,}/.test(scan)) leaked.push('JWT/anon key');
 if(/https:\/\/[a-z0-9]{16,}\.supabase\.co/i.test(scan)) leaked.push('Supabase project URL');

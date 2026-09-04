@@ -3,7 +3,7 @@
 A household financial planning app. One HTML file, no build step, no
 framework, no dependencies to install. Open it in a browser and it runs.
 
-**[Live demo](https://your-demo-url.vercel.app)** — loaded with fictional
+**[Live demo](https://financial-planner-publicdemo.vercel.app)** — loaded with fictional
 data. Press *Start fresh* to clear it and enter your own. Nothing you type
 leaves your browser.
 

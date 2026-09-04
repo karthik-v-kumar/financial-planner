@@ -9,7 +9,7 @@ leaves your browser.
 
 ---
 
-## Two versions
+## The interface
 
 | | Interface | File | Tag |
 |---|---|---|---|

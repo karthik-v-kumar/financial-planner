@@ -1003,7 +1003,7 @@
    ============================================================ */
 const DEFAULTS = {
   "dataVersion": 1,
-  "updated": "2026-08-18",
+  "updated": "2026-09-04",
   "irsLimit": 24500,
   "iraTotal": 15000,
   "miscPct": 0.15,
@@ -1259,23 +1259,19 @@ const DEFAULTS = {
   "caps": {
     "fixed": {
       "min": 0.5,
-      "max": 0.6,
-      "rule": "max"
+      "max": 0.6
     },
     "invest": {
       "min": 0.1,
-      "max": 0.15,
-      "rule": "min"
+      "max": 0.15
     },
     "savings": {
       "min": 0.05,
-      "max": 0.1,
-      "rule": "max"
+      "max": 0.1
     },
     "free": {
       "min": 0.15,
-      "max": 0.3,
-      "rule": "max"
+      "max": 0.3
     }
   },
   "tax": {
@@ -1971,7 +1967,7 @@ const DEFAULTS = {
         561600
       ],
       [
-        "2026-08-18",
+        "2026-09-04",
         630000
       ]
     ],
@@ -2487,11 +2483,32 @@ const CFC  = {ink:"#201e1d", tax:"#b8301b", committed:"#605d5d", neutral:"#9b979
               alert:"#ec3013", light:"#d7d3d3"};
 const CFOP = {keep:.34, committed:.40, gone:.13, tax:.20, alert:.48, light:.26};
 
-// The same guardrail test the allocation ribbon and its legend use further up
-// the tab, so the two cannot end up disagreeing about what is off.
+/* Which end of each band is actually a problem. This is what the band means
+   rather than a figure to tune, so it lives here and not in the saved plan:
+   a plan saved before a correction would otherwise keep the old rule forever
+   and never see the fix, because deepFill() backfills but never overwrites.
+
+     "max"   only the ceiling matters — fixed costs under 50% is good news
+     "min"   only the floor matters   — investing or saving above the band is too
+     "band"  both ends matter         — guilt-free is a symptom either way
+
+   Every verdict on screen goes through inBand(). Three inline copies of this
+   test had drifted apart: savings read as within guardrails on the dashboard
+   ribbon while the rail beside it called the same figure under its floor. */
+const CAP_RULE = {fixed:"max", invest:"min", savings:"min", free:"band"};
+
 const inBand = (val, key) => {
-  const c = S.caps[key];
-  return c.rule === "max" ? val <= c.max : val >= c.min;
+  const c = S.caps[key], rule = CAP_RULE[key];
+  return rule === "max" ? val <= c.max
+       : rule === "min" ? val >= c.min
+       :                  val >= c.min && val <= c.max;
+};
+// How the limit reads once it is stated out loud
+const capLimit = key => {
+  const c = S.caps[key], rule = CAP_RULE[key];
+  return rule === "max" ? `ceiling ${pct(c.max,0)}`
+       : rule === "min" ? `floor ${pct(c.min,0)}`
+       :                  `${pct(c.min,0)}–${pct(c.max,0)} band`;
 };
 
 const cfFmt = v => cfUnit === "pct" ? (CF.gross ? (v/CF.gross*100).toFixed(1) : "0.0") + "%"
@@ -2789,7 +2806,11 @@ function dash(){
   if(m.pct.fixed > cap) alerts.push(["bad", `Fixed costs are ${pct(m.pct.fixed)} of take-home, <strong>${usd(m.fixedTotal - m.netTotal*cap)}</strong>/mo above the ${pct(cap,0)} ceiling.`, "fixed"]);
   else alerts.push(["ok", `Fixed costs are ${pct(m.pct.fixed)} of take-home, ${usd(m.netTotal*cap - m.fixedTotal)}/mo under the ${pct(cap,0)} ceiling.`, "fixed"]);
   if(m.free < 0) alerts.push(["bad", `Allocations exceed net income by <strong>${usd(-m.free)}</strong>/mo.`, "free"]);
-  if(m.pct.savings < S.caps.savings.min) alerts.push(["warn",
+  else if(m.pct.free < S.caps.free.min) alerts.push(["warn",
+    `Guilt-free spending is ${pct(m.pct.free)} of take-home, under the ${pct(S.caps.free.min,0)} floor. <strong>${usd(m.netTotal*S.caps.free.min - m.free)}/mo</strong> is committed that the band says should be loose.`, "free"]);
+  else if(m.pct.free > S.caps.free.max) alerts.push(["warn",
+    `Guilt-free spending is ${pct(m.pct.free)} of take-home, over the ${pct(S.caps.free.max,0)} ceiling. <strong>${usd(m.free - m.netTotal*S.caps.free.max)}/mo</strong> could be moved into savings or investing.`, "free"]);
+  if(!inBand(m.pct.savings,"savings")) alerts.push(["warn",
     `Savings sits at ${pct(m.pct.savings)}, under the ${pct(S.caps.savings.min,0)} floor. <strong>${usd(m.netTotal*S.caps.savings.min - m.savingsTotal)}/mo</strong> closes it.`, "savings"]);
 
   m.P.filter(p=>p.raisePending).forEach(p=>alerts.push(["warn",
@@ -2847,6 +2868,9 @@ function dash(){
     hero = {t:"Needs attention",
             l:`${nearest.length === 1 ? "One credit" : nearest.length + " credits"} worth ${usd(sum(nearest,x=>x.amt))} close in ${nearest[0].days} days`,
             s:`${usd(cm.totalMissed)} has already closed unused this year. ${usd(cm.totalOpen)} is still open.`, go:"cards", cta:"Open card benefits"};
+  } else if(m.pct.free < S.caps.free.min){
+    hero = {k:"free", t:"Nothing loose", l:`Guilt-free spending is only ${pct(m.pct.free)} of take-home`,
+            s:`${usd(m.free)} a month against a ${pct(S.caps.free.min,0)} floor of ${usd(m.netTotal*S.caps.free.min)}. Everything else is committed.`, go:"spend", cta:"Open spending plan"};
   } else if(savingsShort > 0){
     hero = {k:"savings", t:"Under the floor", l:`Savings sits ${usd(savingsShort)}/mo under the ${pct(S.caps.savings.min,0)} floor`,
             s:`${usd(m.savingsTotal)} a month against ${usd(m.netTotal*S.caps.savings.min)} — the floor is ${pct(S.caps.savings.min,0)} of take-home.`, go:"spend", cta:"Open spending plan"};
@@ -2864,7 +2888,7 @@ function dash(){
 
   const seg = (cls,label,val,p) => `<div class="seg ${cls}" style="flex:0 0 ${Math.max(0,p*100).toFixed(2)}%" title="${label}: ${usd(val)}">${p>0.07?`<span class="pct num">${pct(p,0)}</span>`:""}</div>`;
   const leg = (cls,name,val,p,key,extra="") => {
-    const c = S.caps[key], ok = c.rule === "max" ? p <= c.max : p >= c.min;
+    const c = S.caps[key], ok = inBand(p, key);
     return `<div class="l-${cls}">
       <div class="name">${name}</div>
       <span class="amt">${usd(val)}</span>
@@ -3243,8 +3267,8 @@ function spend(){
   // Guardrail band shown on every section header, so each cap is stated explicitly
   const band = (key,val,over) => {
     const c = S.caps[key];
-    const ok = over !== undefined ? !over : (c.rule==="max" ? val<=c.max : val>=c.min);
-    const limit = c.rule==="max" ? `ceiling ${pct(c.max,0)}` : `floor ${pct(c.min,0)}`;
+    const ok = over !== undefined ? !over : inBand(val, key);
+    const limit = capLimit(key);
     return `<span class="caprule">target ${pct(c.min,0)}–${pct(c.max,0)} of take-home · ${limit}</span>
             <span class="tag ${ok?"ok":"bad"}">${pct(val)} now</span>`;
   };
@@ -3313,7 +3337,7 @@ function spend(){
   </div>
 
   <div class="card" style="margin-top:14px">
-    <h3>Guilt-free spending ${band("free",m.pct.free, m.free<0 || m.pct.free>S.caps.free.max)}</h3>
+    <h3>Guilt-free spending ${band("free",m.pct.free, m.free<0 || !inBand(m.pct.free,"free"))}</h3>
     <table>
       <tbody>
         <tr><td class="lab">Dining, clothes, activities, everything else<span class="note">Whatever is left in checking each month</span></td>

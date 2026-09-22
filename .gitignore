@@ -27,4 +27,7 @@ files.zip
 node_modules/
 
 # Local preview server config — points at the parent dir, which holds real data
-.claude/
+.claude/*
+# ...except the shared commit rules, which every session needs
+!.claude/settings.json
+!.claude/CLAUDE.md

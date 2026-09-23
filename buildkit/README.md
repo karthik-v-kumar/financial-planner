@@ -16,16 +16,22 @@ With no argument it looks for `../finance-planner.html`.
 Each takes the source file as its first argument (or the `PLANNER_SRC` env
 var), defaulting to `finance-planner.html` in the current directory.
 
-- `makedemo.js`  — writes a sanitized `demo.html` next to the source
+- `makedemo.js`  — writes a sanitized `demo.html` into the repo
                    (fictional data, no keys, no card art). This is the ONLY
-                   HTML that belongs in the public repo.
-- `verify.js`    — income and spending totals
-- `ratecheck.js` — tax engine (self-deriving, no hardcoded expected values)
+                   HTML that belongs in the public repo. It aborts without
+                   writing if a replacement's target has moved in the source,
+                   or if any term in `demo-map.local.json` survives.
+- `verify.js`    — paychecks, paystub withholding, 401k, spending and net worth totals
+- `ratecheck.js` — tax engine
 - `cardcheck.js` — card credits and offers
 - `raisecheck.js`— mid-year raise math
 - `phaseout.js`  — SALT and California itemized phase-outs
+- `_app.js`      — loads the app under Node for the tests, with the database off
 
-Each test prints `>>> ALL CHECKS PASSED` on success.
+Every test derives its expected values from the plan's own inputs, so none
+names a figure from the plan, and each holds for the live file and the demo
+alike. `build.sh` runs them against both. Each prints `>>> ALL CHECKS PASSED`
+on success.
 
 ## The one rule
 

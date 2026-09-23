@@ -4,8 +4,8 @@ A household financial planning app. One HTML file, no build step, no
 framework, no dependencies to install. Open it in a browser and it runs.
 
 **[Live demo](https://financial-planner-publicdemo.vercel.app)** — loaded with fictional
-data. Press *Start fresh* to clear it and enter your own. Nothing you type
-leaves your browser.
+data. Edit anything; it saves to your browser and nothing you type leaves it.
+*Settings → Export JSON* downloads the plan and *Import JSON* loads one back.
 
 ---
 
@@ -22,28 +22,43 @@ V1, the original navy-and-moss interface, is no longer carried here.
 ## What it does
 
 Six tabs, each fed by the others so a figure is entered once and flows
-everywhere it matters.
+everywhere it matters. A year picker in the masthead governs all of them but
+net worth: everything that resets in January — pay, the budget, the tax
+picture, card credits used — is kept per calendar year, a new year opens from
+the last one's shape on January 1, and a closed year stays as its record.
+Years before the plan began hold just the headline figures of the return as
+filed.
 
 **Dashboard** — net income, savings rate, fixed-cost share and a ribbon
 showing where every dollar goes against 50/60/10/30 guardrails, plus charts
-for the federal bracket the next dollar falls in and what net worth is
-actually made of. A rail down the right ranks everything competing for
+for the federal bracket the next dollar falls in (with the all-in marginal
+rate broken into its pieces) and what net worth is actually made of. A cash
+flow Sankey traces gross pay through taxes, 401k and deductions to each
+spending band, by the month, the year or share of gross; tap a ribbon on a
+phone to trace it, where it also redraws as a stacked ledger. A rail down the right ranks everything competing for
 attention and gives the single most urgent item — a 401k running over the
 IRS limit, fixed costs through their ceiling, card credits about to expire —
 the one red block on the page, along with a what-if for moving money into
 savings that recalculates without touching the saved plan.
 
 **Income plan** — per-paycheck take-home built up line by line: gross, 401k
-deferral, pre-tax deductions, tax, after-tax deductions. Handles a mid-year
+deferral, pre-tax deductions, tax, after-tax deductions. Each person's latest
+paystub is entered once, laid out like the stub itself — federal, California
+and FICA withholding per check and year to date, 401k so far, paychecks
+remaining, any bonus still to come at the supplemental rates — and the 401k
+tracker and the whole tax tab read it rather than asking again. The
+withholding rate is derived from the stub, and payroll drifting from the
+salary figures shows up as a number rather than a surprise. Handles a mid-year
 raise, splitting the year between two salaries so annual figures blend both
 while the monthly figure tracks the rate now in effect. Includes a 401k
 contribution recommender that works forward from what has already been
 contributed, so its answer and the limit tracker can never contradict each
 other.
 
-**Spending plan** — fixed costs by category with a configurable buffer for
-things you forget, then investing, savings, and guilt-free spending as the
-remainder. Each section is measured against its guardrail band.
+**Spending plan** — one flow of money, income first: fixed costs by category
+with a configurable buffer for things you forget, then investing, savings, and
+guilt-free spending as the remainder, each card handing what is left to the
+next. Each section is measured against its guardrail band.
 
 **Tax planning** — a real return, not a flat effective rate. Progressive
 federal brackets, the preferential rate stacked on top of ordinary income,
@@ -62,7 +77,9 @@ use is recorded. Marks what closed unused, and surfaces what expires soonest
 on the dashboard.
 
 **Net worth** — assets, cash and investments, and debt, with a logged
-history charted over time.
+history charted over time; drag or tap along the line for the value on any
+date and the change since the reading before. An income-and-tax-by-year table
+reads each year off the tax tab, or off the filed return for earlier years.
 
 ---
 
@@ -132,9 +149,16 @@ that must never appear in a published file.
 
 Both people edit one plan. Saves are debounced about a second after typing
 stops. The app polls every 45 seconds for the other person's changes and
-pulls them in, without interrupting an edit in progress. Same-field
-collisions resolve last-write-wins, and every save snapshots the previous
-state to a history table, so a bad overwrite is recoverable.
+pulls them in, without interrupting an edit in progress. A save only lands on
+the version it was made against; if someone else saved in between, this
+device's edits are merged over the newer copy (whatever only one side changed
+is kept; where both changed the same value, the device saving wins) and it
+tries again. Every save snapshots the previous state to a history table, so a
+bad overwrite is recoverable.
+
+With no connection the app keeps working. *Continue offline* holds edits on
+the device, the sync light says they are waiting, and they upload when the
+connection returns — asking first if the shared plan moved on meanwhile.
 
 ---
 

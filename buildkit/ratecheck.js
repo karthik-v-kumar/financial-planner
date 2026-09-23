@@ -1,12 +1,4 @@
-const fs=require('fs');const SRC=process.argv[2]||process.env.PLANNER_SRC||'finance-planner.html';
-const html=fs.readFileSync(SRC,'utf8');
-const code=html.split('<script>')[1].split('</script>')[0];
-const st=new Proxy({},{get:(t,k)=>(k==='style'||k==='dataset'||k==='classList')?new Proxy({},{get:()=>()=>{}}):()=>{},set:()=>true});
-global.document={getElementById:()=>st,querySelectorAll:()=>[],querySelector:()=>null,addEventListener:()=>{},createElement:()=>st};
-global.window={scrollTo:()=>{},addEventListener:()=>{}};global.location={href:'x',search:'',hash:'',pathname:'/'};
-global.localStorage={getItem:()=>null,setItem:()=>{},removeItem:()=>{}};global.confirm=()=>false;global.Blob=class{};global.URL={createObjectURL:()=>'',revokeObjectURL:()=>{}};global.FileReader=class{};global.setInterval=()=>0;global.setTimeout=f=>0;global.clearTimeout=()=>{};
-eval(code+';global.X={S,taxModel,taxview,TPF,TPC,TP,saltCapAt,saltFloorAt};');
-const X=global.X;
+const X=require('./_app')(["S","taxModel","taxview","TPF","TPC","TP","saltCapAt","saltFloorAt"]);
 let f=0;const chk=(l,g,w,tol=0.02)=>{const ok=Math.abs(g-w)<=tol;if(!ok)f++;
   console.log((ok?'  PASS ':'  FAIL '),l.padEnd(38),g.toFixed(2).padStart(12),'expect',w.toFixed(2));};
 

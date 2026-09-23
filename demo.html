@@ -86,6 +86,7 @@
   }
   .wm-thin{margin-left:.34em}
   .demoflag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#201e1d;background:#bab6b6;border-radius:0;padding:3px 7px;margin-left:9px;white-space:nowrap}
+  @media (max-width:820px){.demoflag{display:block;width:max-content;margin:4px 0 0;font-size:8px;padding:2px 6px}}
   .wm-year{
     font-size:11px;font-weight:500;letter-spacing:.16em;color:#9b9797;
   }
@@ -105,6 +106,8 @@
   .syncbadge.saving{color:#bab6b6;border-color:rgba(243,242,242,.3)}
   .syncbadge.error{color:#fff;background:var(--accent);border-color:var(--accent)}
   .syncbadge.signedout{color:#9b9797}
+  /* Edits are safe on this device but the shared copy has not seen them yet */
+  .syncbadge.pending{color:var(--ink);background:#ffc9a8;border-color:#ffc9a8}
   /* `hidden` must win over the display:flex below, or the overlay never goes away */
   .authgate[hidden]{display:none !important}
   .authgate{
@@ -135,12 +138,79 @@
   }
   .offlinebtn:hover{border-color:var(--ink);color:var(--ink)}
   .offlinebtn[hidden]{display:none}
+  /* Settings → Agent API. The same square card as sign-in, over a dimmed page
+     rather than the solid gate, since the plan stays open behind it. */
+  .apigate[hidden]{display:none !important}
+  .apigate{
+    position:fixed;inset:0;z-index:150;display:flex;align-items:flex-start;justify-content:center;
+    background:rgba(32,30,29,.62);padding:72px 16px 24px;overflow-y:auto;
+  }
+  .apibox{background:var(--card);max-width:520px;width:100%;padding:24px 24px 22px;border:1px solid var(--ink)}
+  .apihead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .apihead h2{font-family:var(--serif);font-size:20px;font-weight:800;letter-spacing:-.01em;margin:0;color:var(--ink)}
+  .apiclose{font:inherit;font-size:22px;line-height:1;background:transparent;border:0;cursor:pointer;color:var(--muted);padding:2px 6px}
+  .apiclose:hover{color:var(--ink)}
+  .apilede{font-size:13px;color:var(--muted);margin:6px 0 16px;line-height:1.5}
+  .apirow{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:11px 0;border-top:1px solid var(--rule)}
+  .apirow:last-child{border-bottom:1px solid var(--rule)}
+  .apirow b{font-size:14px;color:var(--ink)}
+  .apirow .apimeta{grid-column:1;font-size:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .apirow .apimeta .tag{font-size:10.5px}
+  .apirow.off b{color:var(--muted);font-weight:600}
+  .apirow button{grid-row:1 / span 2;grid-column:2}
+  .apiempty{font-size:13px;color:var(--muted);padding:12px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .apibtn{font:inherit;font-size:12.5px;font-weight:700;padding:8px 14px;cursor:pointer;border-radius:0;
+    background:transparent;border:1px solid var(--rule-2);color:var(--ink)}
+  .apibtn:hover{border-color:var(--ink)}
+  .apibtn.go{background:var(--accent);border-color:var(--accent);color:#fff}
+  .apibtn.go:hover{background:#dd2b0f}
+  .apibtn:disabled{opacity:.55;cursor:default}
+  .apiadd{margin-top:18px}
+  .apiadd label{display:block;font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .apiline{display:flex;gap:8px}
+  .apiline input{flex:1;min-width:0;font:inherit;font-size:14px;padding:8px 11px;border:1px solid var(--rule-2);border-radius:0;background:#f8f4f4}
+  .apiline input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:#fff}
+  .apirow .apiacts{grid-row:1 / span 2;grid-column:2;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .apirow .apiacts button{grid-row:auto;grid-column:auto}
+  .tag.write{background:#fff0e0;color:#8a3b00}
+  .apiact{margin-top:22px}
+  .apiacthead{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);margin-bottom:6px}
+  .apichg{display:grid;grid-template-columns:1fr auto;gap:2px 12px;align-items:center;padding:9px 0;border-top:1px solid var(--rule)}
+  .apichg:last-child{border-bottom:1px solid var(--rule)}
+  .apichg span{font-size:13px;color:var(--ink);line-height:1.35}
+  .apichg small{grid-column:1;font-size:11.5px;color:var(--muted)}
+  .apichg button{grid-row:1 / span 2;grid-column:2}
+  .apichg.undone span{color:var(--muted);text-decoration:line-through}
+  .apiactnote{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.45}
+  .apinew{margin-top:16px;padding:14px;background:#fff4ef;border:1px solid #ffc9a8}
+  .apinew[hidden]{display:none}
+  .apinew p{font-size:12.5px;color:var(--ink);margin:0 0 10px;line-height:1.45}
+  .apinew input{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;background:#fff}
   .authalt{margin-top:18px;padding-top:16px;border-top:1px solid var(--rule)}
   .authalt > span{font-size:11.5px;color:var(--muted);display:block;margin-bottom:9px}
   .authcode{display:flex;gap:8px}
   .authcode input{margin:0;flex:1;font-family:var(--mono);letter-spacing:.24em;text-align:center}
   .authbtn.small{width:auto;padding:11px 18px;font-size:13px}
-  .toolbar{margin-left:auto;display:flex;gap:6px}
+  .settings{margin-left:auto;position:relative;z-index:30}
+  .setbtn{display:flex;align-items:center;gap:7px}
+  .setbtn[aria-expanded="true"]{color:#fff;border-color:rgba(243,242,242,.5)}
+  .setmenu[hidden]{display:none}
+  .setmenu{
+    position:absolute;right:0;top:calc(100% + 8px);min-width:250px;
+    background:var(--card);color:var(--text);border:1px solid var(--ink);
+    box-shadow:0 10px 28px rgba(32,30,29,.28);padding:6px 0;
+  }
+  .set-who{
+    font-size:11.5px;color:var(--muted);padding:8px 16px 10px;margin-bottom:4px;
+    border-bottom:1px solid var(--rule);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .setmenu button{
+    display:block;width:100%;text-align:left;font:inherit;font-size:13px;font-weight:600;color:var(--ink);
+    background:transparent;border:0;border-radius:0;padding:9px 16px;cursor:pointer;
+  }
+  .setmenu button[hidden]{display:none}
+  .setmenu button span{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:1px}
+  .setmenu button:hover, .setmenu button:focus-visible{background:#f3f2f2;outline:none}
   .btn{
     font:inherit;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#bab6b6;
     background:transparent;border:1px solid rgba(243,242,242,.22);border-radius:0;
@@ -168,6 +238,36 @@
   /* Six full tab names do not fit a phone. Rather than leave the row to
      scroll with the last one cut off mid-word, each carries a short form. */
   .lbl-abbr{display:none}
+
+  /* The year every tab is showing. Sits with the tabs because it governs
+     all of them but net worth, and reads as one more item in that row. */
+  .yearpick{display:flex;align-items:center;gap:7px;flex:0 0 auto;cursor:pointer}
+  .yp-phone{display:none}
+  .yp-lab{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7d7979}
+  .yearpick select{
+    font:inherit;font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;cursor:pointer;
+    background:transparent;border:1px solid rgba(243,242,242,.3);border-radius:0;
+    padding:3px 24px 3px 8px;-webkit-appearance:none;appearance:none;
+    background-image:linear-gradient(45deg,transparent 50%,#bab6b6 50%),linear-gradient(135deg,#bab6b6 50%,transparent 50%);
+    background-position:right 11px center,right 7px center;background-size:4px 4px;background-repeat:no-repeat;
+  }
+  .yearpick select:hover{border-color:rgba(243,242,242,.6)}
+  .yearpick select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .yearpick option{color:#201e1d;background:#fff}
+  /* Shown whenever a year other than the current one is on screen, so a
+     closed year is never edited by mistake for this one */
+  .yearnote[hidden]{display:none}
+  .yearnote{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding:9px 14px;
+    background:#ffe9dc;border-left:3px solid var(--accent);font-size:12.5px;color:var(--ink);
+  }
+  .yearnote button{
+    margin-left:auto;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;
+    background:transparent;border:1px solid var(--ink);border-radius:0;padding:3px 10px;color:var(--ink);
+  }
+  .yearnote button:hover{background:var(--ink);color:#fff}
+  .approx{color:var(--muted);font-weight:500}
+  .callout a{color:inherit;text-decoration:underline;text-decoration-color:var(--muted);text-underline-offset:2px}
 
   /* Live net worth readout — the masthead ornament is the data itself */
   .ticker{
@@ -232,9 +332,13 @@
     position:sticky;top:100px;z-index:10;background:var(--paper);
     border-top:2px solid rgba(32,30,29,.4);margin-bottom:20px;
   }
+  /* The pinned row brings its own top rule; directly under a page heading
+     that would be a second line a few pixels below the first */
+  .pagehead:has(+ .kpis.sticky){border-bottom:0;margin-bottom:0}
   .kpi{padding:22px 22px 24px;border-left:1px solid var(--rule-2)}
-  .kpi:first-child{padding-left:0;border-left:0}
-  .kpi:last-child{padding-right:0}
+  /* Every tile keeps the same inset, the first and last included, so the
+     label, figure and note sit in the same place in each */
+  .kpi:first-child{border-left:0}
   .kpi .v{
     font-family:var(--mono);font-weight:800;font-size:38px;letter-spacing:-.03em;
     margin-top:8px;color:var(--ink);line-height:1;
@@ -246,29 +350,42 @@
   .kpi.accent{box-shadow:inset 0 3px 0 var(--accent)}
 
   /* signature: allocation ribbon */
-  .ribbon-wrap{position:relative;margin:26px 0 0}
+  /* The cap's label hangs 28px above the bar, so the gap under the heading
+     has to be taller than that or the label runs into the guardrail tag */
+  .ribbon-wrap{position:relative;margin:40px 0 0}
   .ribbon{display:flex;height:44px;border-radius:0}
-  .seg{position:relative;display:flex;align-items:center;min-width:0;padding-left:12px;transition:flex-basis .5s cubic-bezier(.2,.7,.3,1)}
-  .seg .pct{font-family:var(--mono);font-weight:700;font-size:13px;color:#f3f2f2}
+  .seg{position:relative;display:flex;align-items:center;min-width:0;transition:flex-basis .5s cubic-bezier(.2,.7,.3,1);container-type:inline-size}
+  .seg .pct{font-family:var(--mono);font-weight:700;font-size:13px;color:#f3f2f2;padding-left:12px;white-space:nowrap}
+  /* Every segment carries its figure; whether it shows is decided by the
+     segment's own measured width, not by a share threshold. A 7% savings
+     band is 56px on a desktop and 25px on a phone: the figure fits both,
+     centred once the left padding no longer does. */
+  @container (max-width:48px){ .seg .pct{padding-left:0;margin:0 auto} }
+  @container (max-width:21px){ .seg .pct{display:none} }
   .seg-fixed{background:#201e1d}
   .seg-invest{background:#605d5d}
   .seg-save{background:#9b9797}
   .seg-free{background:#d7d3d3}
   .seg-free .pct{color:var(--ink)}
+  .seg.off .pct{color:var(--accent-400)}
+  .seg-free.off .pct{color:var(--red)}
   .cap{position:absolute;top:-12px;bottom:-12px;width:2px;background:var(--accent);z-index:3}
   .cap::after{
     content:attr(data-label);position:absolute;top:-16px;left:6px;white-space:nowrap;
     font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);font-weight:700;
   }
   .legend{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:22px}
-  .legend div{border-top:2px solid var(--rule-2);padding-top:9px}
-  .legend div.l-fixed{border-top-color:#201e1d}
-  .legend div.l-invest{border-top-color:#605d5d}
-  .legend div.l-save{border-top-color:#9b9797}
-  .legend div.l-free{border-top-color:#d7d3d3}
-  .legend .name{font-size:12px;font-weight:600;color:var(--ink)}
-  .legend .amt{font-family:var(--mono);font-weight:800;font-size:19px;margin-top:3px;display:block}
-  .legend .lab{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+  /* Direct children only. A bare `.legend div` also matched the <div class="name">
+     inside each band, so every band drew its coloured rule and then a second
+     grey one directly under it — four doubled lines, at every width. */
+  .legend > div{border-top:2px solid var(--rule-2);padding-top:9px}
+  .legend > div.l-fixed{border-top-color:#201e1d}
+  .legend > div.l-invest{border-top-color:#605d5d}
+  .legend > div.l-save{border-top-color:#9b9797}
+  .legend > div.l-free{border-top-color:#d7d3d3}
+  .legend .name{font-size:13px;font-weight:600;color:var(--ink)}
+  .legend .amt{font-family:var(--mono);font-weight:800;font-size:22px;margin-top:3px;display:block}
+  .legend .lab{font-size:12.5px;color:var(--muted);display:block;margin-top:2px}
   .legend .lab.off{color:var(--red)}
 
   /* minmax(0,…) rather than a bare 1fr throughout. A bare 1fr is
@@ -291,7 +408,7 @@
   .dashmain .grid2 > .card:first-child{padding-left:0}
   .dashmain .grid2 > .card:last-child{border-right:0;padding-right:0}
   .dashmain .card h3{margin-bottom:4px}
-  .subhead{font-size:11.5px;color:var(--muted);margin:0 0 16px}
+  .subhead{font-size:12.5px;color:var(--muted);margin:0 0 16px}
 
   /* Net worth trend, sitting beside its composition in the first band */
   .trendbig{font-family:var(--mono);font-weight:800;font-size:34px;letter-spacing:-.03em;margin-top:2px}
@@ -302,7 +419,9 @@
   /* The chart frame. The plot stretches to whatever box it is given while the
      axis labels stay real text at a real size — see chart() for why. */
   .nwchart{margin:20px 0 0;padding-left:52px}
-  .nwc-area{position:relative;height:var(--plot-h,200px)}
+  /* pan-y so a vertical swipe still scrolls the page; a horizontal drag scrubs */
+  .nwc-area{position:relative;height:var(--plot-h,200px);touch-action:pan-y}
+  .nwc-area:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:2px}
   .nwc-area svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
   .nwc-grid{position:absolute;left:0;right:0;border-top:1px solid var(--rule);pointer-events:none}
   .nwc-grid.base{border-top-color:var(--rule-2)}
@@ -314,6 +433,26 @@
     position:absolute;width:8px;height:8px;border-radius:50%;background:var(--accent);
     transform:translate(-50%,-50%);
   }
+  /* Scrubbing readout. The rule spans the plot so the eye can carry the
+     point down to the date axis, and the marker sits on the stroke itself. */
+  .nwc-rule{
+    position:absolute;top:0;bottom:0;width:1px;background:var(--ink-2);opacity:.3;
+    transform:translateX(-50%);pointer-events:none;
+  }
+  .nwc-mark{
+    position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);
+    box-shadow:0 0 0 2.5px var(--card);transform:translate(-50%,-50%);pointer-events:none;
+  }
+  .nwc-tip{
+    position:absolute;z-index:3;pointer-events:none;white-space:nowrap;
+    background:var(--ink);color:#fff;border-radius:6px;padding:5px 8px;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;
+    font-size:11.5px;font-weight:700;line-height:1.3;
+    box-shadow:0 2px 10px rgba(32,30,29,.22);
+  }
+  .nwc-tip em{display:block;font-style:normal;font-weight:500;font-size:10.5px;opacity:.75;margin-top:1px}
+  .nwc-tip .up{color:#7ee2b0}
+  .nwc-tip .down{color:#ffa593}
   .nwc-x{position:relative;height:15px;margin-top:7px}
   .nwc-x span{
     position:absolute;transform:translateX(-50%);white-space:nowrap;
@@ -382,7 +521,13 @@
   .railbody{padding:22px 0 0 24px}
   .railsec{border-top:2px solid rgba(32,30,29,.4);margin-top:18px;padding-top:16px}
   .railsec:first-child{border-top:0;margin-top:0;padding-top:0}
-  .railsec .eyebrow{display:block;margin-bottom:10px}
+  /* These name sections of the dashboard, so they are set like the heading
+     over the cash flow band rather than in the small caps the app uses for
+     field labels — same size, weight and tracking as .cf-head h3. */
+  .railsec h3{
+    font-family:var(--serif);font-size:17px;font-weight:800;letter-spacing:-.01em;
+    margin:0 0 10px;
+  }
   .railnote{padding:11px 0;border-bottom:1px solid var(--rule);font-size:12.5px;line-height:1.5}
   .railnote:last-child{border-bottom:0}
   .railnote strong{font-weight:700}
@@ -420,13 +565,14 @@
     color:var(--red);margin-top:14px;
   }
   .ratestrip{display:flex;gap:20px;border-top:1px solid var(--rule-2);padding-top:12px;margin-top:12px}
-  .ratestrip > div{min-width:0}
+  .ratestrip > div{min-width:0;flex:1 1 0}
   /* Named, because "effective" alone does not say federal-and-California
      over AGI, and a combined rate reads high against a federal-only one. */
   .ratestrip .rs{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.3}
   .ratestrip .rl{font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
   .ratestrip .rv{font-family:var(--mono);font-weight:800;font-size:20px}
   .ratestrip .rv.bad{color:var(--red)}
+  .ratemix{font-size:11px;color:var(--muted);margin-top:10px;font-family:var(--mono)}
   .stackbar{display:flex;height:26px;margin-bottom:8px}
   .complist{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
   .complist:last-child{margin-bottom:0}
@@ -483,10 +629,37 @@
     display:flex;align-items:baseline;gap:10px;min-height:26px;margin-top:16px;
     border-top:1px solid var(--rule-2);padding-top:12px;font-size:12.5px;color:var(--muted);
   }
+  .cf-readout[hidden]{display:none}
   .cf-readout b{font-family:var(--mono);font-size:14px;font-weight:800;color:var(--ink);
                 font-variant-numeric:tabular-nums}
   .cf-readout .off{margin-left:auto;font-size:10.5px;letter-spacing:.1em;
                    text-transform:uppercase;font-weight:700;color:var(--red)}
+  /* The phone form of the Sankey. Four columns of ribbon cannot mean anything
+     at 390px, and scrolling a diagram sideways hides most of it. The same
+     graph is read out instead as a cascade: each source, then where its
+     dollars go, with a bar under every line whose length is its share of
+     gross pay — so the proportions stay literal, just stacked. */
+  .cf-stack{display:flex;flex-direction:column;gap:24px;margin-top:4px}
+  .cf-src-h{
+    display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding-bottom:7px;border-bottom:2px solid var(--ink);
+  }
+  .cf-src-h .n{font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+  .cf-src-h .v{font-family:var(--mono);font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .cf-src-s{font-size:12px;color:var(--muted);margin:5px 0 0}
+  .cf-row{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 12px;align-items:baseline;
+    padding:9px 0 8px;border-bottom:1px solid var(--rule);
+  }
+  .cf-row .n{font-size:13.5px;display:flex;align-items:center;gap:9px;min-width:0}
+  .cf-row .n i{width:9px;height:9px;flex:none;display:inline-block}
+  .cf-row .v{font-family:var(--mono);font-weight:700;font-size:13.5px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .cf-row .bar{grid-column:1 / span 2;height:5px;background:var(--rule);margin-top:2px}
+  .cf-row .bar i{display:block;height:100%}
+  .cf-row .s{grid-column:1 / span 2;font-size:11.5px;color:var(--muted)}
+  .cf-row.onward .n{font-weight:700}
+  .cf-row.alert .v,.cf-row.alert .s{color:var(--red);font-weight:700}
+  .subhead.stacked{display:none}
   .cf-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:11.5px;color:var(--muted)}
   .cf-legend span{display:inline-flex;align-items:center;gap:7px}
   .cf-legend i{width:10px;height:10px;display:inline-block;flex:none}
@@ -525,7 +698,38 @@
     color:var(--blue);background:#f0f5fd;border:1px solid #c3d6f0;border-radius:0;
     padding:4px 8px;width:104px;text-align:right;
   }
-  input.cell.wide{width:100%;text-align:left;font-weight:400}
+  /* Left-aligned text cells sit in columns that change width with the layout,
+     so any fixed allocation clips at some size. An ellipsis says the value is
+     longer than the box, and focusing the field still scrolls to all of it —
+     which is better at every width than a name cut mid-letter. */
+  input.cell.wide{width:100%;text-align:left;font-weight:400;text-overflow:ellipsis}
+  /* Spending plan: the long fixed-costs ledger on the left, the short
+     sections stacked beside it. The last row is flexible so the ledger's
+     extra height lands there rather than as gaps between the right cards.
+     One column, in reading order, once the two would be cramped. */
+  .spendgrid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+  @media (min-width:1100px){
+    .spendgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto auto 1fr;align-items:start}
+    .spendgrid > .card{grid-column:2}
+    .spendgrid > .sp-income{grid-column:1 / -1;grid-row:1}
+    .spendgrid > .sp-fixed{grid-column:1;grid-row:2 / span 4}
+  }
+  /* The money moves through the tab in order: numbered steps, and each
+     card ends by handing what is left to the next one */
+  .step{
+    display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+    width:20px;height:20px;margin-right:9px;background:var(--ink);color:#fff;
+    font-family:var(--mono);font-size:11px;font-weight:700;border-radius:50%;
+  }
+  .incstrip{display:flex;align-items:flex-start;gap:6px 22px;flex-wrap:wrap;margin-top:6px}
+  .incstrip .inc{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .incstrip .inc b{font-size:20px;font-weight:800;color:var(--ink)}
+  .incstrip .inc.net b{font-size:24px}
+  .incstrip .note{font-size:11px;color:var(--muted)}
+  .incstrip .op{font-family:var(--mono);font-size:20px;color:var(--muted);align-self:center;padding-top:6px}
+  tr.handoff td{color:var(--moss);font-weight:700;border-top:1px solid var(--rule-2);padding-top:9px}
+  tr.handoff td:first-child{text-align:right}
+  tr.handoff .to{font-family:var(--mono);font-size:11px;margin-left:6px;padding:1px 6px;border:1px solid currentColor}
   input.cell.pct{width:74px;border-right:0;border-radius:0}
   .pctwrap{display:inline-flex;align-items:stretch;white-space:nowrap}
   .pctwrap .suffix{
@@ -568,6 +772,11 @@
     display:block;font-style:normal;font-size:11px;color:var(--muted);
     margin-top:1px;line-height:1.35;
   }
+  /* Widths live here rather than on the <col> elements: an inline width beats
+     a stylesheet, and the narrow-screen layout below needs to override them. */
+  .stubtbl col:nth-child(1){width:32%}
+  .stubtbl col:nth-child(2),.stubtbl col:nth-child(3){width:34%}
+
   .ig-row input.cell{width:100%}
   .ig-row .val{
     font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:13px;text-align:right;
@@ -579,6 +788,10 @@
   .inputs-tbl .pctwrap{display:flex;width:100%}
   .inputs-tbl .pctwrap input.cell{flex:1;width:auto;min-width:0}
   .inputs-tbl td{vertical-align:middle}
+  /* The notes column reads as one right-aligned edge, typed notes and fixed
+     ones alike. On a phone the note sits on its own line and stays left. */
+  .inputs-tbl td:nth-child(4), .inputs-tbl td:nth-child(4) input.cell.note-in{text-align:right}
+  .inputs-tbl td:nth-child(4) input.cell.note-in{padding-right:0}
   .ig-row.sub{border-top:1px solid var(--rule-2);font-weight:700}
   .ig-row.sub .ig-lab{color:var(--ink);font-weight:700}
   .ig-row.grand{
@@ -745,8 +958,29 @@
   .rangebtn:hover{color:var(--ink)}
   .rangebtn.on{background:var(--ink);border-color:var(--ink);color:#f3f2f2}
   .logrow{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  /* The log beside the balance sheet takes that card's height rather than
+     setting its own: a zero-height list that grows into whatever the row
+     leaves, and scrolls inside it. */
+  .nwhist{display:flex;flex-direction:column}
+  .nwhist .scroller{flex:1 1 auto;height:0;min-height:100px;max-height:none}
+  @media (max-width:900px){ .nwhist .scroller{min-height:240px} }
   .logrow .cell{width:auto;flex:1 1 120px}
   .scroller{max-height:290px;overflow-y:auto}
+  /* Debt follows assets in the same card, set off by space and its own header */
+  .nwtbl td.calc{white-space:nowrap}
+  table.nwnext{margin-top:22px}
+  .hscroll{overflow-x:auto}
+  .yeartbl{min-width:760px}
+  .yeartbl th:not(:first-child){text-align:right}
+  .yeartbl td.lab{white-space:nowrap}
+  .yeartbl tr.on td{background:#f8f4f4}
+  .yeartbl .nil{color:var(--muted);font-weight:400}
+  .yrlink{
+    font:inherit;font-family:var(--mono);font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;
+    background:none;border:0;border-bottom:1px dotted var(--muted);padding:0;border-radius:0;
+  }
+  .yrlink:hover{color:var(--accent);border-bottom-color:var(--accent)}
+  .pastcard p{color:var(--text);max-width:62ch;margin:0 0 14px}
   .scroller thead th{position:sticky;top:0;background:var(--card)}
   input.cell:focus{outline:2px solid var(--blue);outline-offset:-1px;background:#fff}
   select.cell{
@@ -777,7 +1011,7 @@
     padding:9px 0 9px 14px;margin:0 auto 20px;max-width:1272px;border-radius:0;
   }
   .flash{
-    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(14px);
+    position:fixed;bottom:max(22px, env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(14px);
     background:var(--ink);color:#fff;padding:11px 18px;border-radius:0;font-size:13px;font-weight:600;
     opacity:0;pointer-events:none;transition:.25s;z-index:50;
   }
@@ -817,22 +1051,48 @@
      break. The "last edited" stamp is dropped — the sync badge beside it
      answers the same question, and the row is worth more than the repeat. */
   @media (max-width:820px){
-    .masthead{gap:9px 10px}
-    .masthead::after{content:"";flex-basis:100%;height:0;order:4}
-    .mark{order:1}
-    .wordmark{order:2;margin-right:auto;gap:9px}
-    .stamp{display:none}
-    .syncbadge{order:5;margin-right:auto;font-size:9px;padding:3px 9px;letter-spacing:.1em}
-    .toolbar{order:6;gap:4px}
+    /* Two rows on a phone. The first is the brand and, beside it, the sync
+       light — the one status worth a glance. The second is the tabs. The
+       "last edited" stamp and the housekeeping buttons leave the masthead:
+       the stamp repeats what the sync light says, and Export, Import and
+       Sign out are once-a-year actions that were taking a row of their own
+       at the top of every screen. They sit at the foot of the page instead.
+       The header box is dissolved so the tab bar sticks to the page rather
+       than to the header's own bottom edge. In a home-screen install the
+       status bar sits over the page, so a fixed strip of ink is painted
+       under it and the tab bar pins just below that strip. */
+    header.top{display:contents}
+    body::before{
+      content:"";position:fixed;top:0;left:0;right:0;z-index:19;
+      height:env(safe-area-inset-top);background:#201e1d;
+    }
+    .masthead{
+      gap:10px;flex-wrap:nowrap;align-items:center;background:#201e1d;
+      padding:max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right))
+              11px max(14px, env(safe-area-inset-left));
+    }
+    .wordmark{gap:9px;flex:0 1 auto;min-width:0}
     .wm-name{font-size:15px}
-    .wm-year{font-size:10px;letter-spacing:.12em}
+    .wm-year{display:none}
+    .stamp{display:none}
     .mark svg{width:26px;height:26px}
-    .btn{font-size:10.5px;padding:5px 9px;letter-spacing:.04em}
-    .headfoot{margin-top:13px}
+    .syncbadge{font-size:9px;padding:3px 9px;letter-spacing:.1em;margin-left:2px}
+    .settings{margin-left:auto}
+    .set-lbl{display:none}
+    .setbtn{padding:6px 8px}
+    .headfoot{
+      position:sticky;top:env(safe-area-inset-top);z-index:20;background:#201e1d;margin:0;
+      padding:0 max(14px, env(safe-area-inset-right)) 0 max(14px, env(safe-area-inset-left));
+    }
     nav.tabs{gap:0;justify-content:space-between}
-    nav.tabs button{font-size:11px;letter-spacing:.06em;padding:4px 0 9px}
+    nav.tabs button{font-size:11px;letter-spacing:.06em;padding:12px 0 10px}
+    footer.note{padding-bottom:max(44px, env(safe-area-inset-bottom))}
     .lbl-full{display:none}
     .lbl-abbr{display:inline}
+    .yp-desk{display:none}
+    .yp-phone{display:flex;margin:0 0 7px 10px}
+    .yearpick select{font-size:11px;padding:2px 15px 2px 5px;background-position:right 8px center,right 4px center}
+    .yearnote{margin-top:14px}
   }
   @media (max-width:900px){
     .kpis,.legend,.kpis.three,.kpis.five,.kpis.six{grid-template-columns:repeat(2,1fr)}
@@ -841,8 +1101,7 @@
        whatever the order, and the charts would stay squeezed side by side. */
     .dashmain .grid2{grid-template-columns:minmax(0,1fr)}
     .kpi{padding:18px 16px}
-    .kpi:nth-child(odd){padding-left:0;border-left:0}
-    .kpi:nth-child(even){padding-right:0}
+    .kpi:nth-child(odd){border-left:0}
     .kpi .v{font-size:30px}
     .kpis.sticky{position:static;box-shadow:none;margin-top:0}
     .grid2{grid-template-columns:minmax(0,1fr)}
@@ -866,17 +1125,45 @@
   }
 
   @media (max-width:640px){
-    /* The fields keep their desktop size, so a table reads at one scale
-       throughout. The cost is that iOS Safari zooms the page in when a
-       focused input is under 16px and does not zoom back out. That was
-       traded the other way once — 16px fields with the surrounding text
-       scaled up to match — and the tables read as though the whole page had
-       been magnified. This is the deliberate choice; only the vertical
-       padding opens up, to keep the tap target usable. */
-    input.cell, select.cell{padding:7px 8px; line-height:1.2}
+    /* The fields keep their desktop scale so a table reads at one size
+       throughout. iOS Safari would zoom the page in on any field under 16px
+       and never zoom back out; that is handled at the viewport instead (see
+       the top of the script), not by inflating the fields. Only the
+       vertical padding opens up, to keep the tap target usable. */
+    input.cell, select.cell{padding:8px 8px; line-height:1.2; font-size:14px}
+    select.cell{font-size:13px}
     .ig-row input.cell, .ig-row .val{min-width:0}
     .credit-name, .flatline{font-size:14.5px}
     .lab{line-height:1.35}
+
+    /* Small type is the first thing to go on a phone held at arm's length.
+       Every secondary size steps up a notch; the figures already carry. */
+    th, td{font-size:14px}
+    thead th{font-size:11px}
+    td .note, .ig-lab em, .cf-line em{font-size:12px}
+    .eyebrow, .calcband, .ratestrip .rl{font-size:11px}
+    .kpi .sub, .kpis.six .kpi .sub{font-size:13.5px}
+    .section-note, .ig-lab, .cf-line{font-size:14px}
+    .subhead, .gauge .hint, .brk-row, .ratestrip .rs, .cf-legend, .chart-empty{font-size:13.5px}
+    .railnote, .railrow, .railrow b, ul.alerts li, .complist div, .barrow .bl, .trendsub{font-size:13.5px}
+    .railrow .when{font-size:12px}
+    .plainline{font-size:15px}
+    .card.guide p{font-size:14.5px}
+    .card.guide .guide-note, .callout, .flatnote{font-size:13px}
+    .credit-meta, .reset-line{font-size:12px}
+    .cf-readout{font-size:13.5px}
+    .kpi{padding-top:14px;padding-bottom:14px}
+
+    /* The rail's two columns were meant for a tablet. On a phone they turn
+       into two ribbons of wrapped text side by side; one column reads. */
+    .railbody{grid-template-columns:minmax(0,1fr);gap:0}
+    .railbody > .railsec:first-child{grid-row:auto}
+    .railbody > .railsec{border-top:2px solid rgba(32,30,29,.4);margin-top:18px;padding-top:16px}
+    .hero .hl{font-size:25px}
+
+    /* The Sankey's caption describes ribbons; the stacked form has bars. */
+    .subhead.ribbons{display:none}
+    .subhead.stacked{display:block}
 
     /* Financial tables here run 3-6 columns wide. Rather than let cells
        crush down to unreadable widths, the table scrolls sideways inside
@@ -888,17 +1175,159 @@
        overflow-x:auto forces overflow-y to match and would clip the
        markers that sit slightly outside their row elsewhere. */
     .card:has(table){overflow-x:auto; -webkit-overflow-scrolling:touch}
+    /* A card that still scrolls says so: a shadow on the edge it can scroll
+       towards, painted with background-attachment so the covering gradient
+       travels with the content and the shadow shows only while there is
+       more to see. Cards whose table fits show nothing. */
+    .card:has(table){
+      background:
+        linear-gradient(90deg, var(--card) 45%, rgba(255,255,255,0)) 0 0 / 36px 100% no-repeat local,
+        linear-gradient(270deg, var(--card) 45%, rgba(255,255,255,0)) 100% 0 / 36px 100% no-repeat local,
+        linear-gradient(90deg, rgba(32,30,29,.18), rgba(32,30,29,0)) 0 0 / 14px 100% no-repeat scroll,
+        linear-gradient(270deg, rgba(32,30,29,.18), rgba(32,30,29,0)) 100% 0 / 14px 100% no-repeat scroll,
+        var(--card);
+    }
     table{width:max-content; min-width:100%}
     th, td{white-space:nowrap}
     td .note, .flatnote, .caprule, .plainline{white-space:normal}
+
+    /* The tables that are edited — accounts, line items, pay inputs — used
+       to scroll sideways too, which put the one column that matters, the
+       amount, off the screen and left the totals rows reading as blank. Each
+       row is a small record instead: the name across the top, the figures
+       beneath it, the delete control in the corner. The header row goes;
+       the fields say what they are. */
+    /* The table itself becomes a block too: left as display:table with a
+       fixed layout and a colgroup, its first column's width was handed to
+       the whole stacked body, which came out 30% wide. */
+    table.stk{display:block;width:100%;min-width:0}
+    /* Seven columns will not go across a phone: each year becomes a block */
+    .yeartbl{min-width:0;display:block;width:100%}
+    .yeartbl tbody, .yeartbl tr{width:100%}
+    .yeartbl thead{display:none}
+    .yeartbl tbody{display:block}
+    .yeartbl tr{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 0;border-bottom:1px solid var(--rule)}
+    .yeartbl tr.on td{background:transparent}
+    .yeartbl td{display:flex;justify-content:space-between;gap:8px;padding:0;border:0;white-space:nowrap}
+    .yeartbl td.lab{grid-column:1 / -1;justify-content:flex-start;align-items:baseline;gap:10px;margin-bottom:2px}
+    .yeartbl td[data-l]::before{content:attr(data-l);font-family:var(--sans);font-weight:400;color:var(--muted);font-size:12px}
+    .stk thead, .stk colgroup{display:none}
+    .stk tbody{display:block}
+    .stk tr{
+      display:grid;gap:5px 10px;align-items:center;padding:10px 0;
+      border-bottom:1px solid var(--rule);
+    }
+    .stk td, .stk tr.total td, .stk tr.sub td, .stk tr.group td{
+      display:block;padding:0;white-space:normal;text-align:left;border:0;min-width:0;
+    }
+    .stk td:empty{display:none}
+    .stk input.cell, .stk .pctwrap{width:100%}
+    /* A field's own intrinsic width is what its size attribute says, and a
+       flex item will not shrink below that unless told it may. */
+    .stk .pctwrap input.cell{flex:1 1 0;width:auto;min-width:0}
+    .stk tbody tr:hover{background:transparent}
+    .stk .rowdel{font-size:20px;padding:2px 4px 4px;color:#9b9797}
+    .stk tr.total{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:9px 0}
+    .stk tr.total td{font-weight:700}
+    .stk tr.sub{border-top:1px solid var(--rule-2)}
+    .stk tr.group{border-bottom:0;padding:18px 0 2px}
+    .stk tr.addrow-row{border-bottom:0;padding:2px 0 4px}
+    /* A label spanning the row with its figure beside it: totals, groups,
+       the "remaining" lines. Both sit on the first row, figure to the right. */
+    .stk tr:has(> td[colspan="3"]){grid-template-columns:minmax(0,1fr) auto}
+    .stk tr > td[colspan="3"]{grid-column:1;grid-row:1;text-align:left !important}
+    .stk tr > td[colspan="3"] + td{grid-column:2;grid-row:1;text-align:right;display:block;white-space:nowrap}
+    .stk tr > td[colspan="5"]{grid-column:1 / -1}
+
+    /* Net worth accounts: name · delete / where it's held · balance */
+    .nwtbl tr{grid-template-columns:minmax(0,1fr) 128px 26px}
+    .nwtbl td:nth-child(1){grid-column:1 / span 2;grid-row:1}
+    .nwtbl td:nth-child(5){grid-column:3;grid-row:1;text-align:right}
+    .nwtbl td:nth-child(2){grid-column:1;grid-row:2}
+    .nwtbl td:nth-child(3){grid-column:2 / span 2;grid-row:2}
+    .nwtbl td:nth-child(4){display:none}
+    .nwtbl input.cell.note-in{padding-left:0}
+
+    /* Spending line items on one line: name · amount · cadence · delete.
+       The monthly figure only earns a second line when the item is yearly;
+       for a monthly one it would repeat the amount beside it. */
+    .linetbl tr{grid-template-columns:minmax(0,1fr) 84px 62px 16px;gap:4px 5px}
+    .linetbl td:nth-child(1){grid-column:1;grid-row:1}
+    .linetbl td:nth-child(2){grid-column:2;grid-row:1}
+    .linetbl td:nth-child(3){grid-column:3;grid-row:1}
+    .linetbl td:nth-child(5){grid-column:4;grid-row:1;text-align:right}
+    .linetbl td:nth-child(4){display:none}
+    .linetbl tr.yr td:nth-child(4){display:block;grid-column:2 / span 3;grid-row:2;text-align:right;
+      font-size:0;color:var(--muted)}
+    .linetbl tr.yr td:nth-child(4)::after{content:attr(data-yr);font-size:12px;font-weight:600}
+    /* The native arrow takes ~30px of a 62px control and clipped "/mo";
+       a drawn chevron takes 8 */
+    .linetbl select.cell{width:100%;padding-left:7px;padding-right:16px;-webkit-appearance:none;appearance:none;
+      background-image:linear-gradient(45deg,transparent 50%,var(--blue) 50%),linear-gradient(135deg,var(--blue) 50%,transparent 50%);
+      background-position:right 10px center,right 6px center;background-size:4px 4px;background-repeat:no-repeat}
+    .linetbl input.cell{padding-left:6px;padding-right:6px}
+    /* Group, buffer and total rows keep their own layout */
+    .linetbl tr.group td:nth-child(4), .linetbl tr.sub td:nth-child(4),
+    .linetbl tr.total td:nth-child(2), .linetbl tr:not(.yr):not(:has(input)) td:nth-child(2){display:block}
+    /* Buffer row: its label across the top; then "% of above", the rate and
+       the dollars it comes to */
+    .linetbl tr.sub td:nth-child(1){grid-column:1 / span 4;grid-row:1}
+    .linetbl tr.sub td:nth-child(3){grid-column:1;grid-row:2;font-size:12px;text-align:right}
+    .linetbl tr.sub td:nth-child(2){grid-column:2;grid-row:2}
+    .linetbl tr.sub td:nth-child(4){grid-column:3 / span 2;grid-row:2;text-align:right}
+    /* Stacked, the + and = have nothing to sit between; the rule above net
+       income says "sum" instead. The hand-off rule belongs to the row, not
+       to each cell, or the stacked grid draws it in two pieces. */
+    .incstrip{flex-direction:column;gap:10px}
+    .incstrip .op{display:none}
+    .incstrip .inc.net{align-self:stretch;border-top:2px solid var(--ink);padding-top:9px}
+    .stk tr.handoff{border-top:1px solid var(--rule-2)}
+    .stk tr.handoff td{border-top:0;padding-top:0}
+    .linetbl tr.group td[colspan="3"]{
+      font-family:var(--serif);font-size:14px;font-weight:800;color:var(--ink);
+    }
+
+    /* Pay inputs: the question across the top, one field per person under
+       it with their name over the field, the note last. */
+    .inputs-tbl tr{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 12px}
+    .inputs-tbl td:nth-child(1){grid-column:1 / span 2;grid-row:1}
+    .inputs-tbl td:nth-child(2){grid-column:1;grid-row:2}
+    .inputs-tbl td:nth-child(3){grid-column:2;grid-row:2}
+    .inputs-tbl td:nth-child(4){grid-column:1 / span 2;grid-row:3}
+    .inputs-tbl td[data-who]::before{
+      content:attr(data-who);display:block;font-size:10.5px;font-weight:700;
+      letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:2px 0 4px;
+    }
+    .inputs-tbl td:nth-child(4), .inputs-tbl td:nth-child(4) input.cell.note-in{padding-left:0;text-align:left}
+    .inputs-tbl td:nth-child(4):not(:has(input)){font-size:12px;color:var(--muted)}
+
+    /* Credits closing soonest: credit · value / card · window · days */
+    .soontbl tr{grid-template-columns:minmax(0,1fr) auto auto;gap:3px 10px}
+    .soontbl td:nth-child(1){grid-column:1;grid-row:1;font-weight:600}
+    .soontbl td:nth-child(4){grid-column:2 / span 2;grid-row:1;text-align:right}
+    .soontbl td:nth-child(2){grid-column:1;grid-row:2;font-size:12.5px}
+    .soontbl td:nth-child(3){grid-column:2;grid-row:2;font-size:12.5px}
+    .soontbl td:nth-child(5){grid-column:3;grid-row:2;text-align:right}
 
     /* The rate tables are prose in the first column and one figure in each
        column after it, sized by a colgroup and already table-layout:fixed.
        Sized to max-content like the data tables above, that prose column
        grows to the full unwrapped sentence and shoves the figures off the
        side of the screen. They keep their declared widths and wrap instead. */
-    .calctbl{width:100%}
-    .calctbl th, .calctbl td.lab, .calctbl td.lab .note{white-space:normal}
+    .calctbl, .fit{width:100%}
+    .calctbl th, .calctbl td.lab, .calctbl td.lab .note, .fit td:first-child{white-space:normal}
+    /* The declared column shares were drawn for a desktop card. At phone
+       width a 19% column is narrower than the figure in it, so the figures
+       size their own columns and the prose column takes what remains. */
+    .calctbl{table-layout:auto}
+    .calctbl th, .calctbl td{padding-left:5px;padding-right:5px}
+    .calctbl th:first-child, .calctbl td:first-child{padding-left:8px}
+    /* The figure columns shrink to their content and the label takes the
+       rest. A 100% width on the label is not enough: WebKit scales an
+       over-asked percentage back and hands the figures a share of the
+       slack anyway. */
+    .fit td:not(:first-child){width:1% !important}
+    .fit td{padding-left:5px;padding-right:5px}
     /* and the fields in them shrink with their column rather than pushing
        out past the card edge */
     .calctbl input.cell, .calctbl .pctwrap{min-width:0; max-width:100%}
@@ -910,10 +1339,40 @@
        than half of a 375px screen and was wrapping mid-figure. One stat per
        row, divided by a rule instead of by the column edge. */
     .kpis,.kpis.three,.kpis.five,.kpis.six,.legend{grid-template-columns:minmax(0,1fr)}
+    /* A card heading is title, qualifier and verdict tag on one flex row. On a
+       phone that squeezes the title to two words a line while the qualifier
+       wraps beside it. The qualifier drops to its own line instead, leaving
+       the title and its tag together on the first. */
+    .card h3{flex-wrap:wrap;row-gap:2px}
+    .card h3 .caprule{flex:1 0 100%;order:3}
+
+    /* A YTD figure is a few pixels wider than a third of a phone-width card.
+       Trimming the cell's own padding fits it without shrinking the type. */
+    .calctbl input.cell{padding-left:4px;padding-right:4px}
+    /* The paystub card carries a long label and two figures on one row. At a
+       third each, "Social Security, Medicare, CA SDI" broke over four lines.
+       The label takes the room it needs and the figures drop a point of type,
+       which still clears the widest year-to-date amount. */
+    /* fixed, or auto-layout hands the figures whatever they ask for and the
+       label keeps whatever is left — which is how it got to four lines. */
+    .stubtbl{table-layout:fixed}
+    .stubtbl col:nth-child(1){width:36%}
+    .stubtbl col:nth-child(2),.stubtbl col:nth-child(3){width:32%}
+    .stubtbl td{padding-left:2px;padding-right:2px}
+    .stubtbl input.cell{font-size:12px}
+    .stubtbl td.calc{font-size:12.5px}
     .kpi{padding:16px 0;border-left:0;border-top:1px solid var(--rule-2)}
     .kpi:first-child{border-top:0;padding-top:14px}
+    /* Stacked, the lead stat's 3px inset runs the full width of the page and
+       lands just under the pagehead's own rule — two heavy lines a gap apart,
+       saying different things. In columns it reads as an accent over one of
+       them, so keep that: a short bar, not a rule across the page. */
+    .kpi.accent{box-shadow:none;position:relative}
+    .kpi.accent::before{
+      content:"";position:absolute;top:0;left:0;width:46px;height:3px;background:var(--accent);
+    }
     .kpi .v,.kpis.five .kpi .v,.kpis.six .kpi .v{font-size:28px}
-    .legend div{margin-top:2px}
+    .legend > div{margin-top:2px}
     .hero .hl{font-size:24px}
     .cardstats{grid-template-columns:repeat(2,minmax(0,1fr))}
     .wm-year{display:none}
@@ -941,6 +1400,37 @@
   </div>
 </div>
 
+<div class="apigate" id="apiPanel" role="dialog" aria-modal="true" aria-labelledby="apiTitle" hidden>
+  <div class="apibox">
+    <div class="apihead">
+      <h2 id="apiTitle">Agent API</h2>
+      <button type="button" class="apiclose" id="apiClose" aria-label="Close">×</button>
+    </div>
+    <p class="apilede">Agents listed here can read your financial plan through a secure key. An agent can only make changes if you allow edits, and every change it makes is listed below with an undo.</p>
+    <div id="apiList"></div>
+    <div class="apiadd">
+      <label for="apiName">ADD AN AGENT</label>
+      <div class="apiline">
+        <input type="text" id="apiName" value="Muse" maxlength="80" spellcheck="false">
+        <button type="button" class="apibtn go" id="apiMint">Generate key</button>
+      </div>
+    </div>
+    <div class="apinew" id="apiNew" hidden>
+      <p id="apiWarn"></p>
+      <div class="apiline">
+        <input type="text" id="apiKey" readonly aria-label="New key">
+        <button type="button" class="apibtn" id="apiCopy">Copy</button>
+      </div>
+    </div>
+    <div class="authmsg" id="apiMsg"></div>
+    <div class="apiact">
+      <div class="apiacthead">RECENT AGENT CHANGES</div>
+      <div id="apiActivity"></div>
+      <p class="apiactnote">Edits allowed: card credits and offers used, realized gains and estimated tax payments, spending lines, and paystub year-to-date figures, 401k and paychecks remaining.</p>
+    </div>
+  </div>
+</div>
+
 <header class="top">
   <div class="masthead">
     <span class="mark" aria-hidden="true">
@@ -953,15 +1443,34 @@
     </span>
     <h1 class="wordmark">
       <span class="wm-name">Financial<span class="wm-thin">Plan</span><span class="demoflag">Demo data</span></span>
-      <span class="wm-year" id="brandYear"></span>
     </h1>
+    <!-- The year every tab but net worth is showing. On a phone the masthead
+         has no room for it and a twin sits at the end of the tab row. -->
+    <label class="yearpick yp-desk" title="Everything that resets in January is kept per year. Net worth is one record across all of them.">
+      <span class="yp-lab">Year</span>
+      <select class="yearsel" aria-label="Plan year"></select>
+    </label>
     <span class="stamp" id="stamp"></span>
     <span class="syncbadge local" id="syncBadge">Saved to this device</span>
-    <div class="toolbar">
-      <button class="btn" id="restoreBtn" hidden>Restore previous</button>
-      <button class="btn ghost" id="freshBtn" title="Clear every figure to zero so you can enter your own. Line items and cards stay.">Start fresh</button>
-      <button class="btn ghost" id="resetBtn" title="Put back the original figures this app shipped with, discarding your edits.">Reset</button>
-      <button class="btn ghost" id="signOutBtn" hidden>Sign out</button>
+    <!-- Housekeeping lives behind one button: these are once-in-a-while
+         actions and were taking a row of the masthead, and on a phone a
+         second copy at the foot of every page. -->
+    <div class="settings">
+      <button class="btn ghost setbtn" id="settingsBtn" aria-haspopup="menu" aria-expanded="false"
+              aria-controls="settingsMenu" title="Settings">
+        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd"
+          d="M8.6 1h2.8l.4 2.3a7 7 0 0 1 1.7 1l2.2-.8 1.4 2.4-1.8 1.5a7 7 0 0 1 0 2l1.8 1.5-1.4 2.4-2.2-.8a7 7 0 0 1-1.7 1l-.4 2.3H8.6l-.4-2.3a7 7 0 0 1-1.7-1l-2.2.8-1.4-2.4 1.8-1.5a7 7 0 0 1 0-2L2.9 6.1l1.4-2.4 2.2.8a7 7 0 0 1 1.7-1zM10 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+        <span class="set-lbl">Settings</span>
+      </button>
+      <div class="setmenu" id="settingsMenu" role="menu" hidden>
+        <div class="set-who" id="whoami" hidden></div>
+        <button type="button" role="menuitem" id="restoreBtn" hidden>Restore previous<span>Bring back the copy set aside on the last update</span></button>
+        <button type="button" role="menuitem" id="exportBtn">Export JSON<span>Download the whole plan as a file</span></button>
+        <button type="button" role="menuitem" id="importBtn">Import JSON<span>Replace the plan with an exported file</span></button>
+        <button type="button" role="menuitem" id="agentApiBtn" hidden>Agent API<span>Give an AI assistant read-only access</span></button>
+        <button type="button" role="menuitem" id="signInBtn" hidden>Sign in<span>Back to the shared plan</span></button>
+        <button type="button" role="menuitem" id="signOutBtn" hidden>Sign out</button>
+      </div>
     </div>
   </div>
   <div class="headfoot">
@@ -973,11 +1482,15 @@
       <button role="tab" data-view="cards" aria-selected="false"><span class="lbl-full">Card benefits</span><span class="lbl-abbr">Cards</span></button>
       <button role="tab" data-view="networth" aria-selected="false"><span class="lbl-full">Net worth</span><span class="lbl-abbr">Worth</span></button>
     </nav>
+    <label class="yearpick yp-phone">
+      <select class="yearsel" aria-label="Plan year"></select>
+    </label>
     <div class="ticker" id="ticker"></div>
   </div>
 </header>
 
 <main>
+  <div class="yearnote" id="yearNote" hidden></div>
   <section class="view" id="view-dash"></section>
   <section class="view" id="view-income" hidden></section>
   <section class="view" id="view-spend" hidden></section>
@@ -986,16 +1499,29 @@
   <section class="view" id="view-networth" hidden></section>
 </main>
 <footer class="note" id="storeNote"></footer>
+<input type="file" id="importFile" accept="application/json,.json" hidden>
 <div class="flash" id="flash"></div>
 
 <script>
+/* iOS Safari zooms the page in when a focused field is under 16px and never
+   zooms back out, which left the tables magnified after every edit on a
+   phone. maximum-scale=1 is what stops it, and Safari has ignored that for
+   pinch-zoom since iOS 10, so nothing is lost there. Other browsers still
+   honour it as a pinch-zoom lock, so it is added only where it is needed. */
+(function(){
+  const ios = /iP(hone|ad|od)/.test(navigator.platform)
+           || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const v = document.querySelector('meta[name="viewport"]');
+  if(ios && v && !/maximum-scale/.test(v.content)) v.content += ", maximum-scale=1";
+})();
+
 /* ============================================================
    STATE — defaults lifted from the workbook (2026 Income
    Planning + Current Budget - Home). Everything is editable.
    ============================================================ */
 const DEFAULTS = {
-  "dataVersion": 1,
-  "updated": "2026-09-04",
+  "dataVersion": 55,
+  "updated": "2026-09-23",
   "irsLimit": 24500,
   "iraTotal": 15000,
   "miscPct": 0.15,
@@ -1010,28 +1536,46 @@ const DEFAULTS = {
       "paychecks": 24,
       "pre401k": 0.1,
       "post401k": 0,
-      "taxRate": 0.32,
       "otherPre": 5.2,
       "otherPost": 8,
-      "ytd401k": 9500,
-      "checksLeft": 9,
+      "fedPer": 905.4,
+      "caPer": 318.6,
+      "ficaPer": 529.54,
+      "ytdGross": 106500,
+      "ytdFed": 16297.2,
+      "ytdCA": 5734.8,
+      "ytdFica": 9531.72,
+      "bonusFedRate": 0.22,
+      "bonusCARate": 0.1023,
+      "stubUpdated": "2026-09-15",
+      "ytd401k": 10650,
+      "checksLeft": 6,
       "bonusLeft": 10000
     },
     {
       "key": "jordan",
       "name": "Jordan",
       "salary": 128000,
-      "newSalary": 0,
-      "raiseChecks": 0,
+      "newSalary": 136000,
+      "raiseChecks": 8,
       "bonus": 15000,
       "paychecks": 26,
       "pre401k": 0.12,
       "post401k": 0,
-      "taxRate": 0.295,
       "otherPre": 14,
       "otherPost": 11.5,
-      "ytd401k": 12800,
-      "checksLeft": 9,
+      "fedPer": 772.3,
+      "caPer": 291.1,
+      "ficaPer": 468.15,
+      "ytdGross": 108846.15,
+      "ytdFed": 17349.7,
+      "ytdCA": 6888.4,
+      "ytdFica": 9741.73,
+      "bonusFedRate": 0.22,
+      "bonusCARate": 0.1023,
+      "stubUpdated": "2026-09-15",
+      "ytd401k": 13061.54,
+      "checksLeft": 7,
       "bonusLeft": 0
     }
   ],
@@ -1174,12 +1718,11 @@ const DEFAULTS = {
     }
   ],
   "notes": {
-    "salary": "Annualized from current gross per paycheck",
+    "salary": "Annualized from gross per paycheck on the latest paystub",
     "bonus": "",
     "paychecks": "24 semi-monthly · 26 bi-weekly",
     "pre401k": "Use the recommender below",
     "post401k": "Mega-backdoor, if the plan allows in-plan Roth conversion",
-    "taxRate": "Fed + SS/Medicare + state, applied to TAXABLE pay — not gross",
     "otherPre": "Per paycheck",
     "otherPost": "Per paycheck"
   },
@@ -1202,12 +1745,6 @@ const DEFAULTS = {
     }
   },
   "tax": {
-    "grossK": 152000,
-    "k401kK": 15200,
-    "preTaxK": 250,
-    "grossS": 143000,
-    "k401kS": 17160,
-    "preTaxS": 0,
     "interest": 640,
     "ordDiv": 6800,
     "qualDiv": 4100,
@@ -1231,18 +1768,6 @@ const DEFAULTS = {
     "propTax": 7200,
     "vlf": 420,
     "charitable": 2400,
-    "whK": {
-      "perYear": 24,
-      "left": 9,
-      "fedPer": 980,
-      "caPer": 265
-    },
-    "whS": {
-      "perYear": 26,
-      "left": 9,
-      "fedPer": 840,
-      "caPer": 210
-    },
     "fedPmts": [
       0,
       0,
@@ -1256,7 +1781,7 @@ const DEFAULTS = {
       0
     ],
     "priorFed": 48200,
-    "priorCA": 9100,
+    "priorCA": 19300,
     "scenAmount": -10000,
     "scenTerm": "ST",
     "params": {
@@ -1569,39 +2094,39 @@ const DEFAULTS = {
         405500
       ],
       [
-        "2024-03-10",
+        "2024-03-11",
         408300
       ],
       [
-        "2024-04-07",
+        "2024-04-08",
         406800
       ],
       [
-        "2024-05-05",
+        "2024-05-06",
         414400
       ],
       [
-        "2024-06-02",
+        "2024-06-03",
         424300
       ],
       [
-        "2024-06-30",
+        "2024-07-01",
         424200
       ],
       [
-        "2024-07-28",
+        "2024-07-29",
         424700
       ],
       [
-        "2024-08-25",
+        "2024-08-26",
         435200
       ],
       [
-        "2024-09-22",
+        "2024-09-23",
         442700
       ],
       [
-        "2024-10-20",
+        "2024-10-21",
         440800
       ],
       [
@@ -1621,39 +2146,39 @@ const DEFAULTS = {
         458700
       ],
       [
-        "2025-03-09",
+        "2025-03-10",
         466400
       ],
       [
-        "2025-04-06",
+        "2025-04-07",
         478100
       ],
       [
-        "2025-05-04",
+        "2025-05-05",
         478900
       ],
       [
-        "2025-06-01",
+        "2025-06-02",
         478600
       ],
       [
-        "2025-06-29",
+        "2025-06-30",
         489800
       ],
       [
-        "2025-07-27",
+        "2025-07-28",
         499300
       ],
       [
-        "2025-08-24",
+        "2025-08-25",
         497500
       ],
       [
-        "2025-09-21",
+        "2025-09-22",
         500600
       ],
       [
-        "2025-10-19",
+        "2025-10-20",
         514000
       ],
       [
@@ -1673,65 +2198,51 @@ const DEFAULTS = {
         538600
       ],
       [
-        "2026-03-08",
+        "2026-03-09",
         540600
       ],
       [
-        "2026-04-05",
+        "2026-04-06",
         539400
       ],
       [
-        "2026-05-03",
+        "2026-05-04",
         551200
       ],
       [
-        "2026-05-31",
+        "2026-06-01",
         562900
       ],
       [
-        "2026-06-28",
+        "2026-06-29",
         561600
       ],
       [
-        "2026-09-04",
+        "2026-09-23",
         630000
       ]
-    ],
-    "gains": {
-      "years": [
-        "2025",
-        "2026"
-      ],
-      "rows": [
-        {
-          "n": "Dividends",
-          "v": [
-            5200,
-            6800
-          ]
-        },
-        {
-          "n": "Short-term gains",
-          "v": [
-            14000,
-            11700
-          ]
-        },
-        {
-          "n": "Long-term gains",
-          "v": [
-            22000,
-            6000
-          ]
-        },
-        {
-          "n": "Earned income",
-          "v": [
-            268000,
-            295000
-          ]
-        }
-      ]
+    ]
+  },
+  "years": {
+    "2024": {
+      "filed": {
+        "income": 251000,
+        "st": 9000,
+        "lt": 15000,
+        "deductions": 44800,
+        "fedTax": 41300,
+        "caTax": 16900
+      }
+    },
+    "2025": {
+      "filed": {
+        "income": 289000,
+        "st": 14000,
+        "lt": 22000,
+        "deductions": 50600,
+        "fedTax": 48200,
+        "caTax": 19300
+      }
     }
   }
 };
@@ -1752,7 +2263,7 @@ const cleanKey = k => String(k||"").trim().replace(/\s+/g,"");
 
 const KEY = "finplan.demo";
 let store = { ok:true, msg:"" };
-let S = load();
+let S;                         // loaded at the foot of the script, once everything it runs through exists
 
 function load(){
   try{
@@ -1766,13 +2277,16 @@ function load(){
           store = {ok:true, refreshed:true,
             msg:"Loaded updated figures. Your previous saved copy was set aside — press Restore previous if you want it back."};
         }
-        return structuredClone(DEFAULTS);
+        return fresh();
       }
       return merge(structuredClone(DEFAULTS), saved);
     }
-  }catch(e){ store = {ok:false, msg:"Browser storage is unavailable here, so edits last only for this session. Use Export JSON to keep a copy."}; }
-  return structuredClone(DEFAULTS);
+  }catch(e){ store = {ok:false, code:"nostorage"}; }
+  return fresh();
 }
+// The baked-in plan, put through the same door as a saved one so it comes
+// out in the per-year shape with the year accessors attached.
+function fresh(){ return merge(null, structuredClone(DEFAULTS)); }
 // Fill in anything the saved plan is missing, at any depth, without ever
 // overwriting a value the user has set. This is what lets a new version add
 // fields — a tax parameter, a per-person setting — and still load a plan
@@ -1796,23 +2310,212 @@ function merge(base, saved){
   for(const k of Object.keys(DEFAULTS.caps)){
     if(!out.caps || typeof out.caps[k] !== "object") out.caps = structuredClone(DEFAULTS.caps);
   }
+  // Version 55 moved withholding onto the people records, split it into
+  // federal, California and FICA, and restated both paystubs from the
+  // September stubs. deepFill supplies the new fields but leaves the old ones
+  // alone, so a plan saved before that would carry September's withholding
+  // beside a salary, contribution rate and paycheck count from months
+  // earlier — a mixture that is worse than either. The shared copy is loaded
+  // straight through merge() without the version gate that the local one
+  // gets, so the restatement happens here.
+  if((saved && saved.dataVersion || 0) < 55){
+    out.people = (out.people || []).map((p,i) => {
+      const d = DEFAULTS.people[i];
+      // A renamed person stays renamed; everything the paystub governs is taken fresh.
+      return d ? {...p, ...structuredClone(d), key:p.key || d.key, name:p.name || d.name} : p;
+    });
+    if(out.tax) for(const k of ["whK","whS","grossK","grossS","k401kK","k401kS","preTaxK","preTaxS"]) delete out.tax[k];
+    store = {ok:true, refreshed:true,
+      msg:"Pay and withholding were restated from the September paystubs, and withholding now lives on the income plan only. Check the income tab before relying on the tax figures."};
+  }
   if(!out.cards || !out.cards.length) out.cards = structuredClone(DEFAULTS.cards);
   out.cardUse = out.cardUse || {};
   out.cardOffers = out.cardOffers || structuredClone(DEFAULTS.cardOffers);
+  return splitYears(out, saved);
+}
+
+/* ============================================================
+   YEARS
+   Everything that resets on January 1 — pay and paystubs, the spending
+   plan, contribution limits, the whole tax picture, card credits used — is
+   kept per calendar year under S.years, and each year is left intact once
+   the next begins. Net worth and the cards held are one continuous record
+   and stay at the top level.
+
+   The rest of the app reads S.people, S.tax and so on exactly as it did
+   before years existed. Those names are accessors onto the year being
+   viewed, and they are not enumerable, so the plan that is saved and
+   synced holds each figure once, under its year.
+
+   A year either has the full plan in it (from 2026, when this tool began)
+   or only the summary of a return already filed — the earlier years,
+   entered from the 1040 and 540 on the tax tab.
+   ============================================================ */
+const YEAR_KEYS = ["people","fixed","invest","savings","notes","caps","miscPct",
+                   "irsLimit","iraTotal","tax","cardUse","cardOffers"];
+const FIRST_YEAR = 2024;       // the household's financial history starts here
+const FILED_KEYS = [
+  ["income",     "Total income",      "1040 line 9"],
+  ["st",         "Short-term gains",  "Schedule D line 7"],
+  ["lt",         "Long-term gains",   "Schedule D line 15"],
+  ["deductions", "Deductions",        "1040 line 12 — standard or itemized"],
+  ["fedTax",     "Federal tax",       "1040 line 24"],
+  ["caTax",      "California tax",    "540 line 64"]
+];
+const blankFiled = () => Object.fromEntries(FILED_KEYS.map(([k]) => [k, null]));
+// What the net worth tab carried for 2025 before years were tracked here
+const LEGACY_GAINS = null;
+
+let YEAR = null;               // the year on screen; per device, never saved
+let ROLLED = null;             // a year opened by the calendar on this load
+const thisYear = () => new Date().getFullYear();
+const isFull = y => !!(S.years[y] && S.years[y].people);
+const yearList = s => Object.keys((s || S).years).map(Number).sort((a,b) => a-b);
+const fullYears = s => yearList(s).filter(y => (s || S).years[y].people);
+
+// Missing fields filled per year, as merge() does for the plan as a whole
+function fillYear(yd, y){
+  const defs = Object.fromEntries(YEAR_KEYS.map(k => [k, DEFAULTS[k]]));
+  deepFill(yd, defs);
+  yd.people = yd.people.map((p,i) => deepFill(p, DEFAULTS.people[i] || DEFAULTS.people[0]));
+  for(const k of Object.keys(DEFAULTS.caps))
+    if(typeof yd.caps[k] !== "object") yd.caps = structuredClone(DEFAULTS.caps);
+  yd.tax.params.year = +y;
+  return yd;
+}
+
+// A new year starts from the last one's shape — same people, same budget,
+// same accounts — with everything that is a running total set back to zero.
+function rollForward(prev, y){
+  const yd = structuredClone(prev);
+  delete yd.filed;
+  yd.people = yd.people.map(p => {
+    const raised = (p.newSalary || 0) > 0 && (p.raiseChecks || 0) > 0;
+    return {...p,
+      salary: raised ? p.newSalary : p.salary, newSalary:0, raiseChecks:0,
+      ytdGross:0, ytdFed:0, ytdCA:0, ytdFica:0, ytd401k:0,
+      checksLeft:p.paychecks, bonusLeft:p.bonus, stubUpdated:""};
+  });
+  const T = yd.tax;
+  Object.assign(T, {interest:0, ordDiv:0, qualDiv:0, usGovDiv:0, ltPortion:0,
+                    fedPmts:[0,0,0,0], caPmts:[0,0,0,0]});
+  T.accounts = T.accounts.map(a => ({...a, a:0}));
+  // Safe harbor is measured against the year just ended. Its projection is
+  // the best figure there is on January 1; the filed return replaces it.
+  const was = withYear(y-1, () => taxRun(0));
+  if(was){ T.priorFed = Math.round(was.fedTax); T.priorCA = Math.round(was.caTax); }
+  // Brackets and limits are indexed every year, but the new figures arrive
+  // on the IRS's schedule, not the calendar's. Flagged until someone edits one.
+  T.params.carried = y - 1;
+  yd.cardUse = {};
+  yd.cardOffers = Object.fromEntries(Object.keys(yd.cardOffers || {}).map(k => [k, []]));
+  return fillYear(yd, y);
+}
+
+// Run fn against another year's figures, then put the view back
+function withYear(y, fn){
+  if(!isFull(y)) return null;
+  const was = YEAR;
+  YEAR = y;
+  try{ return fn(); } finally { YEAR = was; }
+}
+
+function bindYears(s){
+  for(const k of YEAR_KEYS) Object.defineProperty(s, k, {
+    configurable:true, enumerable:false,
+    get(){ const yd = s.years[YEAR]; return yd ? yd[k] : undefined; },
+    set(v){ const yd = s.years[YEAR]; if(yd) yd[k] = v; }
+  });
+  return s;
+}
+
+function splitYears(out, saved){
+  const Y = out.years = (out.years && typeof out.years === "object") ? out.years : {};
+  // A plan saved before years existed keeps its figures at the top level,
+  // and they are the figures for the year its tax parameters name.
+  if(saved && Array.isArray(saved.people) && !fullYears(out).length){
+    const y = (out.tax && out.tax.params && out.tax.params.year) || 2026;
+    Y[y] = Object.fromEntries(YEAR_KEYS.map(k => [k, out[k]]));
+  }
+  for(const k of YEAR_KEYS) delete out[k];
+  for(const y of fullYears(out)) fillYear(Y[y], y);
+  if(!fullYears(out).length) Y[2026] = fillYear(structuredClone(
+    Object.fromEntries(YEAR_KEYS.map(k => [k, DEFAULTS[k]]))), 2026);
+
+  // The old hand-typed gains table becomes the filed summary for the years
+  // before this tool, which is the only place those figures now live.
+  const g = out.nw.gains || (yearList(out).every(y => Y[y].people) ? LEGACY_GAINS : null);
+  delete out.nw.gains;
+  const first = fullYears(out)[0];
+  if(g) g.years.forEach((yr, c) => {
+    const y = +yr;
+    if(y >= first || Y[y]) return;
+    const v = n => { const r = g.rows.find(r => r.n === n); return r ? +r.v[c] || 0 : 0; };
+    Y[y] = {filed:{...blankFiled(),
+      income: g.rows.reduce((t,r) => t + (+r.v[c] || 0), 0),
+      st: v("Short-term gains"), lt: v("Long-term gains")}};
+  });
+  for(let y = FIRST_YEAR; y < first; y++){
+    Y[y] = Y[y] || {filed:blankFiled()};
+    Y[y].filed = {...blankFiled(), ...(Y[y].filed || {})};
+  }
+  bindYears(out);
+
+  // January 1 opens the new year from the old one. The old one stays as it
+  // was — its figures are still the year's figures for as long as they are
+  // needed, and after that they are the record.
+  ROLLED = null;
+  const last = fullYears(out).at(-1);
+  if(thisYear() > last){
+    const s0 = S; S = out;
+    try{ for(let y = last + 1; y <= thisYear(); y++) Y[y] = rollForward(Y[y-1], y); }
+    finally{ S = s0; }
+    ROLLED = thisYear();
+  }
+  if(!YEAR || !Y[YEAR]) YEAR = Y[thisYear()] ? thisYear() : fullYears(out).at(-1);
   return out;
 }
+/* What a failed local save actually means depends on whether the shared plan
+   is reachable, and that is not known when load() runs — so the wording is
+   settled at paint time rather than baked in at the moment of the failure.
+   Signed in, the cloud is saving and only the on-device cache is missing;
+   that is worth saying plainly rather than warning about data that is safe. */
+const storageMsg = () => (cloudOn() && CLOUD.user)
+  ? "This browser won't keep a local copy, so the shared plan is the only one. Edits are still saving to it normally — use Export JSON if you want a copy on disk."
+  : "Browser storage is unavailable here, so edits last only for this session. Use Export JSON to keep a copy.";
+
 const today = () => new Date().toISOString().slice(0,10);
 function touch(){ S.updated = today(); }
 function saveLocal(){
   try{ S.dataVersion = DEFAULTS.dataVersion; localStorage.setItem(KEY, JSON.stringify(S)); }
-  catch(e){ store = {ok:false, msg:"Browser storage is unavailable here, so edits last only for this session. Use Export JSON to keep a copy."}; }
+  catch(e){ store = {ok:false, code:"nostorage"}; }
 }
 function save(){ saveLocal(); cloudSave(); }
 
 /* ============================================================
    SHARED PLAN — one household row, last write wins
    ============================================================ */
-const CLOUD = { client:null, user:null, lastSync:null, dirty:false, timer:null, status:"local" };
+const CLOUD = { client:null, user:null, lastSync:null, dirty:false, timer:null, status:"local",
+                pending:false, pendingAt:null, pollTimer:null, reconnecting:false };
+// Edits made with no way to reach the shared plan. Held on this device with
+// the remote timestamp they were made against, so that when the connection
+// comes back it can be told apart from a shared plan someone else has moved
+// on in the meantime.
+const PENDING_KEY = KEY + ".pending";
+try{
+  const raw = localStorage.getItem(PENDING_KEY);
+  if(raw){ const q = JSON.parse(raw); CLOUD.pending = true; CLOUD.pendingAt = q.at; CLOUD.lastSync = q.lastSync || null; }
+}catch(_){}
+function markPending(){
+  CLOUD.pending = true;
+  CLOUD.pendingAt = new Date().toISOString();
+  try{ localStorage.setItem(PENDING_KEY, JSON.stringify({at:CLOUD.pendingAt, lastSync:CLOUD.lastSync})); }catch(_){}
+  setSync("pending");
+}
+function clearPending(){
+  CLOUD.pending = false; CLOUD.pendingAt = null;
+  try{ localStorage.removeItem(PENDING_KEY); }catch(_){}
+}
 const SB_URL = cleanUrl(SUPABASE_URL), SB_KEY = cleanKey(SUPABASE_ANON_KEY);
 const cloudOn = () => !!(SB_URL && SB_KEY);
 
@@ -1822,19 +2525,31 @@ function setSync(status){
   if(!el) return;
   const label = {
     local:"Saved to this device", saving:"Saving…", saved:"Synced",
-    error:"Sync failed — still saved locally", signedout:"Not signed in"
+    error:"Sync failed — still saved locally", signedout:"Not signed in",
+    pending:"Waiting to sync"
   }[status] || status;
   el.textContent = label;
   el.className = "syncbadge " + status;
 }
 
+// Safe to call again: the first attempt can fail with the network down, and
+// Sign in retries it. Only the parts that have not happened yet are redone.
 async function cloudInit(){
   if(!cloudOn()){ setSync("local"); return; }
   try{
-    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    CLOUD.client = createClient(SB_URL, SB_KEY, {
-      auth:{ detectSessionInUrl:true, persistSession:true, autoRefreshToken:true, flowType:"pkce" }
-    });
+    if(!CLOUD.client){
+      // A dynamic import that failed is remembered by the module map, and
+      // importing the same specifier again returns the same failure without
+      // going near the network. Retrying after the connection is back needs a
+      // specifier the browser has not seen before, hence the counter.
+      CLOUD.importTry = (CLOUD.importTry || 0) + 1;
+      const spec = "https://esm.sh/@supabase/supabase-js@2"
+                 + (CLOUD.importTry > 1 ? "?retry=" + CLOUD.importTry : "");
+      const { createClient } = await import(spec);
+      CLOUD.client = createClient(SB_URL, SB_KEY, {
+        auth:{ detectSessionInUrl:true, persistSession:true, autoRefreshToken:true, flowType:"pkce" }
+      });
+    }
 
     // A failed sign-in comes back with the reason in the hash or query string.
     // Without this it silently looks like "the link just didn't work".
@@ -1853,23 +2568,91 @@ async function cloudInit(){
     }
     const { data } = await CLOUD.client.auth.getSession();
     CLOUD.user = data.session ? data.session.user : null;
-    CLOUD.client.auth.onAuthStateChange((_evt, sess) => {
-      CLOUD.user = sess ? sess.user : null;
-      authUI();
-      if(CLOUD.user) setTimeout(cloudLoad, 0);   // never call Supabase inside this callback
-    });
+    if(!CLOUD.authWired){
+      CLOUD.authWired = true;
+      CLOUD.client.auth.onAuthStateChange((_evt, sess) => {
+        const wasIn = !!CLOUD.user;
+        CLOUD.user = sess ? sess.user : null;
+        // Signing out raises the gate, but the plan it is covering stays in the
+        // DOM behind it unless something blanks it — which is the whole reason
+        // render() refuses to paint while the gate is up.
+        if(wasIn && !CLOUD.user) render(); else authUI();
+        // never call Supabase inside this callback
+        if(CLOUD.user) setTimeout(() => CLOUD.pending ? pushPending() : cloudLoad(), 0);
+      });
+    }
     authUI();
-    if(CLOUD.user) await cloudLoad(); else setSync("signedout");
-    setInterval(pollRemote, 45000);
+    // Offline edits are pushed, not overwritten. cloudLoad() replaces the whole
+    // plan with the shared copy, which is exactly the wrong move on the first
+    // connection after a spell of editing with no network.
+    if(CLOUD.user){ if(CLOUD.pending) await pushPending(true); else await cloudLoad(); }
+    else setSync(CLOUD.pending ? "pending" : "signedout");
+    if(CLOUD.pollTimer == null) CLOUD.pollTimer = setInterval(pollRemote, 45000);
   }catch(e){
     console.error("Cloud sync unavailable:", e);
-    setSync("error");
+    setSync(CLOUD.pending ? "pending" : "error");
     CLOUD.urlError = "Couldn't reach the sync service. Check your connection, "
-      + "or continue offline — changes will stay on this device only.";
+      + "or continue offline — changes stay on this device and upload when it is back.";
     CLOUD.offlineOffer = true;
     authUI();
   }
 }
+
+/* Upload edits made while the shared plan was out of reach.
+
+   The household row is last-write-wins, which is fine when both devices can
+   see each other: whoever typed most recently is the one who meant it. It is
+   not fine after a day offline, where "most recent write" is this device
+   pushing a copy that predates whatever the other person did in between. So
+   the row is checked first, and it is only overwritten without asking when it
+   is still the version these edits were made against. */
+async function pushPending(quiet){
+  if(!CLOUD.client || !CLOUD.user) return;
+  setSync("saving");
+  const { data, error } = await CLOUD.client
+    .from("plan").select("updated_at,updated_by").eq("id","household").maybeSingle();
+  if(error){ setSync("pending"); return; }
+  const moved = data && CLOUD.lastSync && data.updated_at !== CLOUD.lastSync;
+  if(moved){
+    const who = data.updated_by || "someone else";
+    const when = CLOUD.pendingAt ? new Date(CLOUD.pendingAt).toLocaleString("en-US",
+      {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}) : "while offline";
+    const mine = confirm(
+      `This device has changes made offline (${when}).\n`
+      + `The shared plan has also been updated by ${who} since then.\n\n`
+      + `OK — upload this device's version, replacing theirs.\n`
+      + `Cancel — discard this device's offline changes and take the shared version.\n\n`
+      + `Export JSON first if you want to keep both.`);
+    if(!mine){
+      clearPending();
+      await cloudLoad();
+      flash("Took the shared version");
+      return;
+    }
+  }
+  await cloudSave(true);
+  if(CLOUD.status === "saved"){
+    clearPending();
+    if(!quiet) flash(moved ? "Offline changes uploaded, replacing the shared copy" : "Offline changes uploaded");
+  }
+}
+
+/* One way back from offline, used by the Sign in button, the browser's own
+   online event, and a slow poll for the case where neither fires. */
+async function reconnect(quiet){
+  if(!cloudOn() || CLOUD.reconnecting) return;
+  CLOUD.reconnecting = true;
+  try{
+    if(!CLOUD.client){ await cloudInit(); return; }   // cloudInit does the rest
+    if(!CLOUD.user){ setSync(CLOUD.pending ? "pending" : "signedout"); return; }
+    if(CLOUD.pending) await pushPending(quiet);
+  }finally{ CLOUD.reconnecting = false; }
+}
+
+window.addEventListener("online", () => reconnect(false));
+// The online event does not fire for a connection that was up but could not
+// reach Supabase, so anything still waiting is retried on its own clock.
+setInterval(() => { if(CLOUD.pending && navigator.onLine !== false) reconnect(true); }, 60000);
 
 async function cloudLoad(){
   if(!CLOUD.client || !CLOUD.user) return;
@@ -1879,24 +2662,84 @@ async function cloudLoad(){
   if(data && data.data){
     S = merge(structuredClone(DEFAULTS), data.data);
     CLOUD.lastSync = data.updated_at;
+    CLOUD.base = plain(S);
     saveLocal(); render(); setSync("saved");
+    // A new year opened on this load, or the shared copy was still in the
+    // old shape: either way the shared row should hold what is now on screen.
+    if(ROLLED || !data.data.years) await cloudSave(true);
   } else {
     await cloudSave(true);        // first run: seed the shared row
   }
 }
 
+const plain = v => JSON.parse(JSON.stringify(v));
+/* Three-way merge of plain JSON: what this device started from (base), what
+   it has now (mine) and what the shared copy holds (theirs). Whatever only
+   one side changed is kept; where both changed the same value, this device
+   wins, and a list whose length both sides changed is taken from this device
+   whole. A key missing on one side counts as deleted there. */
+function merge3(base, mine, theirs){
+  const same = (a,b) => JSON.stringify(a) === JSON.stringify(b);
+  if(same(mine, base)) return theirs;
+  if(same(theirs, base) || same(mine, theirs)) return mine;
+  const obj = v => v !== null && typeof v === "object";
+  if(obj(base) && obj(mine) && obj(theirs) && Array.isArray(base) === Array.isArray(mine)
+     && Array.isArray(mine) === Array.isArray(theirs)){
+    if(Array.isArray(mine)){
+      if(mine.length !== theirs.length || mine.length !== base.length) return mine;
+      return mine.map((m,i) => merge3(base[i], m, theirs[i]));
+    }
+    const out = {};
+    for(const k of new Set([...Object.keys(base), ...Object.keys(mine), ...Object.keys(theirs)])){
+      const v = merge3(base[k], mine[k], theirs[k]);
+      if(v !== undefined) out[k] = v;
+    }
+    return out;
+  }
+  return mine;
+}
+
 async function cloudSave(immediate){
-  if(!CLOUD.client || !CLOUD.user) return;
+  // Nothing to push to yet — hold the edit on this device and mark it waiting
+  if(!CLOUD.client || !CLOUD.user){ if(cloudOn()) markPending(); return; }
   CLOUD.dirty = true; setSync("saving");
   clearTimeout(CLOUD.timer);
   const push = async () => {
-    const { data, error } = await CLOUD.client.from("plan").upsert({
-      id:"household", data:S,
-      updated_at:new Date().toISOString(),
-      updated_by:CLOUD.user.email
-    }).select("updated_at").single();
-    if(error){ console.error(error); setSync("error"); return; }
-    CLOUD.lastSync = data.updated_at; CLOUD.dirty = false; setSync("saved");
+    // Someone else — the other person, or an agent — may have saved since
+    // this device last loaded, and a plain overwrite would erase their change.
+    // So the save only lands on the version it was made against; if the row
+    // has moved, this device's edits are laid over the newer copy and the
+    // save is tried again.
+    for(let tries = 0; tries < 3; tries++){
+      const now = new Date().toISOString();
+      let q, res;
+      if(CLOUD.lastSync){
+        q = CLOUD.client.from("plan")
+          .update({ data:S, updated_at:now, updated_by:CLOUD.user.email })
+          .eq("id","household").eq("updated_at", CLOUD.lastSync).select("updated_at");
+      } else {
+        q = CLOUD.client.from("plan")
+          .upsert({ id:"household", data:S, updated_at:now, updated_by:CLOUD.user.email }).select("updated_at");
+      }
+      res = await q;
+      // A push that fails is an edit the shared plan has not seen, which is the
+      // same situation as editing with no network at all.
+      if(res.error){ console.error(res.error); markPending(); return; }
+      if(res.data && res.data.length){
+        CLOUD.lastSync = res.data[0].updated_at; CLOUD.base = plain(S);
+        CLOUD.dirty = false; clearPending(); setSync("saved");
+        return;
+      }
+      const { data:cur, error:e2 } = await CLOUD.client
+        .from("plan").select("data,updated_at,updated_by").eq("id","household").maybeSingle();
+      if(e2 || !cur){ markPending(); return; }
+      S = merge(structuredClone(DEFAULTS), merge3(CLOUD.base || plain(S), plain(S), cur.data));
+      CLOUD.lastSync = cur.updated_at;
+      CLOUD.base = plain(merge(structuredClone(DEFAULTS), cur.data));
+      saveLocal(); render();
+      flash("Combined with changes by " + (cur.updated_by || "someone else"));
+    }
+    markPending();
   };
   if(immediate) return push();
   CLOUD.timer = setTimeout(push, 900);   // debounce so typing isn't a write per keystroke
@@ -1905,6 +2748,7 @@ async function cloudSave(immediate){
 // Pick up the other person's edits without a refresh
 async function pollRemote(){
   if(!CLOUD.client || !CLOUD.user || CLOUD.dirty) return;
+  if(CLOUD.pending){ reconnect(true); return; }   // send ours before taking theirs
   const { data, error } = await CLOUD.client
     .from("plan").select("updated_at,updated_by").eq("id","household").maybeSingle();
   if(error || !data || data.updated_at === CLOUD.lastSync) return;
@@ -1926,9 +2770,16 @@ function authUI(){
     if(m){ m.textContent = "Sign-in link failed: " + CLOUD.urlError; m.className = "authmsg bad"; }
   }
   out.hidden = !(cloudOn() && CLOUD.user);
-  if(CLOUD.user){
-    const who = document.getElementById("whoami");
-    if(who) who.textContent = CLOUD.user.email;
+  const api = document.getElementById("agentApiBtn");
+  if(api) api.hidden = !(cloudOn() && CLOUD.user);
+  // Continue offline used to be a one-way door — the gate came down and there
+  // was no way back to it without reloading the page.
+  const inBtn = document.getElementById("signInBtn");
+  if(inBtn) inBtn.hidden = !(cloudOn() && !CLOUD.user && CLOUD.offlineOk);
+  const who = document.getElementById("whoami");
+  if(who){
+    who.hidden = !CLOUD.user;
+    who.textContent = CLOUD.user ? "Signed in as " + CLOUD.user.email : "";
   }
 }
 
@@ -1989,15 +2840,25 @@ const mo = it => it.c === "y" ? it.a/12 : it.a;
 const sum = (arr,f) => arr.reduce((t,x)=>t+f(x),0);
 
 // One paycheck at a given annual rate, run through the same deduction chain.
-function checkAt(p, annual){
+// The rate is passed in rather than read off p: it is derived from the paystub
+// (see person()), and the same rate has to price a pre-raise paycheck and a
+// post-raise one, so it cannot be recomputed from whichever check is in hand.
+function checkAt(p, annual, rate){
   const gross   = p.paychecks ? annual/p.paychecks : 0;
   const preAmt  = gross * p.pre401k;
   const taxable = gross - preAmt - p.otherPre;
-  const tax     = taxable * p.taxRate;
+  const tax     = taxable * rate;
   const postAmt = (taxable - tax) * p.post401k;
   const net     = taxable - tax - postAmt - p.otherPost;
   return { gross, preAmt, taxable, tax, postAmt, net };
 }
+
+// Pay subject to tax on a paycheck at a given annual rate, worked out without
+// reference to tax — which is what lets the withholding rate be derived from it.
+const taxableAt = (p, annual) => {
+  const gross = p.paychecks ? annual/p.paychecks : 0;
+  return gross - gross * p.pre401k - p.otherPre;
+};
 
 function person(p){
   // A mid-year raise splits the year into two rates. raiseChecks is how many
@@ -2009,8 +2870,23 @@ function person(p){
   const rateB      = hasRaise ? p.newSalary : p.salary;        // rate going forward
   const checksB    = hasRaise ? Math.min(p.raiseChecks, p.paychecks) : p.paychecks;
   const checksA    = p.paychecks - checksB;
-  const A          = checkAt(p, p.salary);                     // before the raise
-  const B          = checkAt(p, rateB);                        // after the raise
+
+  // Withholding comes off the paystub as three separate lines. Only the first
+  // two are income tax; FICA — Social Security, Medicare, CA SDI — is a
+  // separate levy that never appears on a return, which is why the tax tab
+  // takes fedPer and caPer and leaves ficaPer alone. Take-home, of course,
+  // is short by all three.
+  const fedPer     = p.fedPer  || 0;
+  const caPer      = p.caPer   || 0;
+  const ficaPer    = p.ficaPer || 0;
+  const whPerCheck = fedPer + caPer + ficaPer;
+  // Expressing the paystub's dollars as a share of pay subject to tax is what
+  // carries them across a mid-year raise: the dollars belong to one paycheck,
+  // the rate to the whole year.
+  const taxableNow = taxableAt(p, rateB);
+  const taxRate    = taxableNow > 0 ? whPerCheck / taxableNow : 0;
+  const A          = checkAt(p, p.salary, taxRate);            // before the raise
+  const B          = checkAt(p, rateB, taxRate);               // after the raise
 
   // The visible per-paycheck chain reflects the rate now in effect
   const gross      = B.gross;
@@ -2031,8 +2907,56 @@ function person(p){
   // True when YTD is blank but the year is already part-spent — the inputs
   // can't both be right, and every 401k figure below depends on it.
   const dataGap       = p.ytd401k === 0 && p.checksLeft < p.paychecks;
+
+  // ---- withholding, projected to year end ------------------------------
+  // Built forward from the paystub's year-to-date column, not from per-check
+  // dollars times checks already paid. The two agree only if pay never
+  // changed mid-year; the YTD column is right either way.
+  const checksPaid = Math.max(0, p.paychecks - p.checksLeft);
+  // Bonuses are withheld at the flat supplemental rates, not at the rate on a
+  // regular paycheck, so a bonus still to come is projected separately.
+  const bonusFed   = p.bonusLeft * (p.bonusFedRate || 0);
+  const bonusCA    = p.bonusLeft * (p.bonusCARate  || 0);
+  const whLine = (per, ytd, bonus) => {
+    const rem = per * p.checksLeft + (bonus || 0);
+    return { per, ytd, rem, year: ytd + rem };
+  };
+  const wh = {
+    fed:  whLine(fedPer,  p.ytdFed  || 0, bonusFed),
+    ca:   whLine(caPer,   p.ytdCA   || 0, bonusCA),
+    fica: whLine(ficaPer, p.ytdFica || 0, 0),
+    bonusFed, bonusCA, checksPaid
+  };
+  wh.total = {
+    per:  whPerCheck,
+    ytd:  wh.fed.ytd  + wh.ca.ytd  + wh.fica.ytd,
+    rem:  wh.fed.rem  + wh.ca.rem  + wh.fica.rem,
+    year: wh.fed.year + wh.ca.year + wh.fica.year
+  };
+  // Gross earned so far, from the paystub, against gross projected for the
+  // year — the two ends of the same measure, so drift between the plan and
+  // payroll shows up as a number rather than as a surprise in April.
+  const ytdGross    = p.ytdGross || 0;
+  const grossToCome = B.gross * p.checksLeft + p.bonusLeft;
+  // Gross as the plan would model it: each salary rate times its share of the
+  // year's paychecks. It misses whatever payroll paid that is not salary —
+  // vesting stock, stipends, a bonus already banked — so the paystub figure
+  // is preferred where there is one, and this stands in until there is.
+  const grossModelled = A.gross*checksA + B.gross*checksB + p.bonus;
+  const annualGross   = ytdGross > 0 ? ytdGross + grossToCome : grossModelled;
+  const grossDrift    = ytdGross > 0 ? annualGross - grossModelled : 0;
+  const annualOtherPre  = p.otherPre  * p.paychecks;
+  const annualOtherPost = p.otherPost * p.paychecks;
+  const annualPostAmt   = B.postAmt   * p.paychecks;
+  // Everything payroll paid, less everything payroll took. Bonus included on
+  // both sides, which the old figure did not manage: it counted 401k from the
+  // bonus as saved while leaving the bonus itself out of income.
+  const annualNet = annualGross - total401k - annualOtherPre
+                  - wh.total.year - annualPostAmt - annualOtherPost;
+
   return {
     ...p, gross, preAmt, taxable, tax, postAmt, net,   // p.pre401k / p.post401k stay as rates
+    fedPer, caPer, ficaPer, whPerCheck, taxRate, wh, checksPaid, ytdGross, grossToCome,
     hasRaise, raisePending, rateB, checksA, checksB, netA: A.net, netB: B.net,
     grossA: A.gross, grossB: B.gross,
     raiseDelta: B.net - A.net,
@@ -2041,9 +2965,9 @@ function person(p){
     // checking from here on. Annual figures below blend both salaries.
     monthly: B.net * p.paychecks / 12,
     monthlyIfWholeYear: A.net * p.paychecks / 12,
-    annualGross: A.gross*checksA + B.gross*checksB + p.bonus,
-    annualNet: A.net*checksA + B.net*checksB,
-    annualTax: A.tax*checksA + B.tax*checksB,
+    annualGross, grossModelled, grossDrift, annualNet,
+    annualOtherPre, annualOtherPost, annualPostAmt,
+    annualTax: wh.total.year,
     grossLeft, fromRemaining, fromBonus, total401k, room, dataGap,
     // The plan hard-stops at the IRS limit, so landing slightly over is safe —
     // the contributions simply cease. Under the limit is the outcome to avoid.
@@ -2145,6 +3069,15 @@ function bracketBars(tx){
   return `<div class="brk" role="img"
        aria-label="Federal ordinary brackets. ${foot}.">${body}</div>
     <div class="brk-foot">${foot}</div>`;
+}
+
+/* The all-in marginal rate named by its pieces, so the federal bracket above
+   it is not mistaken for the whole of it. Pieces that round to zero drop out. */
+function marginalMix(tx){
+  const p = tx.marginalParts;
+  const bits = [["Fed",p.fedBracket],["NIIT",p.niit],["CA",p.ca],["Medicare",p.addMed],["SALT",p.saltFeedback]]
+    .filter(([,v]) => Math.abs(v) >= 0.0005);
+  return bits.map(([n,v],i) => `${i ? (v < 0 ? " − " : " + ") : ""}${n} ${pct(Math.abs(v)).replace(".0%","%")}`).join("");
 }
 
 /* What net worth is made of. Assets group into property, the liquid and
@@ -2376,6 +3309,15 @@ function paintCashflow(){
     if(out) out.innerHTML = "";
     return;
   }
+  // Below a phone-and-a-bit the diagram gives way to the stacked ledger. The
+  // threshold is the plot's own width, which is what the ResizeObserver
+  // above reports, and lines up with the 640px break in the stylesheet.
+  if(host.clientWidth > 0 && host.clientWidth < 612){
+    host.innerHTML = cfStack();
+    if(out){ out.innerHTML = ""; out.hidden = true; }
+    return;
+  }
+  if(out) out.hidden = false;
   const {N, L, by} = CF;
   const W = Math.max(760, host.clientWidth || 900);
   const narrow  = W < 860;
@@ -2470,6 +3412,43 @@ function paintCashflow(){
 
   host.innerHTML = `<div class="cf-in" style="width:${W}px;height:${H}px">${svg.join("")}${labels}</div>`;
   cfWire(host, out);
+}
+
+/* The same graph as a cascade, for a phone. Each source that sends money
+   somewhere is a block: its name and total, then one line per destination
+   with a bar whose length is that line's share of gross pay. Destinations
+   that are themselves sources — take-home pay, and the four bands in full
+   detail — are bold, and appear as their own block further down. Whatever
+   is left over sits last in its block, since that is what flows on. */
+function cfStack(){
+  const {N, L, by} = CF;
+  const order = ["gross","take","fixed","inv","sav","invin"];
+  const rank = n => { const i = order.indexOf(n.id); return i < 0 ? 99 : i; };
+  const srcs = N.filter(n => L.some(l => l.s === n.id)).sort((a,b) => rank(a) - rank(b));
+  const paint = n => CFC[n.ck] || CFC.light;
+  const c = S.caps.free;
+  const share = v => CF.gross ? Math.min(100, v / CF.gross * 100).toFixed(1) : 0;
+  const row = l => {
+    const t = by[l.t];
+    const onward = L.some(x => x.s === t.id);
+    const note = t.alert
+      ? (CF.freePct > c.max ? `over its ${pct(c.max,0)} ceiling` : `under its ${pct(c.min,0)} floor`)
+      : (t.sub || "");
+    return `<div class="cf-row${t.alert ? " alert" : ""}${onward ? " onward" : ""}">
+      <span class="n"><i style="background:${paint(t)}"></i>${esc(t.label)}</span>
+      <span class="v">${cfFmt(l.v)}</span>
+      <span class="bar"><i style="width:${share(l.v)}%;background:${paint(t)}"></i></span>
+      ${note ? `<span class="s">${esc(note)}</span>` : ""}</div>`;
+  };
+  return `<div class="cf-stack">${srcs.map(sr => {
+    const outs = L.filter(l => l.s === sr.id);
+    const lead = outs.filter(l => by[l.t].lead), rest = outs.filter(l => !by[l.t].lead);
+    const sub = sr.parts ? sr.parts.map(([nm,v]) => esc(nm) + " " + cfFmt(v)).join(" · ") : esc(sr.sub || "");
+    return `<div class="cf-src">
+      <div class="cf-src-h"><span class="n">${esc(sr.label)}</span><span class="v">${cfFmt(sr.value)}</span></div>
+      ${sub ? `<p class="cf-src-s">${sub}</p>` : ""}
+      ${rest.concat(lead).map(row).join("")}</div>`;
+  }).join("")}</div>`;
 }
 
 /* Hover only elaborates: every name and figure is already on screen as real
@@ -2625,7 +3604,9 @@ function dash(){
   // Built here, laid out by paintCashflow() once the markup has a width
   CF = cashflowGraph(m, tx);
 
-  const seg = (cls,label,val,p) => `<div class="seg ${cls}" style="flex:0 0 ${Math.max(0,p*100).toFixed(2)}%" title="${label}: ${usd(val)}">${p>0.07?`<span class="pct num">${pct(p,0)}</span>`:""}</div>`;
+  // A band outside its guardrail carries its figure in red, so the ribbon
+  // itself says which one is off — the same verdict the legend gives.
+  const seg = (cls,label,val,p,key) => `<div class="seg ${cls}${inBand(p,key)?"":" off"}" style="flex:0 0 ${Math.max(0,p*100).toFixed(2)}%" title="${label}: ${usd(val)}">${p>0.005?`<span class="pct num">${pct(p,0)}</span>`:""}</div>`;
   const leg = (cls,name,val,p,key,extra="") => {
     const c = S.caps[key], ok = inBand(p, key);
     return `<div class="l-${cls}">
@@ -2674,10 +3655,10 @@ function dash(){
       </div>
       <div class="ribbon-wrap">
         <div class="ribbon">
-          ${seg("seg-fixed","Fixed costs",m.fixedTotal,m.pct.fixed)}
-          ${seg("seg-invest","Investing",m.investTotal,m.pct.invest)}
-          ${seg("seg-save","Savings",m.savingsTotal,m.pct.savings)}
-          ${seg("seg-free","Guilt-free",m.free,Math.max(0,m.pct.free))}
+          ${seg("seg-fixed","Fixed costs",m.fixedTotal,m.pct.fixed,"fixed")}
+          ${seg("seg-invest","Investing",m.investTotal,m.pct.invest,"invest")}
+          ${seg("seg-save","Savings",m.savingsTotal,m.pct.savings,"savings")}
+          ${seg("seg-free","Guilt-free",m.free,Math.max(0,m.pct.free),"free")}
         </div>
         <div class="cap" style="left:${cap*100}%" data-label="${pct(cap,0)} fixed cap"></div>
       </div>
@@ -2732,11 +3713,12 @@ function dash(){
 
       <div class="card">
         <h3>This year at current rates</h3>
-        <p class="subhead">Both salaries, blended across the year</p>
+        <p class="subhead">Both salaries and investment income</p>
         <div class="calcflow">
-          <div class="cf-line"><span>Combined gross</span><b>${usd(sum(m.P,p=>p.annualGross))}</b></div>
+          <div class="cf-line"><span>Combined gross salaries</span><b>${usd(sum(m.P,p=>p.annualGross))}</b></div>
           <div class="cf-line"><span>Taxes withheld</span><b style="color:var(--red)">−${usd(sum(m.P,p=>p.annualTax))}</b></div>
-          <div class="cf-line result"><span>Combined net</span><b>${usd(m.netYr)}</b></div>
+          <div class="cf-line"><span>Net investment income</span><b>${usd(tx.nii)}</b></div>
+          <div class="cf-line result"><span>Combined net</span><b>${usd(m.netYr + tx.nii)}</b></div>
         </div>
         <div class="calcband">Saved or invested</div>
         <div class="calcflow">
@@ -2750,18 +3732,19 @@ function dash(){
 
     <div class="grid2">
       <div class="card">
-        <h3>Where the next dollar is taxed</h3>
-        <p class="subhead">Federal ordinary brackets, married filing jointly</p>
+        <h3>Federal bracket</h3>
+        <p class="subhead">Ordinary income, married filing jointly · federal only</p>
         ${bracketBars(tx)}
         <div class="ratestrip">
           <div><div class="rl">MARGINAL</div><div class="rv">${pct(tx.marginal)}</div>
-               <div class="rs">on the next dollar</div></div>
+               <div class="rs">all-in on the next dollar</div></div>
           <div><div class="rl">EFFECTIVE</div><div class="rv">${pct(tx.agi > 0 ? tx.totalTax/tx.agi : 0)}</div>
                <div class="rs">federal + California, on AGI</div></div>
           <div><div class="rl">${tx.combinedBal >= 0 ? "REFUND" : "STILL OWED"}</div>
                <div class="rv ${tx.combinedBal >= 0 ? "" : "bad"}">${usd(Math.abs(tx.combinedBal))}</div>
                <div class="rs">at current withholding</div></div>
         </div>
+        <div class="ratemix">Marginal ${pct(tx.marginal)} = ${marginalMix(tx)}</div>
       </div>
 
       <div class="card">
@@ -2784,7 +3767,8 @@ function dash(){
       <div class="cf-head">
         <div>
           <h3>Gross pay to guilt-free spending</h3>
-          <p class="subhead">Ribbon width is dollars throughout, so every proportion here is literal</p>
+          <p class="subhead ribbons">Ribbon width is dollars throughout, so every proportion here is literal</p>
+          <p class="subhead stacked">Each bar is that line's share of gross pay, so every proportion here is literal</p>
         </div>
         <div class="cf-ctrls">
           <span class="rangebar">${[["mo","$ / mo"],["yr","$ / yr"],["pct","% of gross"]].map(([k,l])=>
@@ -2808,12 +3792,12 @@ function dash(){
     </div>
     <div class="railbody">
       <div class="railsec">
-        <span class="eyebrow">Also worth a look</span>
+        <h3>Also worth a look</h3>
         ${rest.map(([k,t])=>`<div class="railnote${k==="bad"?" bad":""}">${t}</div>`).join("")}
       </div>
 
       <div class="railsec">
-        <span class="eyebrow">Credits closing soonest</span>
+        <h3>Credits closing soonest</h3>
         ${cardSoon.length ? cardSoon.slice(0,4).map(x=>`<div class="railrow">
           <span>${esc(x.credit)}<span class="when">${esc(x.card)} · ${x.days}d left</span></span>
           <b>${usd(x.amt)}</b></div>`).join("")
@@ -2833,6 +3817,72 @@ function income(){
   const nameInp = (pi,v) => `<input class="cell wide" type="text" value="${esc(v)}" data-p="${pi}" data-f="name" placeholder="Name" aria-label="Name">`;
   const row = (label, cells, cls="", note="") =>
     `<tr class="${cls}"><td class="lab">${label}${note?`<span class="note">${note}</span>`:""}</td>${cells.map(c=>`<td class="calc">${c}</td>`).join("")}</tr>`;
+  const cell = v => `<td style="text-align:right">${v}</td>`;
+
+  // One card per person, laid out like the paystub itself: what this paycheck
+  // did, and what the year has done so far. Everything payroll-shaped is typed
+  // here and nowhere else — the 401k recommender and the whole tax tab read
+  // these figures rather than asking for them a second time.
+  const stub = (p,i) => {
+    const incomeTaxPer = p.fedPer + p.caPer;
+    const gap = p.checksPaid > 0 && p.ytdGross === 0;
+    return `
+    <div class="card">
+      <h3>Latest paystub — ${esc(p.name)} <span class="caprule">${p.stubUpdated ? "Entered "+fmtDay(p.stubUpdated) : "Not yet entered"}</span></h3>
+      <div class="calcflow">
+        <div class="cf-line"><span>Paychecks remaining<em>${p.checksPaid} of ${p.paychecks} already received · the tax tab projects withholding over these</em></span>
+          <b>${inp(i,"checksLeft",p.checksLeft)}</b></div>
+      </div>
+
+      <table class="calctbl stubtbl">
+        <colgroup><col><col><col></colgroup>
+        <thead><tr><th></th><th>This paycheck</th><th>Year to date</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Gross pay<span class="note">Year to date is the paystub's own total — it carries stock, stipends and any bonus already paid</span></td>
+            ${cell(usd2(p.gross))}${cell(inp(i,"ytdGross",p.ytdGross))}</tr>
+        </tbody>
+      </table>
+
+      <div class="calcband">Taxes withheld</div>
+      <table class="calctbl stubtbl">
+        <colgroup><col><col><col></colgroup>
+        <tbody>
+          <tr><td class="lab">Federal withholding</td>${cell(inp(i,"fedPer",p.fedPer))}${cell(inp(i,"ytdFed",p.ytdFed))}</tr>
+          <tr><td class="lab">California withholding</td>${cell(inp(i,"caPer",p.caPer))}${cell(inp(i,"ytdCA",p.ytdCA))}</tr>
+          <tr><td class="lab">Social Security, Medicare, CA SDI<span class="note">Add these paystub lines together — they are not income tax and never reach a return</span></td>
+            ${cell(inp(i,"ficaPer",p.ficaPer))}${cell(inp(i,"ytdFica",p.ytdFica))}</tr>
+          ${row("Total tax withheld",[usd2(p.whPerCheck), usd2(p.wh.total.ytd)],"total")}
+        </tbody>
+      </table>
+
+      <div class="calcband">Retirement</div>
+      <table class="calctbl stubtbl">
+        <colgroup><col><col><col></colgroup>
+        <tbody>
+          <tr><td class="lab">Pre-tax 401k<span class="note">Per-check figure follows the percentage above</span></td>
+            ${cell(usd2(p.preAmt))}${cell(inp(i,"ytd401k",p.ytd401k))}</tr>
+        </tbody>
+      </table>
+
+      <div class="calcband">Bonus still to come</div>
+      <div class="calcflow">
+        <div class="cf-line"><span>Still to be paid<em>A bonus already banked is inside the year-to-date gross above, so leave it out here</em></span>
+          <b>${inp(i,"bonusLeft",p.bonusLeft)}</b></div>
+        <div class="cf-line"><span>Federal supplemental rate<em>Payroll withholds a bonus at a flat rate, not at the rate on a regular paycheck — 22% federal below $1m</em></span>
+          <b>${pctInp(i,"bonusFedRate",p.bonusFedRate)}</b></div>
+        <div class="cf-line"><span>California supplemental rate<em>10.23% on a bonus, 6.6% on other supplemental pay</em></span>
+          <b>${pctInp(i,"bonusCARate",p.bonusCARate)}</b></div>
+        ${p.bonusLeft > 0 ? `<div class="cf-line grand"><span>Withholding it will take</span><b>${usd(p.wh.bonusFed)} fed · ${usd(p.wh.bonusCA)} CA</b></div>` : ""}
+      </div>
+
+      ${gap ? `<div class="callout warn">${esc(p.name)}: year-to-date gross is $0 with ${p.checksPaid} paychecks already received. Until it is entered, the year is projected from the salary rates instead of from payroll.</div>` : ""}
+
+      <div class="calcflow bottom">
+        <div class="cf-line"><span>Withheld per paycheck<em>Federal ${usd2(p.fedPer)} · California ${usd2(p.caPer)} · FICA ${usd2(p.ficaPer)}</em></span><b>${usd2(p.whPerCheck)}</b></div>
+        <div class="cf-line grand"><span>Share of pay subject to tax<em>Income tax alone is ${pct(p.taxable?incomeTaxPer/p.taxable:0,2)}; FICA accounts for the rest</em></span><b>${pct(p.taxRate,2)}</b></div>
+      </div>
+    </div>`;
+  };
 
   return `
   <div class="pagehead"><h2 class="section">Income plan</h2>
@@ -2840,25 +3890,29 @@ function income(){
 
   <div class="card">
     <h3>Pay and deductions <span class="caprule">Edit the blue cells; everything else follows</span></h3>
-    <table class="inputs-tbl">
+    <table class="stk inputs-tbl">
       <colgroup><col style="width:30%"><col style="width:130px"><col style="width:130px"><col></colgroup>
       <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Notes</th></tr></thead>
       <tbody>
-        <tr><td class="lab">Name</td>${P.map((p,i)=>`<td>${nameInp(i,p.name)}</td>`).join("")}<td class="lab"><span class="note">Used across every tab</span></td></tr>
-        <tr><td class="lab">Annual salary<span class="note">Rate before any increase</span></td>${P.map((p,i)=>`<td>${inp(i,"salary",p.salary)}</td>`).join("")}<td>${noteInp("salary")}</td></tr>
-        <tr><td class="lab">Salary after increase<span class="note">Leave at 0 if no raise this year</span></td>${P.map((p,i)=>`<td>${inp(i,"newSalary",p.newSalary)}</td>`).join("")}<td class="lab"><span class="note">The new annual rate</span></td></tr>
-        <tr><td class="lab">Paychecks at the new salary</td>${P.map((p,i)=>`<td>${inp(i,"raiseChecks",p.raiseChecks)}</td>`).join("")}<td class="lab"><span class="note">${P.some(p=>p.raisePending)
+        <tr><td class="lab">Name</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${nameInp(i,p.name)}</td>`).join("")}<td class="lab"><span class="note">Used across every tab</span></td></tr>
+        <tr><td class="lab">Annual salary<span class="note">Rate before any increase</span></td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"salary",p.salary)}</td>`).join("")}<td>${noteInp("salary")}</td></tr>
+        <tr><td class="lab">Salary after increase<span class="note">Leave at 0 if no raise this year</span></td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"newSalary",p.newSalary)}</td>`).join("")}<td class="lab"><span class="note">The new annual rate</span></td></tr>
+        <tr><td class="lab">Paychecks at the new salary</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"raiseChecks",p.raiseChecks)}</td>`).join("")}<td class="lab"><span class="note">${P.some(p=>p.raisePending)
           ? `<strong style="color:var(--amber)">Set this, or the new salary is ignored</strong>`
           : "How many of this year's checks land at the higher rate"}</span></td></tr>
-        <tr><td class="lab">Annual bonus</td>${P.map((p,i)=>`<td>${inp(i,"bonus",p.bonus)}</td>`).join("")}<td>${noteInp("bonus")}</td></tr>
-        <tr><td class="lab">Paychecks per year</td>${P.map((p,i)=>`<td>${inp(i,"paychecks",p.paychecks)}</td>`).join("")}<td>${noteInp("paychecks")}</td></tr>
-        <tr><td class="lab">Pre-tax 401k</td>${P.map((p,i)=>`<td>${pctInp(i,"pre401k",p.pre401k)}</td>`).join("")}<td>${noteInp("pre401k")}</td></tr>
-        <tr><td class="lab">After-tax 401k</td>${P.map((p,i)=>`<td>${pctInp(i,"post401k",p.post401k)}</td>`).join("")}<td>${noteInp("post401k")}</td></tr>
-        <tr><td class="lab">Effective tax rate</td>${P.map((p,i)=>`<td>${pctInp(i,"taxRate",p.taxRate)}</td>`).join("")}<td>${noteInp("taxRate")}</td></tr>
-        <tr><td class="lab">Other pre-tax deductions</td>${P.map((p,i)=>`<td>${inp(i,"otherPre",p.otherPre)}</td>`).join("")}<td>${noteInp("otherPre")}</td></tr>
-        <tr><td class="lab">Other after-tax deductions</td>${P.map((p,i)=>`<td>${inp(i,"otherPost",p.otherPost)}</td>`).join("")}<td>${noteInp("otherPost")}</td></tr>
+        <tr><td class="lab">Annual bonus</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"bonus",p.bonus)}</td>`).join("")}<td>${noteInp("bonus")}</td></tr>
+        <tr><td class="lab">Paychecks per year</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"paychecks",p.paychecks)}</td>`).join("")}<td>${noteInp("paychecks")}</td></tr>
+        <tr><td class="lab">Pre-tax 401k</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${pctInp(i,"pre401k",p.pre401k)}</td>`).join("")}<td>${noteInp("pre401k")}</td></tr>
+        <tr><td class="lab">After-tax 401k</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${pctInp(i,"post401k",p.post401k)}</td>`).join("")}<td>${noteInp("post401k")}</td></tr>
+        <tr><td class="lab">Withheld, share of taxable pay<span class="note">Derived — enter the paystub below instead</span></td>${P.map(p=>`<td data-who="${esc(p.name)}" class="calc">${pct(p.taxRate,2)}</td>`).join("")}<td class="lab"><span class="note">Federal and California withholding, with Social Security, Medicare and CA SDI on top — the split is in the paystub cards below</span></td></tr>
+        <tr><td class="lab">Other pre-tax deductions</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"otherPre",p.otherPre)}</td>`).join("")}<td>${noteInp("otherPre")}</td></tr>
+        <tr><td class="lab">Other after-tax deductions</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"otherPost",p.otherPost)}</td>`).join("")}<td>${noteInp("otherPost")}</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="grid2" id="paystub">
+    ${P.map((p,i)=>stub(p,i)).join("")}
   </div>
 
   <div class="grid2">
@@ -2899,9 +3953,9 @@ function income(){
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
         <tbody>
-          <tr><td class="lab">Contributed so far<span class="note">From the latest paystub</span></td>${P.map((p,i)=>`<td>${inp(i,"ytd401k",p.ytd401k)}</td>`).join("")}</tr>
-          <tr><td class="lab">Paychecks remaining</td>${P.map((p,i)=>`<td>${inp(i,"checksLeft",p.checksLeft)}</td>`).join("")}</tr>
-          <tr><td class="lab">Bonus still to be paid</td>${P.map((p,i)=>`<td>${inp(i,"bonusLeft",p.bonusLeft)}</td>`).join("")}</tr>
+          ${row("Contributed so far", P.map(p=>usd2(p.ytd401k)),"","From the paystub card above")}
+          ${row("Paychecks remaining", P.map(p=>`${p.checksLeft} of ${p.paychecks}`),"","Also from the paystub card — and what the tax tab projects withholding over")}
+          ${row("Bonus still to be paid", P.map(p=>usd2(p.bonusLeft)),"","From the paystub card above")}
           ${row("Percentage to set", P.map(p=>`<strong>${pct(p.recPct,2)}</strong>`),"total")}
           ${row("Contribution per paycheck at that %", P.map(p=>usd2(p.recPerCheck)),"sub")}
         </tbody>
@@ -2949,11 +4003,18 @@ function income(){
         <tbody>
           ${P.some(p=>p.hasRaise) ? row("Paychecks at old / new salary",
             [...P.map(p=>p.hasRaise?`${p.checksA} / ${p.checksB}`:`${p.paychecks} / 0`), ""]) : ""}
-          ${row("Gross pay earned", [...P.map(p=>usd(p.annualGross)), usd(sum(P,p=>p.annualGross))],"","Both salaries plus bonus")}
-          ${row("Tax withheld", [...P.map(p=>usd(p.annualTax)), usd(sum(P,p=>p.annualTax))])}
-          ${row("Take-home for the year", [...P.map(p=>usd(p.annualNet)), usd(m.netYr)],"total","Excludes bonus")}
+          ${row("Earned so far", [...P.map(p=>usd(p.ytdGross)), usd(sum(P,p=>p.ytdGross))],"","Year to date, straight off the paystubs")}
+          ${row("Still to come", [...P.map(p=>usd(p.grossToCome)), usd(sum(P,p=>p.grossToCome))],"","Remaining paychecks plus any bonus not yet paid")}
+          ${row("Gross pay for the year", [...P.map(p=>usd(p.annualGross)), usd(sum(P,p=>p.annualGross))],"sub")}
+          ${row("Federal withheld", [...P.map(p=>"−"+usd(p.wh.fed.year)), "−"+usd(sum(P,p=>p.wh.fed.year))])}
+          ${row("California withheld", [...P.map(p=>"−"+usd(p.wh.ca.year)), "−"+usd(sum(P,p=>p.wh.ca.year))])}
+          ${row("Social Security, Medicare, SDI", [...P.map(p=>"−"+usd(p.wh.fica.year)), "−"+usd(sum(P,p=>p.wh.fica.year))])}
+          ${row("401k and other deductions", [...P.map(p=>"−"+usd(p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost)), "−"+usd(sum(P,p=>p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost))])}
+          ${row("Take-home for the year", [...P.map(p=>usd(p.annualNet)), usd(m.netYr)],"total","Bonus counted on both sides")}
         </tbody>
       </table>
+      ${P.some(p=>Math.abs(p.grossDrift) > 1000) ? `<p class="section-note">${P.filter(p=>Math.abs(p.grossDrift)>1000).map(p=>
+        `${esc(p.name)}: payroll is ${p.grossDrift>0?"ahead of":"behind"} the salary rates above by <strong>${usd(Math.abs(p.grossDrift))}</strong>`).join(" · ")}. Vesting stock, stipends and overtime land in the paystub but not in an annual salary, so a gap here is normal — a large one means the salary or the paycheck count needs another look.</p>` : ""}
 
       <div class="calcband">401k this year</div>
       <table class="calctbl">
@@ -2995,20 +4056,22 @@ function spend(){
   const cadence = (list,idx,it) => `<select class="cell" data-list="${list}" data-i="${idx}" data-f="c">
       <option value="m"${it.c==="m"?" selected":""}>/mo</option>
       <option value="y"${it.c==="y"?" selected":""}>/yr</option></select>`;
-  const line = (list,idx,it) => `<tr>
+  const line = (list,idx,it) => `<tr${it.c==="y"?' class="yr"':""}>
       <td class="lab"><input class="cell wide" value="${esc(it.n)}" data-list="${list}" data-i="${idx}" data-f="n">${it.note?`<span class="note">${esc(it.note)}</span>`:""}</td>
       <td><input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(it.a)}" data-list="${list}" data-i="${idx}" data-f="a"></td>
       <td>${cadence(list,idx,it)}</td>
-      <td class="calc">${usd2(mo(it))}</td>
+      <td class="calc" data-yr="${usd2(mo(it))}/mo">${usd2(mo(it))}</td>
       <td style="width:22px"><button class="rowdel" data-del="${list}" data-i="${idx}" title="Remove ${esc(it.n)}">×</button></td>
     </tr>`;
-  const head = `<thead><tr><th>Line item</th><th>Amount</th><th></th><th>Monthly</th><th></th></tr></thead>`;
+  // Fixed widths, so a line item's name sits next to its amount rather than
+  // stretching across whatever the card leaves over
+  const head = `<colgroup><col><col style="width:124px"><col style="width:84px"><col style="width:120px"><col style="width:30px"></colgroup>`
+             + `<thead><tr><th>Line item</th><th>Amount</th><th></th><th>Monthly</th><th></th></tr></thead>`;
   // Guardrail band shown on every section header, so each cap is stated explicitly
   const band = (key,val,over) => {
     const c = S.caps[key];
     const ok = over !== undefined ? !over : inBand(val, key);
-    const limit = capLimit(key);
-    return `<span class="caprule">target ${pct(c.min,0)}–${pct(c.max,0)} of take-home · ${limit}</span>
+    return `<span class="caprule">target ${pct(c.min,0)}–${pct(c.max,0)} of take-home</span>
             <span class="tag ${ok?"ok":"bad"}">${pct(val)} now</span>`;
   };
 
@@ -3016,19 +4079,19 @@ function spend(){
   <div class="pagehead"><h2 class="section">Spending plan</h2>
   <p class="section-note">Net income pulls from the income plan. Each section is measured against a target share of take-home pay. Guilt-free spending is whatever the other three leave behind.</p></div>
 
-  <div class="card">
-    <h3>Income <span class="tag ok">100%</span></h3>
-    <table>
-      <tbody>
-        ${m.P.map(p=>`<tr><td class="lab">${esc(p.name)}<span class="note">Net of tax, 401k and deductions</span></td><td class="calc">${usd2(p.monthly)}</td></tr>`).join("")}
-        <tr class="total"><td>Net income</td><td class="calc">${usd2(m.netTotal)}</td></tr>
-      </tbody>
-    </table>
+  <div class="spendgrid">
+  <div class="card sp-income">
+    <h3><span class="step">1</span>Income <span class="tag ok">100%</span></h3>
+    <div class="incstrip">
+      ${m.P.map(p=>`<div class="inc"><span class="eyebrow">${esc(p.name)}</span><b class="num">${usd2(p.monthly)}</b><span class="note">Net of tax, 401k and deductions</span></div>`).join(`<span class="op">+</span>`)}
+      <span class="op">=</span>
+      <div class="inc net"><span class="eyebrow">Net income</span><b class="num">${usd2(m.netTotal)}</b><span class="note">Every dollar below comes out of this</span></div>
+    </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
-    <h3>Fixed costs ${band("fixed",m.pct.fixed)}</h3>
-    <table>
+  <div class="card sp-fixed">
+    <h3><span class="step">2</span>Fixed costs ${band("fixed",m.pct.fixed)}</h3>
+    <table class="stk linetbl">
       ${head}
       <tbody>
         ${groups.map(g=>{
@@ -3043,48 +4106,49 @@ function spend(){
           <td style="color:var(--muted);font-size:12px">% of above</td>
           <td class="calc">${usd2(m.misc)}</td><td></td></tr>
         <tr class="total"><td colspan="3">Fixed costs total</td><td class="calc">${usd2(m.fixedTotal)}</td><td></td></tr>
-        <tr><td colspan="3" style="text-align:right;color:var(--moss);font-weight:600">Remaining after fixed costs</td><td class="calc" style="color:var(--moss);font-weight:600">${usd2(m.afterFixed)}</td><td></td></tr>
+        <tr class="handoff"><td colspan="3">Left for investing <span class="to">→ 3</span></td><td class="calc">${usd2(m.afterFixed)}</td><td></td></tr>
       </tbody>
     </table>
     <button class="addrow" data-add="fixed">+ Add a new category</button>
   </div>
 
-  <div class="card" style="margin-top:14px">
-      <h3>Investing ${band("invest",m.pct.invest)}</h3>
-      <table>
+  <div class="card">
+      <h3><span class="step">3</span>Investing ${band("invest",m.pct.invest)}</h3>
+      <table class="stk linetbl">
         ${head}
         <tbody>
           ${S.invest.map((it,i)=>line("invest",i,it)).join("")}
-          <tr class="total"><td colspan="3">Investing total</td><td class="calc">${usd2(m.investTotal)}</td><td></td></tr>
-          <tr><td colspan="3" style="text-align:right;color:var(--muted)">${usd(m.brokerageYr)}/yr · ${m.pct.invest>=S.caps.invest.min?`${pct(m.pct.invest-S.caps.invest.min)} above the ${pct(S.caps.invest.min,0)} floor`:`${usd(m.netTotal*S.caps.invest.min-m.investTotal)}/mo short of the ${pct(S.caps.invest.min,0)} floor`}</td><td class="calc" style="color:var(--moss)">${usd2(m.afterFixed-m.investTotal)} left</td><td></td></tr>
+          <tr class="total"><td colspan="3">Investing total<span class="note">${usd(m.brokerageYr)}/yr</span></td><td class="calc">${usd2(m.investTotal)}</td><td></td></tr>
+          <tr class="handoff"><td colspan="3">Left for savings <span class="to">→ 4</span></td><td class="calc">${usd2(m.afterFixed-m.investTotal)}</td><td></td></tr>
         </tbody>
       </table>
       <button class="addrow" data-add="invest">+ Add investment</button>
   </div>
 
-  <div class="card" style="margin-top:14px">
-      <h3>Savings ${band("savings",m.pct.savings)}</h3>
-      <table>
+  <div class="card">
+      <h3><span class="step">4</span>Savings ${band("savings",m.pct.savings)}</h3>
+      <table class="stk linetbl">
         ${head}
         <tbody>
           ${S.savings.map((it,i)=>line("savings",i,it)).join("")}
-          <tr class="total"><td colspan="3">Savings total</td><td class="calc">${usd2(m.savingsTotal)}</td><td></td></tr>
-          <tr><td colspan="3" style="text-align:right;color:var(--muted)">${usd(m.savingsTotal*12)}/yr · ${usd(Math.abs(m.netTotal*S.caps.savings.max-m.savingsTotal))}/mo ${m.savingsTotal<=m.netTotal*S.caps.savings.max?"under":"over"} the ${pct(S.caps.savings.max,0)} ceiling</td><td class="calc" style="color:var(--moss)">${usd2(m.afterFixed-m.investTotal-m.savingsTotal)} left</td><td></td></tr>
+          <tr class="total"><td colspan="3">Savings total<span class="note">${usd(m.savingsTotal*12)}/yr</span></td><td class="calc">${usd2(m.savingsTotal)}</td><td></td></tr>
+          <tr class="handoff"><td colspan="3">Left for guilt-free <span class="to">→ 5</span></td><td class="calc">${usd2(m.afterFixed-m.investTotal-m.savingsTotal)}</td><td></td></tr>
         </tbody>
       </table>
       <button class="addrow" data-add="savings">+ Add savings goal</button>
   </div>
 
-  <div class="card" style="margin-top:14px">
-    <h3>Guilt-free spending ${band("free",m.pct.free, m.free<0 || !inBand(m.pct.free,"free"))}</h3>
-    <table>
+  <div class="card">
+    <h3><span class="step">5</span>Guilt-free spending ${band("free",m.pct.free, m.free<0 || !inBand(m.pct.free,"free"))}</h3>
+    <table class="fit">
       <tbody>
         <tr><td class="lab">Dining, clothes, activities, everything else<span class="note">Whatever is left in checking each month</span></td>
           <td class="calc">${usd2(m.free)}</td><td class="calc" style="color:var(--muted);width:110px">${usd(m.free*12)}/yr</td></tr>
         <tr><td class="lab" style="color:var(--muted)">${pct(S.caps.free.min,0)}–${pct(S.caps.free.max,0)} band in dollars</td>
-          <td class="calc" style="color:var(--muted)">${usd(m.netTotal*S.caps.free.min)}–${usd(m.netTotal*S.caps.free.max)}</td><td></td></tr>
+          <td class="calc" style="color:var(--muted);white-space:nowrap">${usd(m.netTotal*S.caps.free.min)}–${usd(m.netTotal*S.caps.free.max)}</td><td></td></tr>
       </tbody>
     </table>
+  </div>
   </div>
   `;
 }
@@ -3150,9 +4214,14 @@ function taxRun(delta, term){
   // Gross earnings come from the income plan, blended across both salaries
   // when there has been a mid-year raise, plus bonus. Entered once, not twice.
   const inc = model();
-  const grossK = inc.P[1].annualGross, grossS = inc.P[0].annualGross;
-  const boxK = grossK - T.k401kK - T.preTaxK;      // W-2 Box 1
-  const boxS = grossS - T.k401kS - T.preTaxS;
+  const pk = inc.P[1], ps = inc.P[0];
+  const grossK = pk.annualGross, grossS = ps.annualGross;
+  // 401k and the other pre-tax deductions are the income plan's projections.
+  // They were entered here as well until they disagreed with it once too often.
+  const k401kK = pk.total401k, k401kS = ps.total401k;
+  const preTaxK = pk.annualOtherPre, preTaxS = ps.annualOtherPre;
+  const boxK = grossK - k401kK - preTaxK;          // W-2 Box 1
+  const boxS = grossS - k401kS - preTaxS;
   const wages = boxK + boxS;
   const medicareWages = grossK + grossS;           // 401k does not reduce these
   const realized = sum(T.accounts, a => a.a);
@@ -3196,7 +4265,7 @@ function taxRun(delta, term){
     (ordTaxable + prefTaxable) > lo ? rate : r, 0);
   const nii  = T.interest + T.ordDiv + Math.max(0, netCap);
   const niit = F.niitRate * Math.min(nii, Math.max(0, agi - F.niitThresh));
-  const k401kTotal = T.k401kK + T.k401kS;
+  const k401kTotal = k401kK + k401kS;
   const addMedBase = Math.max(0, medicareWages - F.addMedThresh);
   const addMed = F.addMedRate * addMedBase;
   const niitBase = Math.min(nii, Math.max(0, agi - F.niitThresh));
@@ -3204,6 +4273,7 @@ function taxRun(delta, term){
 
   return {
     grossK, grossS, boxK, boxS, wages, medicareWages, k401kTotal, addMedBase, niitBase,
+    k401kK, k401kS, preTaxK, preTaxS,
     realized, stRaw, ltRaw, netCap, carryforward, stComp, ltComp,
     agi, ordinaryIncome, preferential,
     caItemized, caDeduction, caTaxable, caTax, caPhaseout,
@@ -3260,17 +4330,14 @@ function taxModel(){
     ca: d(plusLT,"caTax")
   };
 
-  const wh = p => {
-    const paid = Math.max(0, p.perYear - p.left);
-    return {
-      paid,
-      fedYtd: p.fedPer * paid, caYtd: p.caPer * paid,
-      fedRem: p.fedPer * p.left, caRem: p.caPer * p.left,
-      fed: p.fedPer * p.perYear, ca: p.caPer * p.perYear
-    };
-  };
-  const k = wh(T.whK), sb = wh(T.whS);
-  const fedWH = k.fed + sb.fed, caWH = k.ca + sb.ca;
+  // Withholding is the income plan's, built from each paystub's year-to-date
+  // column plus what the remaining paychecks will take. FICA is deliberately
+  // absent: Social Security, Medicare and CA SDI are separate levies and
+  // settle nothing on a return, so counting them here would have shown a
+  // refund that never arrives.
+  const inc = model();
+  const k = inc.P[1], sb = inc.P[0];
+  const fedWH = k.wh.fed.year + sb.wh.fed.year, caWH = k.wh.ca.year + sb.wh.ca.year;
   const fedEst = sum(T.fedPmts, x => x), caEst = sum(T.caPmts, x => x);
   const fedPaid = fedWH + fedEst, caPaid = caWH + caEst;
 
@@ -3342,16 +4409,18 @@ const usedAmt = (cardId, ci, pk, full) => {
 
 function cardModel(){
   const now = new Date();
+  // A year that has ended has no window open: every slot in it has closed
+  const over = YEAR < thisYear();
   const cards = S.cards.map(card => {
     const credits = card.credits.map((c,ci) => {
       const slots = periodsOf(c);
-      const cur = currentSlot(c, now);
+      const cur = over ? slots.length : currentSlot(c, now);
       const total = sum(slots, p => p.amt);
       const used  = sum(slots, p => usedAmt(card.id, ci, p.key, p.amt));
       // Slots that have closed with anything left on the table
       const missed = sum(slots.filter((p,i) => i < cur),
                          p => p.amt - usedAmt(card.id, ci, p.key, p.amt));
-      const openNow = slots[cur].amt - usedAmt(card.id, ci, slots[cur].key, slots[cur].amt);
+      const openNow = over ? 0 : slots[cur].amt - usedAmt(card.id, ci, slots[cur].key, slots[cur].amt);
       return {...c, ci, slots, cur, total, used, missed, openNow,
               pctUsed: total > 0 ? used/total : 0};
     });
@@ -3384,6 +4453,7 @@ function cardModel(){
 
 // Credits whose current window closes soonest, for the dashboard
 function expiringSoon(){
+  if(YEAR !== thisYear()) return [];
   const now = new Date();
   const endOfMonth = new Date(now.getFullYear(), now.getMonth()+1, 0);
   const daysLeftInMonth = Math.ceil((endOfMonth - now)/864e5);
@@ -3485,8 +4555,13 @@ function chart(hist, opts={}){
     .map(y => ({y, t:new Date(y + "-01-01").getTime()}))
     .filter(d => d.t >= x0 && d.t <= x1);
 
-  return `<figure class="nwchart" style="--plot-h:${opts.height || 200}px">
-    <div class="nwc-area">
+  // The same percentage coordinates the polyline is drawn from, handed to the
+  // scrubber so its marker lands on the stroke rather than on a re-derived
+  // approximation of it. Date and value ride along for the readout.
+  const series = hist.map((p,i) => [+fx(xs[i]).toFixed(2), +fy(p[1]).toFixed(2), p[0], p[1]]);
+
+  return `<figure class="nwchart" data-series="${esc(JSON.stringify(series))}" style="--plot-h:${opts.height || 200}px">
+    <div class="nwc-area" tabindex="0">
       ${marks.map((v,i) => `<span class="nwc-grid${i?"":" base"}" style="top:${fy(v).toFixed(2)}%"><i>${money(v)}</i></span>`).join("")}
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img"
            aria-label="Net worth from ${fmtDay(hist[0][0])} to ${fmtDay(hist[hist.length-1][0])}, ${usd(ys[ys.length-1])} at the latest entry">
@@ -3494,11 +4569,108 @@ function chart(hist, opts={}){
                   vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"></polyline>
       </svg>
       <span class="nwc-dot" style="left:${fx(xs[xs.length-1]).toFixed(2)}%;top:${fy(ys[ys.length-1]).toFixed(2)}%"></span>
+      <span class="nwc-rule" hidden></span>
+      <span class="nwc-mark" hidden></span>
+      <div class="nwc-tip" hidden></div>
     </div>
     <figcaption class="nwc-x">
       ${years.map(d => `<span style="left:${fx(d.t).toFixed(2)}%">${d.y}</span>`).join("")}
     </figcaption>
   </figure>`;
+}
+
+/* Scrub the line for the value on any date. Wired after paint rather than
+   drawn into the markup: a render replaces the figure, so the listeners go
+   with it and each fresh node is wired once.
+
+   Nearest-point rather than interpolated — every entry is a real reading on
+   a real date, and inventing a value between two of them would be the one
+   thing a net worth log should never do. */
+function wireCharts(){
+  // One listener for the page, not one per chart: a tap anywhere else clears
+  // whichever readout a finger left standing.
+  if(!wireCharts.docWired){
+    wireCharts.docWired = true;
+    document.addEventListener("pointerdown", e => {
+      document.querySelectorAll("figure.nwchart .nwc-area").forEach(a => {
+        if(a._scrubHide && !a.contains(e.target)) a._scrubHide();
+      });
+    }, true);
+  }
+  document.querySelectorAll("figure.nwchart[data-series]").forEach(fig => {
+    if(fig.dataset.wired) return;
+    fig.dataset.wired = "1";
+    let series;
+    try{ series = JSON.parse(fig.dataset.series); }catch(_){ return; }
+    if(!Array.isArray(series) || series.length < 2) return;
+
+    const area = fig.querySelector(".nwc-area");
+    const rule = fig.querySelector(".nwc-rule");
+    const mark = fig.querySelector(".nwc-mark");
+    const tip  = fig.querySelector(".nwc-tip");
+    const dot  = fig.querySelector(".nwc-dot");
+    if(!area || !rule || !mark || !tip) return;
+
+    let at = -1;
+    const hide = () => {
+      at = -1;
+      rule.hidden = mark.hidden = tip.hidden = true;
+      if(dot) dot.hidden = false;
+    };
+    const show = i => {
+      i = Math.max(0, Math.min(series.length - 1, i));
+      if(i === at) return;
+      at = i;
+      const [x, y, iso, val] = series[i];
+      rule.hidden = mark.hidden = tip.hidden = false;
+      if(dot) dot.hidden = true;               // the scrub marker stands in for it
+      rule.style.left = x + "%";
+      mark.style.left = x + "%";
+      mark.style.top  = y + "%";
+      // Change since the previous reading — the question anyone scrubbing is asking
+      const chg = i > 0 ? val - series[i-1][3] : null;
+      tip.innerHTML = usd(val) + `<em>${fmtDay(iso)}`
+        + (chg === null ? ""
+           : ` · <span class="${chg >= 0 ? "up" : "down"}">${chg >= 0 ? "+" : "−"}${usd(Math.abs(chg))}</span>`)
+        + `</em>`;
+      // Above the point, unless that would push it off the top of the plot
+      const below = y < 28;
+      tip.style.top = `calc(${y}% ${below ? "+ 15px" : "- 13px"})`;
+      tip.style.transform = below ? "translate(-50%,0)" : "translate(-50%,-100%)";
+      // and clamped so it stays inside the plot at either end
+      const w = area.clientWidth, half = tip.offsetWidth / 2;
+      tip.style.left = w ? Math.max(half, Math.min(w - half, x/100 * w)) + "px" : x + "%";
+    };
+    const nearest = clientX => {
+      const r = area.getBoundingClientRect();
+      if(!r.width) return 0;
+      const f = (clientX - r.left) / r.width * 100;
+      let best = 0, bd = Infinity;
+      series.forEach((p,i) => { const d = Math.abs(p[0] - f); if(d < bd){ bd = d; best = i; } });
+      return best;
+    };
+
+    area._scrubHide = hide;
+    area.addEventListener("pointermove", e => show(nearest(e.clientX)));
+    area.addEventListener("pointerdown", e => show(nearest(e.clientX)));
+    // A touch fires pointerleave the instant the finger lifts, which would
+    // clear the readout before it could be read. Touch keeps it up until the
+    // next tap somewhere else; a mouse clears it on the way out, as expected.
+    area.addEventListener("pointerleave", e => { if(e.pointerType !== "touch") hide(); });
+    area.addEventListener("pointercancel", hide);
+    area.addEventListener("blur", hide);
+    // Keyboard: the line is reachable and walkable without a pointer
+    area.addEventListener("keydown", e => {
+      const k = e.key;
+      if(k === "ArrowRight" || k === "ArrowLeft"){
+        show((at < 0 ? series.length - 1 : at) + (k === "ArrowRight" ? 1 : -1));
+      } else if(k === "Home"){ show(0); }
+      else if(k === "End"){ show(series.length - 1); }
+      else if(k === "Escape"){ hide(); return; }
+      else return;
+      e.preventDefault();
+    });
+  });
 }
 
 // Compact sparkline for the masthead — light stroke for the dark background
@@ -3531,10 +4703,16 @@ function networth(){
       <td class="calc" style="color:${list==="debt"?"var(--red)":"var(--text)"}">${list==="debt"?"−":""}${usd(it.a)}</td>
       <td style="width:22px"><button class="rowdel" data-delnw="${list}" data-i="${i}" title="Remove ${esc(it.n)}">×</button></td>
     </tr>`).join("");
-  const head = `<thead><tr><th>Account</th><th>Held at</th><th>Balance</th><th></th><th></th></tr></thead>`;
+  // Without this the name column takes whatever the others leave, and the
+  // longer accounts clip mid-word. Hidden on a phone, where .stk restacks.
+  const head = (first="Account") => `<colgroup><col style="width:40%"><col style="width:24%"><col style="width:112px">`
+             + `<col style="width:96px"><col style="width:22px"></colgroup>`
+             + `<thead><tr><th>${first}</th><th>Held at</th><th>Balance</th><th></th><th></th></tr></thead>`;
 
-  const g = S.nw.gains;
-  const gainTotal = c => sum(g.rows, r=>r.v[c]||0);
+  // Income and tax by year — read, never typed. See yearSummary().
+  const ys = yearSummary();
+  const yv = v => (v === null || v === undefined) ? `<span class="nil">—</span>` : usd(v);
+  const kindTag = {projected:"Projected", planned:"Planned", tracked:"Tracked here", filed:"As filed"};
 
   return `
   <div class="pagehead"><h2 class="section">Net worth</h2>
@@ -3564,15 +4742,19 @@ function networth(){
 
   <div class="grid2">
     <div class="card">
-      <h3>Assets <span class="tag ok">${usd(n.assets)}</span></h3>
-      <table>${head}<tbody>${rows("assets")}
+      <h3>Assets and debt <span class="tag ${n.assets - n.debt >= 0 ? "ok" : "bad"}">${n.assets - n.debt >= 0 ? "" : "−"}${usd(Math.abs(n.assets - n.debt))} net</span></h3>
+      <table class="stk nwtbl">${head("Asset")}<tbody>${rows("assets")}
         <tr class="total"><td colspan="3">Assets total</td><td class="calc">${usd(n.assets)}</td><td></td></tr>
       </tbody></table>
       <button class="addrow" data-addnw="assets">+ Add asset</button>
+      <table class="stk nwtbl nwnext">${head("Debt")}<tbody>${rows("debt")}
+        <tr class="total"><td colspan="3">Debt total</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td><td></td></tr>
+      </tbody></table>
+      <button class="addrow" data-addnw="debt">+ Add debt</button>
     </div>
     <div class="card">
       <h3>Cash and investments <span class="tag ok">${usd(n.cash)}</span></h3>
-      <table>${head}<tbody>${rows("cash")}
+      <table class="stk nwtbl">${head()}<tbody>${rows("cash")}
         <tr class="total"><td colspan="3">Cash and investments total</td><td class="calc">${usd(n.cash)}</td><td></td></tr>
       </tbody></table>
       <button class="addrow" data-addnw="cash">+ Add account</button>
@@ -3581,15 +4763,8 @@ function networth(){
 
   <div class="grid2">
     <div class="card">
-      <h3>Debt <span class="tag bad">${usd(n.debt)}</span></h3>
-      <table>${head}<tbody>${rows("debt")}
-        <tr class="total"><td colspan="3">Debt total</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td><td></td></tr>
-      </tbody></table>
-      <button class="addrow" data-addnw="debt">+ Add debt</button>
-    </div>
-    <div class="card">
       <h3>Balance sheet</h3>
-      <table><tbody>
+      <table class="fit"><tbody>
         <tr><td class="lab">Assets</td><td class="calc">${usd(n.assets)}</td></tr>
         <tr><td class="lab">Cash and investments</td><td class="calc">${usd(n.cash)}</td></tr>
         <tr><td class="lab">less debt</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td></tr>
@@ -3597,14 +4772,11 @@ function networth(){
         <tr><td class="lab" style="color:var(--muted)">Invested and liquid, excluding the home<span class="note">Cash + brokerage + retirement</span></td><td class="calc" style="color:var(--muted)">${usd(n.cash)}</td></tr>
       </tbody></table>
     </div>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
+    <div class="card nwhist">
       <h3>Logged history <span class="caprule">Each entry becomes a point on the chart</span></h3>
       <div class="logrow">
         <input class="cell" type="date" id="nwDate" value="${today()}" aria-label="Entry date">
-        <input class="cell" type="text" inputmode="decimal" data-num="1" id="nwVal" value="${Math.round(n.total)}" aria-label="Net worth amount">
+        <input class="cell" type="text" inputmode="decimal" data-num="1" id="nwVal" value="${nf(Math.round(n.total))}" aria-label="Net worth amount">
         <button class="addrow" style="margin:0" data-addnw="history">Log entry</button>
       </div>
       <div class="scroller">
@@ -3624,23 +4796,32 @@ function networth(){
       </div>
     </div>
 
-    <div class="card">
-      <h3>Realized income and gains by year</h3>
-      <table>
-        <thead><tr><th></th>${g.years.map(y=>`<th>${y}</th>`).join("")}</tr></thead>
-        <tbody>
-          ${g.rows.map((r,ri)=>`<tr><td class="lab">${esc(r.n)}</td>
-            ${r.v.map((v,ci)=>`<td><input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(v)}" data-gain="${ri}" data-col="${ci}"></td>`).join("")}</tr>`).join("")}
-          <tr class="total"><td>Total</td>${g.years.map((y,ci)=>`<td class="calc">${usd(gainTotal(ci))}</td>`).join("")}</tr>
-        </tbody>
-      </table>
+  </div>
+
+  <div class="card" id="yearTable" style="margin-top:14px">
+    <h3>Income and tax by year <span class="caprule">From the tax tab — pick a year up top to change its figures</span></h3>
+    <div class="hscroll">
+    <table class="yeartbl">
+      <thead><tr><th>Year</th>${FILED_KEYS.map(([,l]) => `<th>${l}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${ys.map(r => `<tr${r.y === YEAR ? ' class="on"' : ""}>
+          <td class="lab"><button type="button" class="yrlink" data-year="${r.y}" data-goto="tax" title="Open the ${r.y} tax tab">${r.y}</button><span class="note">${kindTag[r.kind]}</span></td>
+          ${FILED_KEYS.map(([k,l]) => `<td class="calc" data-l="${l}">${yv(r[k])}</td>`).join("")}</tr>`).join("")}
+      </tbody>
+    </table>
     </div>
+    <p class="section-note" style="max-width:none;margin-top:10px">Short- and long-term are net realized gains before
+    they are netted against each other; dividends and interest are in total income. ${thisYear()} is the tax tab's
+    projection and settles as the year's figures go in.</p>
   </div>`;
 }
 
 function taxview(){
   const t = taxModel(), T = S.tax;
   const n = (f,v,w) => `<input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(v)}" data-tax="${f}"${w?` style="width:${w}"`:""}>`;
+  // The decimal keypad iOS raises for inputmode="decimal" has no minus key,
+  // so a field that can hold a loss asks for the full keyboard instead.
+  const ns = (f,v,w) => n(f,v,w).replace('inputmode="decimal"', 'inputmode="text"');
   const inRow = (label, f, note="") =>
     `<tr><td class="lab">${label}${note?`<span class="note">${note}</span>`:""}</td><td style="text-align:right">${n(f,T[f])}</td></tr>`;
   const row = (label, cells, cls="", note="") =>
@@ -3657,30 +4838,45 @@ function taxview(){
   const nl = (i,col,v,isPct) => isPct
     ? `<span class="pctwrap"><input class="cell pct" type="text" inputmode="decimal" data-num="1" data-pct="1" value="${+(v*100).toFixed(3)}" data-ltcg="${i}" data-col="${col}"><span class="suffix">%</span></span>`
     : `<input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(v)}" data-ltcg="${i}" data-col="${col}">`;
-  const whIn = (who,f) => `<input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(T[who][f])}" data-wh="${who}" data-f="${f}">`;
-  const whBlock = (who, name) => { const k = t[who==="whK"?"k":"sb"]; return `
-    <div class="calcband">${esc(name)}</div>
+  // Every figure here is the income plan's. Nothing on this tab is typed twice.
+  // The bonus row is on every person's card, in one of three states, so the
+  // two cards line up and nobody's row goes missing once the bonus lands.
+  // A bonus already paid is shown for reference only: its withholding is
+  // inside "withheld so far", so it is marked approximate and never added.
+  const rates = k => `the ${pct(k.bonusFedRate,0)} federal and ${pct(k.bonusCARate,2)} California supplemental rates`;
+  const bonusRow = k => k.bonusLeft > 0
+    ? row("Withholding on the bonus",[usd(k.wh.bonusFed), usd(k.wh.bonusCA)],"",
+        `${usd(k.bonusLeft)} still to come, at ${rates(k)}`)
+    : k.bonus > 0
+    ? row("Withholding on the bonus",
+        [`<span class="approx">≈${usd(k.bonus*(k.bonusFedRate||0))}</span>`, `<span class="approx">≈${usd(k.bonus*(k.bonusCARate||0))}</span>`],"",
+        `${usd(k.bonus)} already paid — counted in withheld so far, not added again`)
+    : row("Withholding on the bonus",["—","—"],"","No bonus entered on the income plan");
+  const whBlock = k => `
+    <div class="calcband">${esc(k.name)}</div>
     <table class="calctbl">
       <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
       <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
       <tbody>
-        <tr><td class="lab">Paychecks per year</td><td colspan="2" style="text-align:right">${whIn(who,"perYear")}</td></tr>
-        <tr><td class="lab">Paychecks remaining</td><td colspan="2" style="text-align:right">${whIn(who,"left")}</td></tr>
-        <tr class="sub"><td>Already paid</td><td class="calc" colspan="2">${k.paid} paychecks</td></tr>
-        <tr><td class="lab">Withheld per check<span class="note">Federal Withholding and State Tax lines only — not Social Security, Medicare or CA SDI</span></td>
-          <td style="text-align:right">${whIn(who,"fedPer")}</td>
-          <td style="text-align:right">${whIn(who,"caPer")}</td></tr>
-        ${row("Withheld so far",[usd(k.fedYtd), usd(k.caYtd)])}
-        ${row("Still to be withheld",[usd(k.fedRem), usd(k.caRem)])}
-        ${row("Projected year-end withholding",[usd(k.fed), usd(k.ca)],"total")}
+        ${row("Paychecks received",[`${k.checksPaid} of ${k.paychecks}`,""],"sub")}
+        ${row("Withheld per check",[usd2(k.fedPer), usd2(k.caPer)],"","Income-tax lines only. Social Security, Medicare and CA SDI (" + usd2(k.ficaPer) + " a check) don't count toward the return")}
+        ${row("Withheld so far",[usd(k.wh.fed.ytd), usd(k.wh.ca.ytd)],"","Paystub year-to-date")}
+        ${row("Still to be withheld",[usd(k.fedPer*k.checksLeft), usd(k.caPer*k.checksLeft)],"",
+          k.checksLeft > 0 ? `${k.checksLeft} ${k.checksLeft === 1 ? "paycheck" : "paychecks"} to come` : "Every paycheck this year has been received")}
+        ${bonusRow(k)}
+        ${row("Projected year-end withholding",[usd(k.wh.fed.year), usd(k.wh.ca.year)],"total")}
       </tbody>
-    </table>`; };
+    </table>`;
   const qLabels = ["Q1 — Apr 15","Q2 — Jun 15","Q3 — Sep 15","Q4 — Jan 15"];
 
   return `
   <div class="pagehead"><h2 class="section">Tax planning</h2>
-  <p class="section-note">Wages come from the income plan. Update the investment figures and withholding here; everything else recalculates. A plain-language walkthrough sits at the bottom of this tab.</p></div>
-  <p class="plainline">On <strong>${usd(t.agi)}</strong> of total income, tax comes to <strong>${usd(t.totalTax)}</strong> — about <strong>${pct(t.effRate)}</strong> overall, with the next dollar taxed at <strong>${pct(t.marginal)}</strong>. Withholding and payments so far cover <strong>${usd(t.fedPaid + t.caPaid)}</strong>, leaving a projected ${t.combinedBal>=0?"refund":"balance due"} of <strong>${usd(Math.abs(t.combinedBal))}</strong>.</p>
+  <p class="section-note">Wages, 401k and withholding all come from the income plan — enter the paystub there and this tab follows. What is typed here is the part payroll never sees: investment income, deductions and any estimated payments sent directly. A plain-language walkthrough sits at the bottom of this tab.</p></div>
+  ${T.params.carried ? `<div class="callout warn" style="margin:0 0 16px">
+    <strong>These are ${T.params.carried}'s tax brackets and limits.</strong> ${YEAR} opened with last year's statutory
+    figures, since the new ones are published on the IRS's schedule rather than on January 1. Update the ones marked
+    yearly under <a href="#" data-goto="tax" data-focus="taxParams">Tax rates and thresholds</a> — and the 401k and IRA
+    limits on the income plan — once they are out. This note clears on the first edit there.</div>` : ""}
 
   <div class="kpis six sticky">
     <div class="kpi accent">
@@ -3690,7 +4886,7 @@ function taxview(){
     </div>
     <div class="kpi">
       <div class="eyebrow">${t.combinedBal >= 0 ? "Projected refund" : "Projected owed"}</div>
-      <div class="v">${usd(Math.abs(t.combinedBal))}</div>
+      <div class="v" style="color:${t.combinedBal >= 0 ? "var(--pos)" : "var(--red)"}">${usd(Math.abs(t.combinedBal))}</div>
       <div class="sub">Fed ${t.fedBal>=0?"+":"−"}${usd(Math.abs(t.fedBal))} · CA ${t.caBal>=0?"+":"−"}${usd(Math.abs(t.caBal))}</div>
     </div>
     <div class="kpi">
@@ -3729,16 +4925,16 @@ function taxview(){
           <span class="eyebrow">${esc(S.people[0].name)}</span>
         </div>
         <div class="ig-row">
-          <span class="ig-lab">Gross earnings<em>From the income plan — both salaries plus bonus</em></span>
+          <span class="ig-lab">Gross earnings<em>From the income plan — salary, any raise, and bonus</em></span>
           <span class="val">${usd(t.grossK)}</span><span class="val">${usd(t.grossS)}</span>
         </div>
         <div class="ig-row">
-          <span class="ig-lab">less 401k</span>
-          ${n("k401kK",T.k401kK)}${n("k401kS",T.k401kS)}
+          <span class="ig-lab">less 401k<em>Projected full year, from the 401k tracker</em></span>
+          <span class="val">${usd(t.k401kK)}</span><span class="val">${usd(t.k401kS)}</span>
         </div>
         <div class="ig-row">
-          <span class="ig-lab">less other pre-tax<em>FSA, HSA</em></span>
-          ${n("preTaxK",T.preTaxK)}${n("preTaxS",T.preTaxS)}
+          <span class="ig-lab">less other pre-tax<em>Dental, FSA, HSA — the per-paycheck figure on the income plan, over the year</em></span>
+          <span class="val">${usd(t.preTaxK)}</span><span class="val">${usd(t.preTaxS)}</span>
         </div>
         <div class="ig-row sub">
           <span class="ig-lab">Taxable wages (W-2 Box 1)</span>
@@ -3755,7 +4951,7 @@ function taxview(){
         <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">Annual</span></div>
         <div class="ig-row"><span class="ig-lab">Mortgage interest</span>${n("mortInterest",T.mortInterest)}</div>
         <div class="ig-row"><span class="ig-lab">Property tax</span>${n("propTax",T.propTax)}</div>
-        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion, both cars</em></span>${n("vlf",T.vlf)}</div>
+        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion of vehicle registration</em></span>${n("vlf",T.vlf)}</div>
         <div class="ig-row"><span class="ig-lab">Charitable</span>${n("charitable",T.charitable)}</div>
         <div class="ig-row sub"><span class="ig-lab">Itemized before SALT cap</span><span class="val">${usd(t.itemized)}</span></div>
       </section>
@@ -3781,11 +4977,11 @@ function taxview(){
         <tbody>
           ${T.accounts.map((a,i)=>`<tr>
             <td class="lab"><input class="cell wide" value="${esc(a.n)}" data-acct="${i}" data-f="n"></td>
-            <td style="text-align:right"><input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(a.a)}" data-acct="${i}" data-f="a"></td>
+            <td style="text-align:right"><input class="cell" type="text" inputmode="text" data-num="1" value="${nf(a.a)}" data-acct="${i}" data-f="a"></td>
             <td><button class="rowdel" data-delacct="${i}" title="Remove">×</button></td></tr>`).join("")}
           ${row("Total realized",[usd(t.realized),""],"sub")}
           <tr><td class="lab">of which long-term<span class="note">Held more than a year</span></td>
-            <td style="text-align:right">${n("ltPortion",T.ltPortion)}</td><td></td></tr>
+            <td style="text-align:right">${ns("ltPortion",T.ltPortion)}</td><td></td></tr>
         </tbody>
       </table>
       <button class="addrow tiny" data-addacct="1">+ Add account</button>
@@ -3807,7 +5003,7 @@ function taxview(){
         <div class="ig-row"><span class="ig-lab">Interest income</span>${n("interest",T.interest)}</div>
         <div class="ig-row"><span class="ig-lab">Ordinary dividends<em>Total across all accounts</em></span>${n("ordDiv",T.ordDiv)}</div>
         <div class="ig-row"><span class="ig-lab">of which qualified<em>Taxed at the preferential rate</em></span>${n("qualDiv",T.qualDiv)}</div>
-        <div class="ig-row"><span class="ig-lab">of which US govt obligations<em>SGOV and similar — exempt from California only</em></span>${n("usGovDiv",T.usGovDiv)}</div>
+        <div class="ig-row"><span class="ig-lab">of which US govt obligations<em>Treasury funds and similar — exempt from California only</em></span>${n("usGovDiv",T.usGovDiv)}</div>
       </section>
 
       <div class="calcband">Where these amounts are used</div>
@@ -3852,7 +5048,7 @@ function taxview(){
       <div class="calcband">California tax</div>
       <div class="calcflow">
         <div class="cf-line"><span>Total income (AGI)</span><b>${usd(t.agi)}</b></div>
-        <div class="cf-line"><span>less US govt obligation dividends<em>SGOV and similar — taxed federally, exempt in California</em></span><b>−${usd(T.usGovDiv)}</b></div>
+        <div class="cf-line"><span>less US govt obligation dividends<em>Treasury funds and similar — taxed federally, exempt in California</em></span><b>−${usd(T.usGovDiv)}</b></div>
         <div class="cf-line"><span>less deduction<em>${t.caItemized > TPC().std
           ? `Itemized, beating the ${usd(TPC().std)} California standard`
           : "California standard deduction"}</em></span><b>−${usd(t.caDeduction)}</b></div>
@@ -3915,10 +5111,10 @@ function taxview(){
   </div>
 
   <div class="card" style="margin-top:14px">
-      <h3>Withholding <span class="caprule">Tax already taken out of your paychecks</span></h3>
+      <h3>Withholding <span class="caprule">From the paystubs on the income plan</span></h3>
       <div class="grid2" style="margin-top:0">
-        <div>${whBlock("whK", S.people[1].name)}</div>
-        <div>${whBlock("whS", S.people[0].name)}</div>
+        <div>${whBlock(t.k)}</div>
+        <div>${whBlock(t.sb)}</div>
       </div>
       <div class="calcflow bottom">
         <div class="cf-line grand"><span>Total withholding, both</span>
@@ -3956,7 +5152,7 @@ function taxview(){
       </table>
       <div class="calcflow bottom">
         <div class="cf-line grand"><span>${t.combinedBal>=0?"Projected refund":"Projected balance due"}</span>
-          <b style="color:${t.combinedBal>=0?"var(--green)":"var(--red)"}">${usd(Math.abs(t.combinedBal))}</b></div>
+          <b style="color:${t.combinedBal>=0?"var(--pos)":"var(--red)"}">${usd(Math.abs(t.combinedBal))}</b></div>
         <div class="cf-line muted"><span>Split</span>
           <b>${t.fedBal>=0?"refund":"owed"} ${usd(Math.abs(t.fedBal))} federal · ${t.caBal>=0?"refund":"owed"} ${usd(Math.abs(t.caBal))} California</b></div>
       </div>
@@ -4077,13 +5273,13 @@ function taxview(){
         <div class="sub">${t.scen.agi > TPF().saltThresh ? "above" : "below"} the ${usd(TPF().saltThresh)} SALT threshold</div></div>
     </div>
   </div>
-  <div class="card" style="margin-top:14px">
+  <div class="card" style="margin-top:14px" id="taxParams">
     <h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3>
     <div class="calcflow">
       <div class="cf-line"><span><span class="yearly">yearly</span> marks the figures that change every January — brackets, standard deductions, and the three thresholds below. Everything else is set by statute and only changes if the law does.</span></div>
     </div>
     <div class="ig-row" style="max-width:320px;border-bottom:0">
-      <span class="ig-lab">Tax year</span>${np("year",TP().year,"plain")}
+      <span class="ig-lab">Tax year</span><span class="num" style="font-weight:700">${YEAR}</span>
     </div>
 
     <div class="grid2" style="margin-top:4px">
@@ -4119,7 +5315,7 @@ function taxview(){
       <section class="ig one">
         <div class="ig-head"><span class="eyebrow">Deductions and SALT</span><span class="eyebrow">Federal</span></div>
         <div class="ig-row"><span class="ig-lab">Standard deduction <span class="yearly">yearly</span></span>${np("fed.std",TPF().std)}</div>
-        <div class="ig-row"><span class="ig-lab">SALT cap <span class="yearly">yearly</span><em>Rises 1% a year through 2029</em></span>${np("fed.saltCap",TPF().saltCap)}</div>
+        <div class="ig-row"><span class="ig-lab">SALT cap <span class="yearly">yearly</span><em>${YEAR <= 2029 ? "Rises 1% a year through 2029" : "The 2025–2029 increases have ended — enter the current IRS figure"}</em></span>${np("fed.saltCap",TPF().saltCap)}</div>
         <div class="ig-row"><span class="ig-lab">SALT phase-out starts <span class="yearly">yearly</span></span>${np("fed.saltThresh",TPF().saltThresh)}</div>
         <div class="ig-row"><span class="ig-lab">Phase-out rate</span>${np("fed.saltRate",TPF().saltRate,"pct")}</div>
         <div class="ig-row"><span class="ig-lab">SALT floor</span>${np("fed.saltFloor",TPF().saltFloor)}</div>
@@ -4293,7 +5489,7 @@ function cardsview(){
 
   <div class="card" style="margin-top:14px">
     <h3>Credits closing soonest</h3>
-    <table>
+    <table class="stk soontbl">
       <thead><tr><th>Credit</th><th>Card</th><th>Window</th><th>Value</th><th>Days left</th></tr></thead>
       <tbody>
         ${soon.slice(0,8).map(x=>`<tr>
@@ -4321,6 +5517,82 @@ function cardsview(){
 /* ============================================================
    WIRING
    ============================================================ */
+/* ============================================================
+   YEAR PICKER AND THE YEARS BEFORE THIS TOOL
+   ============================================================ */
+function paintYear(){
+  const want = yearList().reverse()
+    .map(y => `<option value="${y}">${y}</option>`).join("");
+  document.querySelectorAll(".yearsel").forEach(sel => {
+    if(sel.dataset.opts !== want){ sel.innerHTML = want; sel.dataset.opts = want; }
+    sel.value = YEAR;
+  });
+  // Net worth is one record across every year, so it carries no year note
+  const note = document.getElementById("yearNote");
+  const past = YEAR < thisYear() && current !== "networth";
+  note.hidden = !past;
+  if(past) note.innerHTML = isFull(YEAR)
+    ? `<span><b>Viewing ${YEAR}.</b> That year has closed — what is shown is its record, and edits change it.</span> <button type="button" data-year="${thisYear()}">Back to ${thisYear()}</button>`
+    : `<span><b>Viewing ${YEAR}.</b> Only the filed return is kept for years before ${fullYears()[0]}.</span> <button type="button" data-year="${thisYear()}">Back to ${thisYear()}</button>`;
+}
+
+function pastView(){
+  const name = {dash:"Dashboard", income:"Income plan", spend:"Spending plan", cards:"Card benefits"}[current];
+  return `
+  <div class="pagehead"><h2 class="section">${name}</h2>
+  <p class="section-note">${YEAR}</p></div>
+  <div class="card pastcard">
+    <h3>${YEAR} predates this plan</h3>
+    <p>The full plan — paystubs, budget, card credits — is kept from ${fullYears()[0]} on. For ${YEAR} there is only the
+    return that was filed, entered on the tax tab. Its figures feed the year-by-year table on the net worth tab.</p>
+    <button type="button" class="panelbtn" data-goto="tax">Open the ${YEAR} return</button>
+  </div>`;
+}
+
+function filedView(){
+  const f = S.years[YEAR].filed;
+  const cell = (k, v) => `<input class="cell" type="text" inputmode="text" data-num="1" data-filed="${k}"
+      value="${v === null || v === undefined ? "" : nf(v)}" placeholder="—">`;
+  const where = {income:"Total income on the 1040", st:"Net short-term gain or loss, from Schedule D",
+    lt:"Net long-term gain or loss, from Schedule D", deductions:"Standard or itemized, whichever was taken",
+    fedTax:"Total tax on the 1040", caTax:"Total tax on the California 540"};
+  const tot = (f.fedTax || 0) + (f.caTax || 0);
+  return `
+  <div class="pagehead"><h2 class="section">Tax planning</h2>
+  <p class="section-note">${YEAR} was filed before this plan began, so there is nothing to project — just the
+  return's headline figures. Copy them from the 1040 and the 540. Leave a field blank if it isn't to hand yet.</p></div>
+  <div class="grid2">
+    <div class="card">
+      <h3>${YEAR} return as filed</h3>
+      <table class="fit filedtbl"><tbody>
+        ${FILED_KEYS.map(([k,label]) => `<tr><td class="lab">${label}<span class="note">${where[k]}</span></td>
+          <td style="text-align:right">${cell(k, f[k])}</td></tr>`).join("")}
+        <tr class="total"><td>Total income tax</td><td class="calc">${usd(tot)}</td></tr>
+        <tr><td class="lab" style="color:var(--muted)">Effective rate on total income</td>
+          <td class="calc" style="color:var(--muted)">${f.income > 0 && (f.fedTax !== null || f.caTax !== null) ? pct(tot / f.income) : "—"}</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card">
+      <h3>Where this goes</h3>
+      <p class="section-note" style="max-width:none">These figures are the ${YEAR} row of <b>Income and tax by year</b> on
+      the net worth tab. From ${fullYears()[0]} on, that table fills itself from the tax tab's own calculation, so nothing
+      is typed twice.</p>
+      <button type="button" class="panelbtn" data-goto="networth" data-focus="yearTable" style="margin-top:14px">See the year-by-year table</button>
+    </div>
+  </div>`;
+}
+
+// One row per year for the net worth tab. A year with the full plan is read
+// off the tax calculation; an earlier one off the return as filed.
+function yearSummary(){
+  return yearList().map(y => {
+    const r = withYear(y, () => taxRun(0));
+    if(r) return {y, kind: y === thisYear() ? "projected" : y > thisYear() ? "planned" : "tracked",
+      income:r.agi, st:r.stRaw, lt:r.ltRaw, deductions:r.fedDeduction, fedTax:r.fedTax, caTax:r.caTax};
+    return {y, kind:"filed", ...S.years[y].filed};
+  });
+}
+
 const views = { dash, income, spend, tax: taxview, cards: cardsview, networth };
 let current = "dash";
 
@@ -4335,11 +5607,15 @@ function render(){
     authUI();
     return;
   }
-  document.getElementById("view-"+current).innerHTML = views[current]();
+  // Years before this tool have a filed return and nothing else. The tax tab
+  // is where that is entered; the tabs built on a full plan say so and point there.
+  document.getElementById("view-"+current).innerHTML =
+    current === "networth" || isFull(YEAR) ? views[current]()
+    : current === "tax" ? filedView() : pastView();
+  paintYear();
   const d = new Date(S.updated+"T00:00:00");
   document.getElementById("stamp").textContent =
     "Last edited " + (S.updated === today() ? "today" : d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}));
-  document.getElementById("brandYear").textContent = new Date().getFullYear();
 
   const n = nwModel();
   document.getElementById("ticker").innerHTML = n.last ? `
@@ -4348,7 +5624,7 @@ function render(){
     <span class="tk-chg ${n.sinceLast>=0?"up":"down"}">${n.sinceLast>=0?"+":"−"}${usd(Math.abs(n.sinceLast))}</span>
     ${headSpark(n.hist.slice(-30))}` : "";
   const note = document.getElementById("storeNote");
-  note.textContent = store.msg || "";
+  note.textContent = store.code === "nostorage" ? storageMsg() : (store.msg || "");
   note.className = store.refreshed ? "note refreshed" : "note";
   const rb = document.getElementById("restoreBtn");
   let hasBackup = false;
@@ -4356,6 +5632,7 @@ function render(){
   rb.hidden = !hasBackup || cloudOn();
   authUI();
   paintCashflow();
+  wireCharts();
 }
 
 // focus is the id of a section to land on rather than the top of the tab —
@@ -4379,6 +5656,11 @@ document.querySelectorAll("nav.tabs button").forEach(b=>{
 const nf = v => (typeof v === "number" && isFinite(v))
   ? v.toLocaleString("en-US",{maximumFractionDigits:2}) : v;
 
+// The figures that come off a paystub, as opposed to the standing terms of
+// employment. Editing any of them restamps that person's card.
+const STUB_FIELDS = new Set(["fedPer","caPer","ficaPer","ytdGross","ytdFed",
+                             "ytdCA","ytdFica","ytd401k","checksLeft"]);
+
 const parseNum = s => {
   const n = parseFloat(String(s).replace(/[$,\s]/g,""));
   return isNaN(n) ? 0 : n;
@@ -4394,13 +5676,21 @@ document.addEventListener("input", e=>{
 
   if(el.dataset.g){ S[el.dataset.g] = val; }
   else if(el.dataset.note){ S.notes[el.dataset.note] = val; }
-  else if(el.dataset.p !== undefined){ S.people[+el.dataset.p][el.dataset.f] = val; }
+  else if(el.dataset.p !== undefined){
+    const pi = +el.dataset.p, f = el.dataset.f;
+    S.people[pi][f] = val;
+    // Which figures are current is the thing that is easiest to lose track of
+    // when a paystub is only opened every couple of months, so entering one
+    // dates itself rather than relying on anyone to remember.
+    if(STUB_FIELDS.has(f)) S.people[pi].stubUpdated = today();
+  }
   else if(el.dataset.nw){ S.nw[el.dataset.nw][+el.dataset.i][el.dataset.f] = val; }
-  else if(el.dataset.gain !== undefined){ S.nw.gains.rows[+el.dataset.gain].v[+el.dataset.col] = val; }
   else if(el.dataset.tax){ S.tax[el.dataset.tax] = val; }
   else if(el.dataset.acct){ S.tax.accounts[+el.dataset.acct][el.dataset.f] = val; }
-  else if(el.dataset.wh){ S.tax[el.dataset.wh][el.dataset.f] = val; }
   else if(el.dataset.pmt){ S.tax[el.dataset.pmt][+el.dataset.i] = val; }
+  else if(el.dataset.filed){
+    S.years[YEAR].filed[el.dataset.filed] = el.value.trim() === "" ? null : val;
+  }
   else if(el.dataset.param){
     const p = el.dataset.param.split(".");
     if(p.length === 1) S.tax.params[p[0]] = val;
@@ -4423,6 +5713,8 @@ document.addEventListener("input", e=>{
   else if(el.dataset.list){ S[el.dataset.list][+el.dataset.i][el.dataset.f] = val; }
   else return;
 
+  // The first edit to a carried-over rate means the new year's are going in
+  if((el.dataset.param || el.dataset.brk || el.dataset.ltcg) && S.tax.params.carried) delete S.tax.params.carried;
   touch(); save();
 
   // Re-render, then put the caret back exactly where it was. Every editable
@@ -4431,10 +5723,9 @@ document.addEventListener("input", e=>{
             : el.dataset.note ? `[data-note="${el.dataset.note}"]`
             : el.dataset.p !== undefined ? `[data-p="${el.dataset.p}"][data-f="${el.dataset.f}"]`
             : el.dataset.nw ? `[data-nw="${el.dataset.nw}"][data-i="${el.dataset.i}"][data-f="${el.dataset.f}"]`
-            : el.dataset.gain !== undefined ? `[data-gain="${el.dataset.gain}"][data-col="${el.dataset.col}"]`
+            : el.dataset.filed ? `[data-filed="${el.dataset.filed}"]`
             : el.dataset.tax ? `[data-tax="${el.dataset.tax}"]`
             : el.dataset.acct ? `[data-acct="${el.dataset.acct}"][data-f="${el.dataset.f}"]`
-            : el.dataset.wh ? `[data-wh="${el.dataset.wh}"][data-f="${el.dataset.f}"]`
             : el.dataset.pmt ? `[data-pmt="${el.dataset.pmt}"][data-i="${el.dataset.i}"]`
             : el.dataset.param ? `[data-param="${el.dataset.param}"]`
             : el.dataset.brk ? `[data-brk="${el.dataset.brk}"][data-i="${el.dataset.i}"][data-col="${el.dataset.col}"]`
@@ -4462,6 +5753,10 @@ document.addEventListener("blur", e=>{
 }, true);
 
 document.addEventListener("change", e=>{
+  if(e.target.matches(".yearsel")){
+    YEAR = +e.target.value;
+    render(); window.scrollTo({top:0}); return;
+  }
   if(e.target.matches("select.cell") && e.target.dataset.basis){
     S.incomeBasis = e.target.value; touch(); save(); render(); return;
   }
@@ -4477,10 +5772,11 @@ document.addEventListener("change", e=>{
 document.addEventListener("click", e=>{
   // The rail's red block always names the tab where the thing can be fixed
   const goto = e.target.closest("[data-goto]");
-  if(goto){ goTab(goto.dataset.goto, goto.dataset.focus); return; }
+  if(goto){ e.preventDefault(); if(goto.dataset.year) YEAR = +goto.dataset.year; goTab(goto.dataset.goto, goto.dataset.focus); return; }
 
   const addbrk = e.target.closest("[data-addbrk]");
   if(addbrk){
+    delete S.tax.params.carried;
     const list = S.tax.params[addbrk.dataset.addbrk].ord;
     const last = list[list.length-1];
     list.push([last[0] + 50000, last[1]]);
@@ -4488,6 +5784,7 @@ document.addEventListener("click", e=>{
   }
   const delbrk = e.target.closest("[data-delbrk]");
   if(delbrk){
+    delete S.tax.params.carried;
     S.tax.params[delbrk.dataset.delbrk].ord.splice(+delbrk.dataset.i, 1);
     touch(); save(); render(); return;
   }
@@ -4534,6 +5831,9 @@ document.addEventListener("click", e=>{
     if(S.cardUse[k]) delete S.cardUse[k]; else S.cardUse[k] = true;
     touch(); save(); render(); return;
   }
+
+  const yb = e.target.closest("[data-year]");
+  if(yb){ YEAR = +yb.dataset.year; render(); window.scrollTo({top:0}); return; }
 
   const range = e.target.closest("[data-range]");
   if(range){ nwRange = range.dataset.range; render(); return; }
@@ -4595,51 +5895,242 @@ document.getElementById("restoreBtn").onclick = ()=>{
   }catch(e){ flash("Couldn't restore that copy."); }
 };
 
-function startFresh(){
-  const P = S.people.map((p,i) => ({...p, name: i===0 ? "Person 1" : "Person 2",
-    salary:0, bonus:0, pre401k:0, post401k:0, otherPre:0, otherPost:0,
-    ytd401k:0, bonusLeft:0 }));
-  S.people = P;
-  S.fixed   = S.fixed.map(i => ({...i, a:0}));      // keep the line items as a scaffold
-  S.invest  = S.invest.map(i => ({...i, a:0}));
-  S.savings = S.savings.map(i => ({...i, a:0}));
-  S.tax = {...S.tax,
-    grossK:0, k401kK:0, preTaxK:0, grossS:0, k401kS:0, preTaxS:0,
-    interest:0, ordDiv:0, qualDiv:0, usGovDiv:0, ltPortion:0,
-    mortInterest:0, propTax:0, vlf:0, charitable:0, priorFed:0, priorCA:0,
-    accounts:[{n:"Account 1", a:0}],
-    fedPmts:[0,0,0,0], caPmts:[0,0,0,0],
-    whK:{...S.tax.whK, fedPer:0, caPer:0}, whS:{...S.tax.whS, fedPer:0, caPer:0},
-    scenAmount:0 };
-  S.nw = {...S.nw,
-    assets:  S.nw.assets.map(i => ({...i, a:0})),
-    cash:    S.nw.cash.map(i => ({...i, a:0})),
-    debt:    S.nw.debt.map(i => ({...i, a:0})),
-    history: [],
-    gains:{...S.nw.gains, rows:S.nw.gains.rows.map(r => ({...r, v:r.v.map(()=>0)}))} };
-  S.cardUse = {};
-  touch(); save(); render();
+/* Export and import the whole plan as a file. This is the only copy that
+   lives anywhere but the shared row, so it is also the only way back from a
+   bad edit — the app has no undo and, with sync on, no local backup either. */
+function exportPlan(){
+  try{
+    const blob = new Blob([JSON.stringify(S, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `financial-plan-${today()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    flash("Exported");
+  }catch(e){ flash("Couldn't export on this browser."); }
 }
 
-document.getElementById("freshBtn").onclick = ()=>{
-  if(confirm("Clear every figure so you can enter your own? Line items and cards stay, all amounts go to zero. Export first if you want a copy.")){
-    startFresh(); flash("Cleared — enter your own numbers");
-  }
-};
+document.getElementById("exportBtn").onclick = exportPlan;
+document.getElementById("importBtn").onclick = () => document.getElementById("importFile").click();
 
-document.getElementById("resetBtn").onclick = ()=>{
-  if(confirm("Replace everything with the original spreadsheet values? Your current edits will be lost.")){
-    S = structuredClone(DEFAULTS); save(); render(); flash("Reset to defaults");
-  }
+document.getElementById("importFile").onchange = e => {
+  const file = e.target.files && e.target.files[0];
+  e.target.value = "";                       // so the same file can be chosen twice
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onerror = () => flash("Couldn't read that file.");
+  reader.onload = () => {
+    let data;
+    try{ data = JSON.parse(reader.result); }
+    catch(_){ flash("That file isn't valid JSON."); return; }
+    // Enough of a shape check to catch the wrong file rather than let it
+    // through and leave the plan half-replaced by something unrelated.
+    if(!data || typeof data !== "object"
+       || !((Array.isArray(data.people) && data.tax) || (data.years && typeof data.years === "object"))){
+      flash("That doesn't look like a plan export."); return;
+    }
+    const when = data.updated ? `, last edited ${data.updated},` : "";
+    if(!confirm(`Replace the current plan with this file${when} and keep no copy of what is there now?`
+      + (cloudOn() ? " This overwrites the shared plan for everyone signed in." : ""))) return;
+    // Through merge() like every other load, so a file saved by an older
+    // build still arrives with the fields this one expects.
+    S = merge(structuredClone(DEFAULTS), data);
+    touch(); save(); render(); flash("Plan imported");
+  };
+  reader.readAsText(file);
 };
 
 document.getElementById("authSend").onclick = signInPassword;
+document.getElementById("signInBtn").onclick = async ()=>{
+  CLOUD.offlineOk = false;
+  CLOUD.urlError = null;
+  const msg = document.getElementById("authMsg");
+  if(msg){ msg.textContent = ""; msg.className = "authmsg"; }
+  render();                       // put the gate back up over the plan
+  // The first attempt may have failed with the network down, in which case
+  // there is no client yet and the session on this device has not been read.
+  if(!CLOUD.client){ setSync("saving"); await cloudInit(); }
+  else if(CLOUD.pending) reconnect(false);
+};
 document.getElementById("offlineBtn").onclick = ()=>{
-  CLOUD.offlineOk = true; authUI(); setSync("local");
-  flash("Working offline — changes stay on this device.");
+  CLOUD.offlineOk = true;
+  setSync(CLOUD.pending ? "pending" : "local");
+  // render(), not authUI(): the gate is only the overlay. While it was up the
+  // views were blanked, so lowering it without painting left an empty page
+  // until a tab happened to be tapped.
+  render();
+  flash("Working offline — changes upload when the connection is back.");
 };
 document.getElementById("authEmail").addEventListener("keydown", e=>{ if(e.key==="Enter") document.getElementById("authPass").focus(); });
 document.getElementById("authPass").addEventListener("keydown", e=>{ if(e.key==="Enter") signInPassword(); });
+// The settings menu: opened by its button, closed by picking an item (whose
+// own handler still runs), by a click anywhere else, or by Escape.
+function setMenu(open){
+  const m = document.getElementById("settingsMenu"), b = document.getElementById("settingsBtn");
+  m.hidden = !open;
+  b.setAttribute("aria-expanded", String(open));
+  if(open){ const first = m.querySelector("button:not([hidden])"); if(first) first.focus(); }
+}
+document.getElementById("settingsBtn").addEventListener("click", e => {
+  e.stopPropagation();
+  setMenu(document.getElementById("settingsMenu").hidden);
+});
+document.addEventListener("click", e => {
+  const m = document.getElementById("settingsMenu");
+  if(m.hidden || e.target.closest("#settingsBtn")) return;
+  if(!m.contains(e.target) || e.target.closest("button")) setMenu(false);
+}, true);
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !document.getElementById("settingsMenu").hidden){
+    setMenu(false); document.getElementById("settingsBtn").focus();
+  }
+});
+/* Settings → Agent API. Lists the keys an AI assistant can use to read the
+   plan through /api/agent, mints new ones and revokes them. The server checks
+   the signed-in session belongs to the household before doing any of it. A new
+   key is shown once, held only in the field, and cleared when the panel closes. */
+async function agentApi(method, body, query, path){
+  const { data } = await CLOUD.client.auth.getSession();
+  const token = data && data.session && data.session.access_token;
+  if(!token){ closeAgentApi(); CLOUD.offlineOk = false; authUI(); return null; }
+  const r = await fetch("/api/agent/" + (path || "keys") + (query || ""), {
+    method, cache:"no-store",
+    headers:{ Authorization:"Bearer " + token, ...(body ? {"Content-Type":"application/json"} : {}) },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  let json = {};
+  try{ json = await r.json(); }catch(e){}
+  if(!r.ok) throw new Error(json.error || ("the server answered " + r.status));
+  return json;
+}
+function apiMsg(t, bad){
+  const m = document.getElementById("apiMsg");
+  m.textContent = t || ""; m.className = "authmsg" + (bad ? " bad" : "");
+}
+const scopeLabel = sc => (sc || []).includes("write") ? ["Read & edit"]
+                       : (sc || []).map(x => x === "read" ? "Read-only" : x);
+async function loadAgentKeys(){
+  const list = document.getElementById("apiList");
+  list.innerHTML = `<div class="apiempty">Loading…</div>`;
+  try{
+    const res = await agentApi("GET");
+    if(!res) return;
+    const keys = res.keys || [];
+    list.innerHTML = keys.length ? keys.map(k => {
+      const off = !!k.revoked_at, canWrite = (k.scopes || []).includes("write");
+      return `<div class="apirow${off ? " off" : ""}">
+        <b>${esc(k.name)}</b>
+        ${off ? "" : `<div class="apiacts">
+          <button type="button" class="apibtn" data-write="${esc(k.id)}" data-on="${canWrite ? 0 : 1}" data-name="${esc(k.name)}">${canWrite ? "Make read-only" : "Allow edits"}</button>
+          <button type="button" class="apibtn" data-revoke="${esc(k.id)}" data-name="${esc(k.name)}">Revoke</button></div>`}
+        <div class="apimeta">${scopeLabel(k.scopes).map(l => `<span class="tag ${l === "Read & edit" ? "write" : "ok"}">${esc(l)}</span>`).join("")}
+          <span>Added ${fmtDay(k.created_at.slice(0,10))}</span>
+          <span>· ${off ? "Revoked " + fmtDay(k.revoked_at.slice(0,10)) : "Active"}</span></div>
+      </div>`;
+    }).join("") : `<div class="apiempty">No agents have access yet.</div>`;
+  }catch(e){
+    list.innerHTML = "";
+    apiMsg("Couldn't load the agent list: " + e.message, true);
+  }
+}
+async function loadAgentActivity(){
+  const box = document.getElementById("apiActivity");
+  box.innerHTML = `<div class="apiempty">Loading…</div>`;
+  try{
+    const res = await agentApi("GET", null, "", "activity");
+    if(!res) return;
+    const rows = res.changes || [];
+    box.innerHTML = rows.length ? rows.map(c => {
+      const when = new Date(c.created_at).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+      return `<div class="apichg${c.undone_at ? " undone" : ""}">
+        <span>${esc(c.summary)}</span>
+        ${c.undone_at ? "" : `<button type="button" class="apibtn" data-undo="${c.id}">Undo</button>`}
+        <small>${esc(c.agent)} · ${when}${c.undone_at ? " · undone" : ""}</small>
+      </div>`;
+    }).join("") : `<div class="apiempty">No changes by agents yet.</div>`;
+  }catch(e){ box.innerHTML = ""; apiMsg("Couldn't load recent changes: " + e.message, true); }
+}
+function openAgentApi(){
+  apiMsg("");
+  document.getElementById("apiPanel").hidden = false;
+  document.getElementById("apiClose").focus();
+  loadAgentKeys();
+  loadAgentActivity();
+}
+document.getElementById("apiActivity").addEventListener("click", async e => {
+  const b = e.target.closest("[data-undo]");
+  if(!b) return;
+  b.disabled = true;
+  try{
+    const res = await agentApi("POST", { id:+b.dataset.undo }, "", "activity");
+    if(!res) return;
+    flash("Change undone");
+    loadAgentActivity();
+    await cloudLoad();
+  }catch(err){ b.disabled = false; apiMsg("Couldn't undo: " + err.message, true); }
+});
+function closeAgentApi(){
+  document.getElementById("apiPanel").hidden = true;
+  document.getElementById("apiKey").value = "";
+  document.getElementById("apiNew").hidden = true;
+}
+document.getElementById("agentApiBtn").onclick = openAgentApi;
+document.getElementById("apiClose").onclick = closeAgentApi;
+document.getElementById("apiPanel").addEventListener("click", e => { if(e.target.id === "apiPanel") closeAgentApi(); });
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape" && !document.getElementById("apiPanel").hidden) closeAgentApi();
+});
+document.getElementById("apiMint").onclick = async ()=>{
+  const btn = document.getElementById("apiMint");
+  const name = document.getElementById("apiName").value.trim() || "Muse";
+  btn.disabled = true; apiMsg("Generating…");
+  try{
+    const res = await agentApi("POST", { name });
+    if(!res) return;
+    document.getElementById("apiKey").value = res.key;
+    document.getElementById("apiWarn").textContent =
+      `Key for ${res.name}. ${res.warning || "Copy it now — it is shown once and never again."}`;
+    document.getElementById("apiNew").hidden = false;
+    apiMsg("");
+    loadAgentKeys();
+  }catch(e){ apiMsg("Couldn't generate a key: " + e.message, true); }
+  finally{ btn.disabled = false; }
+};
+document.getElementById("apiCopy").onclick = async ()=>{
+  const f = document.getElementById("apiKey");
+  try{ await navigator.clipboard.writeText(f.value); }
+  catch(e){ f.select(); document.execCommand("copy"); }
+  flash("Key copied");
+};
+document.getElementById("apiList").addEventListener("click", async e => {
+  const w = e.target.closest("[data-write]");
+  if(w){
+    const on = w.dataset.on === "1";
+    if(on && !confirm(`Allow ${w.dataset.name} to edit the plan? It can change card credits and offers, realized gains, estimated payments, spending lines and paystub figures. Every change is listed here with an undo.`)) return;
+    w.disabled = true;
+    try{
+      const res = await agentApi("PATCH", { id:w.dataset.write, write:on });
+      if(!res) return;
+      flash(on ? "Edits allowed" : "Now read-only");
+      loadAgentKeys();
+    }catch(err){ w.disabled = false; apiMsg("Couldn't change access: " + err.message, true); }
+    return;
+  }
+  const b = e.target.closest("[data-revoke]");
+  if(!b) return;
+  if(!confirm(`Revoke ${b.dataset.name}'s key? It stops working immediately.`)) return;
+  b.disabled = true;
+  try{
+    const res = await agentApi("DELETE", null, "?id=" + encodeURIComponent(b.dataset.revoke));
+    if(!res) return;
+    flash("Key revoked");
+    loadAgentKeys();
+  }catch(err){ b.disabled = false; apiMsg("Couldn't revoke: " + err.message, true); }
+});
+
 document.getElementById("signOutBtn").onclick = async ()=>{
   if(CLOUD.client){ await CLOUD.client.auth.signOut(); flash("Signed out"); }
 };
@@ -4648,6 +6139,9 @@ document.getElementById("signOutBtn").onclick = async ()=>{
 // network round trip happens behind it rather than in front of it.
 if(cloudOn()) document.getElementById("authGate").hidden = false;
 
+// Loaded last: opening a new year runs the tax calculation for the old one.
+S = load();
+if(ROLLED) saveLocal();
 render();
 cloudInit();
 </script>

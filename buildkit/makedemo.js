@@ -20,18 +20,30 @@ eval(code+';global.D=DEFAULTS;');
 const D=JSON.parse(JSON.stringify(global.D));
 
 /* ---- people ---- */
-// newSalary/raiseChecks are zero rather than absent: these replace the person
-// wholesale, and a missing field renders as "undefined" in its input cell.
+// Replaced wholesale, and every paystub field is set: a missing field renders
+// as "undefined" in its input cell. The figures are one consistent set of
+// paystubs part-way through the year — year-to-date columns that agree with
+// the salary, 401k rate and paychecks already received — so the income plan,
+// the 401k tracker and the tax tab's withholding all have something to show.
+// Alex: semi-monthly, 18 of 24 paid, bonus still to come.
+// Jordan: bi-weekly, 19 of 26 paid, a raise that landed one paycheck ago,
+// bonus already paid (so it sits inside the year-to-date columns).
+const stubDay=new Date(Date.now()-8*864e5).toISOString().slice(0,10);
 D.people[0]={key:"alex",name:"Alex",salary:142000,newSalary:0,raiseChecks:0,bonus:10000,paychecks:24,
-  pre401k:0.10,post401k:0,taxRate:0.32,otherPre:5.20,otherPost:8.00,
-  ytd401k:9500,checksLeft:9,bonusLeft:10000};
-D.people[1]={key:"jordan",name:"Jordan",salary:128000,newSalary:0,raiseChecks:0,bonus:15000,paychecks:26,
-  pre401k:0.12,post401k:0,taxRate:0.295,otherPre:14.00,otherPost:11.50,
-  ytd401k:12800,checksLeft:9,bonusLeft:0};
-D.notes={salary:"Annualized from current gross per paycheck",bonus:"",
+  pre401k:0.10,post401k:0,otherPre:5.20,otherPost:8.00,
+  fedPer:905.40,caPer:318.60,ficaPer:529.54,
+  ytdGross:106500,ytdFed:16297.20,ytdCA:5734.80,ytdFica:9531.72,
+  bonusFedRate:0.22,bonusCARate:0.1023,stubUpdated:stubDay,
+  ytd401k:10650,checksLeft:6,bonusLeft:10000};
+D.people[1]={key:"jordan",name:"Jordan",salary:128000,newSalary:136000,raiseChecks:8,bonus:15000,paychecks:26,
+  pre401k:0.12,post401k:0,otherPre:14.00,otherPost:11.50,
+  fedPer:772.30,caPer:291.10,ficaPer:468.15,
+  ytdGross:108846.15,ytdFed:17349.70,ytdCA:6888.40,ytdFica:9741.73,
+  bonusFedRate:0.22,bonusCARate:0.1023,stubUpdated:stubDay,
+  ytd401k:13061.54,checksLeft:7,bonusLeft:0};
+D.notes={salary:"Annualized from gross per paycheck on the latest paystub",bonus:"",
   paychecks:"24 semi-monthly · 26 bi-weekly",pre401k:"Use the recommender below",
   post401k:"Mega-backdoor, if the plan allows in-plan Roth conversion",
-  taxRate:"Fed + SS/Medicare + state, applied to TAXABLE pay — not gross",
   otherPre:"Per paycheck",otherPost:"Per paycheck"};
 
 /* ---- spending: the same groups, a generic household ---- */
@@ -64,16 +76,14 @@ D.savings=[{n:"Travel fund",a:600,c:"m"}];
 D.iraTotal=15000;
 
 /* ---- tax ---- */
+// Wages, 401k and withholding are the income plan's; the tax tab reads them
+// from the paystubs above rather than holding its own copy.
 D.tax={...D.tax,
-  grossK:142000+10000,k401kK:15200,preTaxK:250,
-  grossS:128000+15000,k401kS:17160,preTaxS:0,
   interest:640,ordDiv:6800,qualDiv:4100,usGovDiv:0,
   accounts:[{n:"Brokerage A",a:18400},{n:"Brokerage B",a:-2600},{n:"Crypto",a:-4100}],
   ltPortion:6000,mortInterest:21000,propTax:7200,vlf:420,charitable:2400,
-  priorFed:48200,priorCA:9100,
+  priorFed:48200,priorCA:19300,
   fedPmts:[0,0,0,0],caPmts:[0,0,0,0],
-  whK:{perYear:24,left:9,fedPer:980,caPer:265},
-  whS:{perYear:26,left:9,fedPer:840,caPer:210},
   scenAmount:-10000,scenTerm:"ST"};
 
 /* ---- net worth ---- */
@@ -96,9 +106,15 @@ for(let i=0;i<34;i++){
 }
 hist[hist.length-1]=[new Date().toISOString().slice(0,10), total];
 D.nw.history=hist;
-D.nw.gains={years:["2025","2026"],rows:[{n:"Dividends",v:[5200,6800]},
- {n:"Short-term gains",v:[14000,11700]},{n:"Long-term gains",v:[22000,6000]},
- {n:"Earned income",v:[268000,295000]}]};
+
+/* ---- earlier years: only the return as filed ---- */
+// The years before the plan began carry six figures off the 1040 and 540.
+// They feed the net worth tab's year-by-year table; 2025's taxes are the
+// safe-harbor figures the tax tab measures this year against.
+D.years={
+  2024:{filed:{income:251000,st:9000,lt:15000,deductions:44800,fedTax:41300,caTax:16900}},
+  2025:{filed:{income:289000,st:14000,lt:22000,deductions:50600,fedTax:48200,caTax:19300}}
+};
 
 /* ---- cards: a fictional wallet that exercises every credit period ---- */
 D.cards=[
@@ -123,21 +139,36 @@ D.cards=[
 D.cardOffers={travel:[],dining:[]};
 D.cardUse={};
 D.updated=new Date().toISOString().slice(0,10);
-D.dataVersion=1;
+// dataVersion stays the live file's. A plan older than the current version
+// has its paystubs restated from these defaults on every load, with a notice
+// saying so — which a demo stamped with a low version would show every time.
 
 /* ---- write the demo build ---- */
+// A replacement whose target has moved is a silent no-op, and some of these
+// are what keep real data out. Every one must land or nothing is written.
+const must=(re,to,what)=>{
+  if(!(typeof re==='string'?out.includes(re):re.test(out))){
+    console.error('ABORTED \u2014 could not find '+what+' in '+SRC+'. makedemo.js needs updating for the new source.');
+    process.exit(1);
+  }
+  out=out.replace(re,to);
+};
 let out=html;
 const s=out.indexOf('const DEFAULTS = {');
 // the object literal terminates at a "};" sitting in column 0
 const e=out.indexOf('\n};\n', s)+4;
 out=out.slice(0,s)+'const DEFAULTS = '+JSON.stringify(D,null,2)+';\n'+out.slice(e);
-out=out.replace('const KEY = "finplan.v2";','const KEY = "finplan.demo";');
+must('const KEY = "finplan.v2";','const KEY = "finplan.demo";','the storage key');
 // Blank the Supabase config — the app falls back to browser-only storage,
 // which is what a public demo should do. Never ship the project URL or key.
-out=out.replace(/const SUPABASE_URL\s*=\s*"[^"]*";/,'const SUPABASE_URL      = "";');
-out=out.replace(/const SUPABASE_ANON_KEY\s*=\s*"[^"]*";/,'const SUPABASE_ANON_KEY = "";');
+must(/const SUPABASE_URL\s*=\s*"[^"]*";/,'const SUPABASE_URL      = "";','SUPABASE_URL');
+must(/const SUPABASE_ANON_KEY\s*=\s*"[^"]*";/,'const SUPABASE_ANON_KEY = "";','SUPABASE_ANON_KEY');
 // card art belongs to the issuers — the styled fallbacks ship instead
-out=out.replace(/const CARD_IMG = \{[\s\S]*?\n\}/,'const CARD_IMG = {}');
+must(/const CARD_IMG = \{[\s\S]*?\n\}/,'const CARD_IMG = {}','CARD_IMG');
+// The gains table the net worth tab carried before years were tracked is a
+// literal in the code, not part of DEFAULTS, and it holds real figures. The
+// demo's earlier years come from D.years above, so it is never needed.
+must(/const LEGACY_GAINS = \{[\s\S]*?\};\n/,'const LEGACY_GAINS = null;\n','LEGACY_GAINS');
 // The styled fallbacks are named after the real cards. The demo keeps four of
 // the gradients under neutral names and drops the rest of the block.
 const THEME={platinum:"silver",chase:"navy",boa:"crimson",capone:"ink"};
@@ -145,7 +176,10 @@ out=out.split('\n').filter(l=>!/\.theme-[a-z]+/.test(l) || Object.keys(THEME).so
   .map(l=>l.replace(/\.theme-([a-z]+)/g,(m,k)=>'.theme-'+(THEME[k]||k))).join('\n');
 out=out.replace('<title>Financial Plan</title>','<title>Financial Plan — Demo</title>');
 out=out.replace('<span class="wm-thin">Plan</span>','<span class="wm-thin">Plan</span><span class="demoflag">Demo data</span>');
-out=out.replace('.wm-year{','.demoflag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#201e1d;background:#bab6b6;border-radius:0;padding:3px 7px;margin-left:9px;white-space:nowrap}\n  .wm-year{');
+// On a phone the brand and the sync light share one row with no room for the
+// flag beside them, so it drops under the name instead.
+out=out.replace('.wm-year{','.demoflag{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#201e1d;background:#bab6b6;border-radius:0;padding:3px 7px;margin-left:9px;white-space:nowrap}\n'
+  +'  @media (max-width:820px){.demoflag{display:block;width:max-content;margin:4px 0 0;font-size:8px;padding:2px 6px}}\n  .wm-year{');
 /* The live file sits one level ABOVE the repo, so the demo must be written
    into the repo (buildkit's parent) rather than next to the source. */
 const OUT=process.argv[3]||process.env.DEMO_OUT||path.join(__dirname,'..','demo.html');

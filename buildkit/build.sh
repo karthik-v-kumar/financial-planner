@@ -19,13 +19,21 @@ if [ ! -f "$SRC" ]; then
 fi
 echo "Source: $SRC"
 echo
-echo "Running tests..."
-for t in verify ratecheck cardcheck raisecheck phaseout; do
-  printf "  %-14s " "$t"
-  node "$t.js" "$SRC" 2>&1 | grep -oE ">>> ALL CHECKS PASSED|>>> [0-9]+ FAILURES" | head -1
-done
+runtests(){
+  for t in verify ratecheck cardcheck raisecheck phaseout; do
+    printf "  %-14s " "$t"
+    node "$t.js" "$1" 2>&1 | grep -oE ">>> ALL CHECKS PASSED|>>> [0-9]+ FAILURES" | head -1
+  done
+}
+echo "Running tests against the live file..."
+runtests "$SRC"
 echo
 echo "Regenerating demo..."
 node makedemo.js "$SRC"
+echo
+# The demo is a different household, so the same tests run again on it:
+# the fictional figures have to hold together as well as the real ones do.
+echo "Running tests against the demo..."
+runtests ../demo.html
 echo
 echo "Done. Commit the regenerated demo.html — never $SRC."

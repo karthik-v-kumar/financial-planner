@@ -41,7 +41,9 @@ IRS limit, fixed costs through their ceiling, card credits about to expire —
 the one red block on the page, along with a what-if for moving money into
 savings that recalculates without touching the saved plan.
 
-**Income plan** — per-paycheck take-home built up line by line: gross, 401k
+**Income plan** — laid out in chapters in the order the money moves: pay,
+paystubs, take-home, 401k, saving, each heading carrying the figure it hands
+on. Per-paycheck take-home built up line by line: gross, 401k
 deferral, pre-tax deductions, tax, after-tax deductions. Each person's latest
 paystub is entered once, laid out like the stub itself — federal, California
 and FICA withholding per check and year to date, 401k so far, paychecks
@@ -60,7 +62,10 @@ with a configurable buffer for things you forget, then investing, savings, and
 guilt-free spending as the remainder, each card handing what is left to the
 next. Each section is measured against its guardrail band.
 
-**Tax planning** — a real return, not a flat effective rate. Progressive
+**Tax planning** — a real return, not a flat effective rate, laid out the
+way a return reads: income, deductions, tax, what has been paid, then what a
+sale would cost, with each chapter heading carrying its figure so the
+headings alone tell the story. Progressive
 federal brackets, the preferential rate stacked on top of ordinary income,
 NIIT, Additional Medicare, California computed separately with its own
 deduction rules, the SALT cap with its phase-out, and California's
@@ -76,8 +81,9 @@ quarters and halves, with full-year credits taking a dollar amount so partial
 use is recorded. Marks what closed unused, and surfaces what expires soonest
 on the dashboard.
 
-**Net worth** — assets, cash and investments, and debt, with a logged
-history charted over time; drag or tap along the line for the value on any
+**Net worth** — balances to update first, then debt beside the balance
+sheet it is subtracted in, with the total logged from there and charted
+over time; drag or tap along the line for the value on any
 date and the change since the reading before. An income-and-tax-by-year table
 reads each year off the tax tab, or off the filed return for earlier years.
 

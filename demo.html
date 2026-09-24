@@ -855,6 +855,47 @@
   }
   .calctbl th{vertical-align:bottom}
 
+  /* The tax and income tabs read in chapters, in the order the money moves:
+     the tax tab as the return, the income tab from pay through to saving. Each heading carries the figure its chapter hands on, so the
+     headings alone tell the story, and the line that closes a chapter names
+     the one it feeds. */
+  .chap{
+    display:flex;align-items:baseline;gap:4px 14px;flex-wrap:wrap;
+    margin:36px 0 0;padding-bottom:9px;border-bottom:2px solid var(--ink);
+  }
+  .chap-name{font-family:var(--serif);font-size:22px;font-weight:800;letter-spacing:-.02em;margin:0;color:var(--ink)}
+  .chap-q{font-size:13px;color:var(--muted)}
+  .chap-fig{margin-left:auto;display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;justify-content:flex-end}
+  .chap-fig b{font-size:20px;font-weight:800;color:var(--ink)}
+  .chap-sub{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .chap + .grid2, .chap + .card, #view-tax > .card + .card, #view-tax > .grid2 + .card,
+  #view-income > .card + .card, #view-income > .grid2 + .card,
+  #view-networth > .card + .card, #view-networth > .grid2 + .card{margin-top:14px}
+  .cf-line .to, td .to{
+    font-family:var(--mono);font-size:11px;font-weight:600;margin-left:8px;padding:1px 6px;
+    border:1px solid currentColor;white-space:nowrap;vertical-align:1px;
+  }
+  a.to{color:inherit;text-decoration:none}
+  a.to:hover{background:var(--ink);color:var(--paper)}
+  .card.chapend{padding-top:8px;padding-bottom:8px}
+  /* A typed note under a row of rate fields, rather than a notes column */
+  .calctbl tr.noterow td{padding-top:0;border-top:0}
+  .calctbl tr.noterow input.note-in{width:100%;font-size:11.5px;color:var(--muted);padding-left:0}
+  .chapend .calcflow{margin:0}
+  /* Reference sections fold, since they are opened a few times a year */
+  .refsec > summary{list-style:none;cursor:pointer;display:block}
+  .refsec > summary::-webkit-details-marker{display:none}
+  .refsec > summary h3::after{
+    content:"+";margin-left:auto;font-family:var(--mono);font-size:18px;font-weight:400;
+    color:var(--muted);line-height:1;
+  }
+  .refsec[open] > summary h3::after{content:"−"}
+  .refsec:not([open]) > summary h3{margin:0}
+  .refsec > summary:hover h3::after{color:var(--ink)}
+  /* The phone's pinned summary; wider screens pin the whole stat row instead */
+  .pinbar{display:none}
+  .pagehead:has(+ .pinbar + .kpis.sticky){border-bottom:0;margin-bottom:0}
+
   /* ---------- card benefits ---------- */
   .subsection{
     font-family:var(--serif);font-size:17px;font-weight:800;color:var(--ink);letter-spacing:-.015em;
@@ -965,6 +1006,16 @@
   .nwhist .scroller{flex:1 1 auto;height:0;min-height:100px;max-height:none}
   @media (max-width:900px){ .nwhist .scroller{min-height:240px} }
   .logrow .cell{width:auto;flex:1 1 120px}
+  /* Logging a total: date, amount and the button on one line, one height.
+     iOS draws a date field taller than a text field and centres its value,
+     so its own look is switched off and both are held to the same box. */
+  .logrow.nwlog{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;gap:8px}
+  .logrow.nwlog .cell, .logrow.nwlog .addrow{height:38px;box-sizing:border-box;margin:0;min-width:0;width:100%}
+  .logrow.nwlog input[type="date"]{-webkit-appearance:none;appearance:none;text-align:right;line-height:normal}
+  .logrow.nwlog input[type="date"]::-webkit-date-and-time-value{text-align:right}
+  .logrow.nwlog .addrow{width:auto;white-space:nowrap}
+  /* Folded at the foot of the tab, the history scrolls inside a fixed height */
+  details.nwhist .scroller{flex:none;height:auto;max-height:420px;overflow:auto}
   .scroller{max-height:290px;overflow-y:auto}
   /* Debt follows assets in the same card, set off by space and its own header */
   .nwtbl td.calc{white-space:nowrap}
@@ -1382,9 +1433,76 @@
     .cardstats{grid-template-columns:repeat(2,minmax(0,1fr))}
     .wm-year{display:none}
     nav.tabs button{font-size:10.5px;letter-spacing:.04em}
+    /* The dashboard's figures are short — a percentage or a four- and
+       five-digit amount — so they keep two to a row where the net worth
+       tab's arrowed changes cannot. One stat a row left each figure a
+       third of the screen wide with the rest empty. */
+    .kpis.dashkpis, .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .dashkpis .kpi{padding:14px 0 12px}
+    .dashkpis .kpi:nth-child(2){border-top:0}
+    .dashkpis .kpi:nth-child(even){padding-left:14px;border-left:1px solid var(--rule-2)}
+    .dashkpis .kpi .v{font-size:24px}
+    .dashkpis .kpi .sub{font-size:12.5px}
+    .legend{gap:18px 14px}
+    .legend .amt{font-size:20px}
+    /* Three across clips the date and the amount at this width. The two
+       fields share the line, the button takes the full line under them. */
+    .logrow.nwlog{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .logrow.nwlog .addrow{grid-column:1 / -1;width:100%}
+    details.nwhist table{width:100%}
+    details.nwhist th, details.nwhist td{padding-left:3px;padding-right:3px}
+    details.nwhist td.calc{font-size:13px}
   }
 
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  /* Tax, income and net worth tabs on a phone. The stat row stops being pinned below 900px, so the
+     two figures that matter most ride along in a slim bar under the tabs
+     instead, and drop out of the row itself. */
+  @media (max-width:820px){
+    .pinbar{
+      display:flex;gap:26px;position:sticky;top:calc(env(safe-area-inset-top) + 41px);z-index:10;
+      background:var(--paper);margin:0 -14px;padding:8px 14px 9px;
+      border-top:2px solid rgba(32,30,29,.4);border-bottom:1px solid var(--rule-2);
+    }
+    .pinbar > span{display:flex;flex-direction:column;gap:1px}
+    .pinbar b{font-size:19px;font-weight:800;color:var(--ink)}
+    .kpis.pinkpis{border-top:0}
+    .pinkpis .kpi:nth-child(-n+2){display:none}
+    .chap-q{flex:1 0 100%;order:3}
+  }
+  @media (max-width:640px){
+    /* Four-column tables leave the label a word a line at this width. Each
+       row puts its label across the top and its figures under it, each
+       figure captioned with the column it came from. */
+    .comptbl colgroup, .comptbl thead{display:none}
+    .comptbl, .comptbl tbody{display:block;width:100%}
+    .comptbl tr{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:10px;
+      padding:8px 0;border-bottom:1px solid var(--rule);
+    }
+    .comptbl td{border:0 !important;padding:0 !important}
+    .comptbl td.lab, .comptbl tr.total td:first-child{grid-column:1 / -1;padding-bottom:4px !important}
+    .comptbl td[data-l]{text-align:right}
+    .comptbl td[data-l]::before{
+      content:attr(data-l);display:block;font-family:var(--sans);font-size:11px;font-weight:400;color:var(--muted);
+    }
+    .comptbl td.rate em{display:inline;margin-left:4px}
+    .comptbl tr.total{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);margin-top:2px}
+    .comptbl tr.total td::before{display:none}
+    .comptbl tr.total:has(td[colspan]){grid-template-columns:minmax(0,1fr) auto}
+    .comptbl tr.total td[colspan]{grid-column:auto;padding-bottom:0 !important}
+  }
+  @media (max-width:480px){
+    /* Four stats at 22px fit two to a row, which keeps the whole row on one
+       screen rather than four */
+    .kpis.pinkpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .pinkpis .kpi{padding:14px 0 12px}
+    .pinkpis .kpi:nth-child(4), .pinkpis .kpi:nth-child(6){padding-left:14px;border-left:1px solid var(--rule-2)}
+    .pinkpis .kpi .v, .pinkpis .kpi .v .delta{font-size:22px}
+    .pinkpis .kpi .sub{font-size:12.5px}
+    .chap-name{font-size:20px}
+    .chap-fig{margin-left:0;flex:1 0 100%;justify-content:flex-start;order:4}
+  }
 </style>
 
 <div class="authgate" id="authGate" hidden>
@@ -3630,7 +3748,7 @@ function dash(){
       <p class="section-note">${asOf}, at the salaries in effect now</p>
     </div>
 
-    <div class="kpis">
+    <div class="kpis dashkpis">
       <div class="kpi accent">
         <div class="eyebrow">Net income / month</div>
         <div class="v">${usd(m.netTotal)}</div>
@@ -3864,7 +3982,7 @@ function income(){
       <table class="calctbl stubtbl">
         <colgroup><col><col><col></colgroup>
         <tbody>
-          <tr><td class="lab">Pre-tax 401k<span class="note">Per-check figure follows the percentage above</span></td>
+          <tr><td class="lab">Pre-tax 401k<span class="note">Per-check figure follows the rate set under 401k, below</span></td>
             ${cell(usd2(p.preAmt))}${cell(inp(i,"ytd401k",p.ytd401k))}</tr>
         </tbody>
       </table>
@@ -3889,12 +4007,46 @@ function income(){
     </div>`;
   };
 
+  const both = f => sum(P, f);
+  const whYear = both(p => p.wh.fed.year + p.wh.ca.year);
+  const noteRow = (f, span) => `<tr class="noterow"><td colspan="${span}">${noteInp(f)}</td></tr>`;
+  const statusLine = P.map(p => `${esc(p.name)} ${p.statusText.toLowerCase()}`).join(" · ");
+
   return `
   <div class="pagehead"><h2 class="section">Income plan</h2>
-  <p class="section-note">Edit the blue cells. Take-home pay, 401k projections and the monthly figure used by the spending plan all calculate from these.</p></div>
+  <p class="section-note">Edit the blue cells. The tab follows the money: pay, what payroll has withheld, what reaches checking, then 401k and saving. Take-home feeds the spending plan, and wages and withholding feed the tax tab.</p></div>
 
+  <div class="pinbar">
+    <span><span class="eyebrow">Take-home a month</span><b class="num">${usd(m.netTotal)}</b></span>
+    <span><span class="eyebrow">401k projected</span><b class="num">${usd(m.pre401kYr)}</b></span>
+  </div>
+
+  <div class="kpis sticky pinkpis">
+    <div class="kpi accent">
+      <div class="eyebrow">Take-home a month</div>
+      <div class="v">${usd(m.netTotal)}</div>
+      <div class="sub">What the spending plan works from</div>
+    </div>
+    <div class="kpi">
+      <div class="eyebrow">401k projected</div>
+      <div class="v">${usd(m.pre401kYr)}</div>
+      <div class="sub">${statusLine}</div>
+    </div>
+    <div class="kpi">
+      <div class="eyebrow">Gross pay for the year</div>
+      <div class="v">${usd(both(p=>p.annualGross))}</div>
+      <div class="sub">${usd(both(p=>p.ytdGross))} earned so far</div>
+    </div>
+    <div class="kpi">
+      <div class="eyebrow">Savings rate</div>
+      <div class="v">${pct(m.savingsRate)}</div>
+      <div class="sub">${usd(m.savedYr)} saved and invested this year</div>
+    </div>
+  </div>
+
+  ${chapter("incPay", "Pay", "Salary, raises and bonus — the terms of the job", "Gross pay for the year", usd(both(p=>p.annualGross)))}
   <div class="card">
-    <h3>Pay and deductions <span class="caprule">Edit the blue cells; everything else follows</span></h3>
+    <h3>Salary and bonus <span class="caprule">Change these when the job does</span></h3>
     <table class="stk inputs-tbl">
       <colgroup><col style="width:30%"><col style="width:130px"><col style="width:130px"><col></colgroup>
       <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Notes</th></tr></thead>
@@ -3907,19 +4059,39 @@ function income(){
           : "How many of this year's checks land at the higher rate"}</span></td></tr>
         <tr><td class="lab">Annual bonus</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"bonus",p.bonus)}</td>`).join("")}<td>${noteInp("bonus")}</td></tr>
         <tr><td class="lab">Paychecks per year</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"paychecks",p.paychecks)}</td>`).join("")}<td>${noteInp("paychecks")}</td></tr>
-        <tr><td class="lab">Pre-tax 401k</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${pctInp(i,"pre401k",p.pre401k)}</td>`).join("")}<td>${noteInp("pre401k")}</td></tr>
-        <tr><td class="lab">After-tax 401k</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${pctInp(i,"post401k",p.post401k)}</td>`).join("")}<td>${noteInp("post401k")}</td></tr>
-        <tr><td class="lab">Withheld, share of taxable pay<span class="note">Derived — enter the paystub below instead</span></td>${P.map(p=>`<td data-who="${esc(p.name)}" class="calc">${pct(p.taxRate,2)}</td>`).join("")}<td class="lab"><span class="note">Federal and California withholding, with Social Security, Medicare and CA SDI on top — the split is in the paystub cards below</span></td></tr>
-        <tr><td class="lab">Other pre-tax deductions</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"otherPre",p.otherPre)}</td>`).join("")}<td>${noteInp("otherPre")}</td></tr>
-        <tr><td class="lab">Other after-tax deductions</td>${P.map((p,i)=>`<td data-who="${esc(p.name)}">${inp(i,"otherPost",p.otherPost)}</td>`).join("")}<td>${noteInp("otherPost")}</td></tr>
       </tbody>
     </table>
   </div>
 
+  <div class="card">
+    <h3>Gross pay for the year <span class="caprule">What payroll has paid, and what is still to come</span></h3>
+    <table class="calctbl comptbl">
+      <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
+      <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Both</th></tr></thead>
+      <tbody>
+        ${P.some(p=>p.hasRaise) ? `<tr><td class="lab">Paychecks at old / new salary</td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${p.hasRaise?`${p.checksA} / ${p.checksB}`:`${p.paychecks} / 0`}</td>`).join("")}<td class="calc"></td></tr>` : ""}
+        <tr><td class="lab">Earned so far<span class="note">Year to date, straight off the paystubs</span></td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${usd(p.ytdGross)}</td>`).join("")}<td class="calc" data-l="Both">${usd(both(p=>p.ytdGross))}</td></tr>
+        <tr><td class="lab">Still to come<span class="note">Remaining paychecks plus any bonus not yet paid</span></td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${usd(p.grossToCome)}</td>`).join("")}<td class="calc" data-l="Both">${usd(both(p=>p.grossToCome))}</td></tr>
+        <tr class="total"><td>Gross pay for the year ${handoff("Take-home")}</td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${usd(p.annualGross)}</td>`).join("")}<td class="calc" data-l="Both">${usd(both(p=>p.annualGross))}</td></tr>
+      </tbody>
+    </table>
+    ${P.some(p=>Math.abs(p.grossDrift) > 1000) ? `<p class="section-note" style="max-width:none;margin-top:10px">${P.filter(p=>Math.abs(p.grossDrift)>1000).map(p=>
+      `${esc(p.name)}: payroll is ${p.grossDrift>0?"ahead of":"behind"} the salary rates above by <strong>${usd(Math.abs(p.grossDrift))}</strong>`).join(" · ")}. Vesting stock, stipends and overtime land in the paystub but not in an annual salary, so a gap here is normal — a large one means the salary or the paycheck count needs another look.</p>` : ""}
+  </div>
+
+  ${chapter("incStub", "Paystubs", "Update after each payday", "Income tax withheld this year", usd(whYear), "projected")}
   <div class="grid2" id="paystub">
     ${P.map((p,i)=>stub(p,i)).join("")}
   </div>
+  <div class="card chapend">
+    <div class="calcflow">
+      <div class="cf-line grand"><span>Income tax withheld for the year ${handoff("Tax tab","tax")}</span><b>${usd(whYear)}</b></div>
+      <div class="cf-line muted"><span>Split</span>
+        <b>${usd(both(p=>p.wh.fed.year))} federal · ${usd(both(p=>p.wh.ca.year))} California · plus ${usd(both(p=>p.wh.fica.year))} Social Security, Medicare and SDI</b></div>
+    </div>
+  </div>
 
+  ${chapter("incTake", "Take-home", "What reaches checking", "Take-home a month", usd(m.netTotal), "at the current salary")}
   <div class="grid2">
     <div class="card">
       <h3>Per paycheck <span class="caprule">At the salary in effect now</span></h3>
@@ -3928,12 +4100,12 @@ function income(){
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
         <tbody>
           ${row("Gross pay", P.map(p=>usd2(p.gross)))}
-          ${row("less 401k", P.map(p=>"−"+usd2(p.preAmt)))}
-          ${row("less other pre-tax", P.map(p=>"−"+usd2(p.otherPre)))}
+          ${row("less 401k", P.map(p=>"−"+usd2(p.preAmt)),"","At the rate set under 401k")}
+          <tr><td class="lab">less other pre-tax<span class="note">Dental, FSA, HSA — per paycheck</span></td>${P.map((p,i)=>cell(inp(i,"otherPre",p.otherPre))).join("")}</tr>
           ${row("Pay subject to tax", P.map(p=>usd2(p.taxable)),"sub")}
-          ${row("less tax", P.map(p=>"−"+usd2(p.tax)))}
+          ${row("less tax", P.map(p=>"−"+usd2(p.tax)),"","From the paystubs")}
           ${row("less after-tax 401k", P.map(p=>"−"+usd2(p.postAmt)))}
-          ${row("less other after-tax", P.map(p=>"−"+usd2(p.otherPost)))}
+          <tr><td class="lab">less other after-tax<span class="note">Per paycheck</span></td>${P.map((p,i)=>cell(inp(i,"otherPost",p.otherPost))).join("")}</tr>
           ${row("Take-home pay", P.map(p=>usd2(p.net)),"total")}
           ${row("Kept, as a share of gross", P.map(p=>pct(p.takeHomePct)),"sub")}
         </tbody>
@@ -3953,95 +4125,94 @@ function income(){
     </div>
 
     <div class="card">
-      <h3 id="rec401k">401k contribution recommender</h3>
+      <h3>Monthly and annual</h3>
+
+      <div class="calcband tight">Each month, at the current salary</div>
+      <table class="calctbl comptbl">
+        <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
+        <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Both</th></tr></thead>
+        <tbody>
+          <tr class="total"><td>Take-home a month ${handoff("Spending plan","spend")}</td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${usd2(p.monthly)}</td>`).join("")}<td class="calc" data-l="Both">${usd2(m.netTotal)}</td></tr>
+        </tbody>
+      </table>
+
+      <div class="calcband">The full year, both salaries combined</div>
+      <table class="calctbl comptbl">
+        <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
+        <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Both</th></tr></thead>
+        <tbody>
+          ${[["Gross pay for the year", p=>usd(p.annualGross), usd(both(p=>p.annualGross)), "sub", "From Pay, above"],
+             ["Federal withheld", p=>"−"+usd(p.wh.fed.year), "−"+usd(both(p=>p.wh.fed.year))],
+             ["California withheld", p=>"−"+usd(p.wh.ca.year), "−"+usd(both(p=>p.wh.ca.year))],
+             ["Social Security, Medicare, SDI", p=>"−"+usd(p.wh.fica.year), "−"+usd(both(p=>p.wh.fica.year))],
+             ["401k and other deductions", p=>"−"+usd(p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost),
+               "−"+usd(both(p=>p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost))],
+             ["Take-home for the year", p=>usd(p.annualNet), usd(m.netYr), "total", "Bonus counted on both sides"]]
+            .map(([lab, f, tot, cls="", note=""]) => `<tr class="${cls}"><td class="${cls==="total"?"":"lab"}">${lab}${note?`<span class="note">${note}</span>`:""}</td>${P.map(p=>`<td class="calc" data-l="${esc(p.name)}">${f(p)}</td>`).join("")}<td class="calc" data-l="Both">${tot}</td></tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  ${chapter("inc401k", "401k", "Where the year lands against the limit", "Projected full-year", usd(m.pre401kYr), `${usd(S.irsLimit)} limit each`)}
+  <div class="grid2">
+    <div class="card">
+      <h3 id="rec401k">Contribution rate <span class="caprule">What is set, and what would land on the limit</span></h3>
       <table class="calctbl">
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
         <tbody>
-          ${row("Contributed so far", P.map(p=>usd2(p.ytd401k)),"","From the paystub card above")}
-          ${row("Paychecks remaining", P.map(p=>`${p.checksLeft} of ${p.paychecks}`),"","Also from the paystub card — and what the tax tab projects withholding over")}
-          ${row("Bonus still to be paid", P.map(p=>usd2(p.bonusLeft)),"","From the paystub card above")}
-          ${row("Percentage to set", P.map(p=>`<strong>${pct(p.recPct,2)}</strong>`),"total")}
+          <tr><td class="lab">Pre-tax, set now</td>${P.map((p,i)=>cell(pctInp(i,"pre401k",p.pre401k))).join("")}</tr>
+          ${noteRow("pre401k", 3)}
+          <tr><td class="lab">After-tax, set now</td>${P.map((p,i)=>cell(pctInp(i,"post401k",p.post401k))).join("")}</tr>
+          ${noteRow("post401k", 3)}
+        </tbody>
+      </table>
+
+      <div class="calcband">To land on the limit</div>
+      <table class="calctbl">
+        <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
+        <tbody>
+          ${row("Still to contribute", P.map(p=>usd2(S.irsLimit - p.ytd401k)),"","The limit, less contributed so far")}
+          ${row("Paychecks remaining", P.map(p=>`${p.checksLeft} of ${p.paychecks}`),"","From the paystub card")}
+          ${row("Bonus still to be paid", P.map(p=>usd2(p.bonusLeft)),"","From the paystub card")}
+          ${row("Pay still to come", P.map(p=>usd2(p.grossLeft + p.bonusLeft)),"sub","Paychecks left, plus the bonus")}
+          ${row("Pre-tax percentage to set", P.map(p=>`<strong>${pct(p.recPct,2)}</strong>`),"total","Still to contribute ÷ pay still to come")}
           ${row("Contribution per paycheck at that %", P.map(p=>usd2(p.recPerCheck)),"sub")}
         </tbody>
       </table>
       ${P.some(p=>p.dataGap) ? `<div class="callout warn">${P.filter(p=>p.dataGap).map(p=>esc(p.name)).join(" and ")}: contributed-so-far is $0 with paychecks already paid this year. Enter the figure from the latest paystub.</div>` : ""}
     </div>
-  </div>
 
-  <div class="grid2">
     <div class="card">
-      <h3>401k limit tracker</h3>
+      <h3>Against the limit <span class="caprule">At the rate set now</span></h3>
       <div class="calcflow">
         <div class="cf-line"><span>IRS deferral limit<em>Employee contributions, this year</em></span>
           <b><input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(S.irsLimit)}" data-g="irsLimit" style="width:110px"></b></div>
       </div>
-      <div class="calcband">Projected against the limit</div>
       <table class="calctbl">
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
         <tbody>
-          ${row("Contributed so far", P.map(p=>usd2(p.ytd401k)))}
-          ${row("Still to come at current %", P.map(p=>usd2(p.fromRemaining+p.fromBonus)))}
-          ${row("Projected full-year", P.map(p=>usd2(p.total401k)),"total")}
+          ${row("Contributed so far", P.map(p=>usd2(p.ytd401k)),"","From the paystub card")}
+          ${row("From remaining paychecks", P.map(p=>usd2(p.fromRemaining)))}
+          ${row("From bonus still to come", P.map(p=>usd2(p.fromBonus)))}
+          ${row(`Projected full-year ${handoff("Saving")}`, P.map(p=>usd2(p.total401k)),"total")}
           ${row("Room left vs. limit", P.map(p=>usd2(p.room)),"sub")}
           <tr><td class="lab">Status</td>${P.map(p=>`<td style="text-align:right"><span class="tag ${p.status}">${p.statusText}</span></td>`).join("")}</tr>
         </tbody>
       </table>
     </div>
-
-    <div class="card">
-      <h3>Monthly and annual</h3>
-
-      <div class="calcband">Each month, at the current salary</div>
-      <table class="calctbl">
-        <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
-        <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}<th>Both</th></tr></thead>
-        <tbody>
-          ${row("Take-home per month", [...P.map(p=>usd2(p.monthly)), usd2(m.netTotal)],"total","At the current salary — this is what the spending plan uses")}
-        </tbody>
-      </table>
-
-      <div class="calcband">The full year, both salaries combined</div>
-      <table class="calctbl">
-        <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
-        <tbody>
-          ${P.some(p=>p.hasRaise) ? row("Paychecks at old / new salary",
-            [...P.map(p=>p.hasRaise?`${p.checksA} / ${p.checksB}`:`${p.paychecks} / 0`), ""]) : ""}
-          ${row("Earned so far", [...P.map(p=>usd(p.ytdGross)), usd(sum(P,p=>p.ytdGross))],"","Year to date, straight off the paystubs")}
-          ${row("Still to come", [...P.map(p=>usd(p.grossToCome)), usd(sum(P,p=>p.grossToCome))],"","Remaining paychecks plus any bonus not yet paid")}
-          ${row("Gross pay for the year", [...P.map(p=>usd(p.annualGross)), usd(sum(P,p=>p.annualGross))],"sub")}
-          ${row("Federal withheld", [...P.map(p=>"−"+usd(p.wh.fed.year)), "−"+usd(sum(P,p=>p.wh.fed.year))])}
-          ${row("California withheld", [...P.map(p=>"−"+usd(p.wh.ca.year)), "−"+usd(sum(P,p=>p.wh.ca.year))])}
-          ${row("Social Security, Medicare, SDI", [...P.map(p=>"−"+usd(p.wh.fica.year)), "−"+usd(sum(P,p=>p.wh.fica.year))])}
-          ${row("401k and other deductions", [...P.map(p=>"−"+usd(p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost)), "−"+usd(sum(P,p=>p.total401k+p.annualPostAmt+p.annualOtherPre+p.annualOtherPost))])}
-          ${row("Take-home for the year", [...P.map(p=>usd(p.annualNet)), usd(m.netYr)],"total","Bonus counted on both sides")}
-        </tbody>
-      </table>
-      ${P.some(p=>Math.abs(p.grossDrift) > 1000) ? `<p class="section-note">${P.filter(p=>Math.abs(p.grossDrift)>1000).map(p=>
-        `${esc(p.name)}: payroll is ${p.grossDrift>0?"ahead of":"behind"} the salary rates above by <strong>${usd(Math.abs(p.grossDrift))}</strong>`).join(" · ")}. Vesting stock, stipends and overtime land in the paystub but not in an annual salary, so a gap here is normal — a large one means the salary or the paycheck count needs another look.</p>` : ""}
-
-      <div class="calcband">401k this year</div>
-      <table class="calctbl">
-        <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
-        <tbody>
-          ${row("Contributed so far", [...P.map(p=>usd(p.ytd401k)), usd(sum(P,p=>p.ytd401k))])}
-          ${row("From remaining paychecks", [...P.map(p=>usd(p.fromRemaining)), usd(sum(P,p=>p.fromRemaining))])}
-          ${row("From bonus still to come", [...P.map(p=>usd(p.fromBonus)), usd(sum(P,p=>p.fromBonus))])}
-          ${row("Projected full-year", [...P.map(p=>usd(p.total401k)), usd(m.pre401kYr)],"total")}
-        </tbody>
-      </table>
-    </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
+  ${chapter("incSave", "Saving", "Everything set aside this year", "Savings rate", pct(m.savingsRate))}
+  <div class="card">
       <h3>Combined savings and investments</h3>
-      <div class="calcband">Contributions and investments</div>
       <table class="calctbl">
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <thead><tr><th></th><th>Per month</th><th>Annual</th></tr></thead>
         <tbody>
-          ${row("Pre-tax 401k (incl. bonus)", [usd2(m.pre401kYr/12), usd(m.pre401kYr)])}
+          ${row("Pre-tax 401k (incl. bonus)", [usd2(m.pre401kYr/12), usd(m.pre401kYr)],"","Projected full-year, from 401k above")}
           ${row("After-tax 401k", [usd2(m.post401kYr/12), usd(m.post401kYr)])}
           <tr><td class="lab">Backdoor Roth IRA<span class="note">$7,500 each</span></td><td class="calc">${usd2(S.iraTotal/12)}</td><td style="text-align:right"><input class="cell" type="text" inputmode="decimal" data-num="1" value="${nf(S.iraTotal)}" data-g="iraTotal"></td></tr>
           ${row("Brokerage", [usd2(m.investTotal), usd(m.brokerageYr)], "", "From the spending plan")}
@@ -4719,15 +4890,25 @@ function networth(){
   const yv = v => (v === null || v === undefined) ? `<span class="nil">—</span>` : usd(v);
   const kindTag = {projected:"Projected", planned:"Planned", tracked:"Tracked here", filed:"As filed"};
 
+  const owned = n.assets + n.cash;
+  const lastOn = n.last ? new Date(n.last[0]+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"}) : "";
+  // A balance already logged today reads as done rather than as a prompt
+  const loggedNow = n.last && Math.round(n.last[1]) === Math.round(n.total);
+
   return `
   <div class="pagehead"><h2 class="section">Net worth</h2>
-  <p class="section-note">Update the balances below, then log the total to add a point to the chart. Debts are entered as positive numbers and subtracted automatically.</p></div>
+  <p class="section-note">Update the balances, check the balance sheet, then log the total to add a point to the chart. Debts are entered as positive numbers and subtracted automatically.</p></div>
 
-  <div class="kpis">
+  <div class="pinbar">
+    <span><span class="eyebrow">Net worth</span><b class="num">${usd(n.total)}</b></span>
+    <span><span class="eyebrow">Since last entry</span><b class="num">${delta(n.sinceLast)}</b></span>
+  </div>
+
+  <div class="kpis sticky pinkpis">
     <div class="kpi accent">
       <div class="eyebrow">Total net worth</div>
       <div class="v">${usd(n.total)}</div>
-      <div class="sub">${n.last ? `Last logged ${usd(n.last[1])} on ${new Date(n.last[0]+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"})}` : "Nothing logged yet"}</div>
+      <div class="sub">${n.last ? `Last logged ${usd(n.last[1])} on ${lastOn}` : "Nothing logged yet"}</div>
     </div>
     <div class="kpi"><div class="eyebrow">Since last entry</div><div class="v">${delta(n.sinceLast)}</div><div class="sub">${n.prev?`from ${usd(n.prev[1])}`:"—"}</div></div>
     <div class="kpi"><div class="eyebrow">Year to date</div><div class="v">${delta(n.ytd)}</div><div class="sub">${pct(n.last&&n.ytd?n.ytd/(n.last[1]-n.ytd):0)} change</div></div>
@@ -4745,18 +4926,8 @@ function networth(){
     ${chart(shown, {height:280, ticks:5})}
   </div>
 
+  ${chapter("nwOwn", "Own", "Balances to update — accounts first, then everything else", "Owned", usd(owned))}
   <div class="grid2">
-    <div class="card">
-      <h3>Assets and debt <span class="tag ${n.assets - n.debt >= 0 ? "ok" : "bad"}">${n.assets - n.debt >= 0 ? "" : "−"}${usd(Math.abs(n.assets - n.debt))} net</span></h3>
-      <table class="stk nwtbl">${head("Asset")}<tbody>${rows("assets")}
-        <tr class="total"><td colspan="3">Assets total</td><td class="calc">${usd(n.assets)}</td><td></td></tr>
-      </tbody></table>
-      <button class="addrow" data-addnw="assets">+ Add asset</button>
-      <table class="stk nwtbl nwnext">${head("Debt")}<tbody>${rows("debt")}
-        <tr class="total"><td colspan="3">Debt total</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td><td></td></tr>
-      </tbody></table>
-      <button class="addrow" data-addnw="debt">+ Add debt</button>
-    </div>
     <div class="card">
       <h3>Cash and investments <span class="tag ok">${usd(n.cash)}</span></h3>
       <table class="stk nwtbl">${head()}<tbody>${rows("cash")}
@@ -4764,26 +4935,63 @@ function networth(){
       </tbody></table>
       <button class="addrow" data-addnw="cash">+ Add account</button>
     </div>
+    <div class="card">
+      <h3>Property and other assets <span class="tag ok">${usd(n.assets)}</span></h3>
+      <table class="stk nwtbl">${head("Asset")}<tbody>${rows("assets")}
+        <tr class="total"><td colspan="3">Assets total</td><td class="calc">${usd(n.assets)}</td><td></td></tr>
+      </tbody></table>
+      <button class="addrow" data-addnw="assets">+ Add asset</button>
+    </div>
   </div>
 
+  ${chapter("nwNet", "Net worth", "What you own, less what you owe", "Net worth", usd(n.total))}
   <div class="grid2">
+    <div class="card">
+      <h3>Debt <span class="tag bad">−${usd(n.debt)}</span></h3>
+      <table class="stk nwtbl">${head("Debt")}<tbody>${rows("debt")}
+        <tr class="total"><td colspan="3">Debt total</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td><td></td></tr>
+      </tbody></table>
+      <button class="addrow" data-addnw="debt">+ Add debt</button>
+    </div>
     <div class="card">
       <h3>Balance sheet</h3>
       <table class="fit"><tbody>
-        <tr><td class="lab">Assets</td><td class="calc">${usd(n.assets)}</td></tr>
         <tr><td class="lab">Cash and investments</td><td class="calc">${usd(n.cash)}</td></tr>
+        <tr><td class="lab">Property and other assets</td><td class="calc">${usd(n.assets)}</td></tr>
         <tr><td class="lab">less debt</td><td class="calc" style="color:var(--red)">−${usd(n.debt)}</td></tr>
         <tr class="total"><td>Total net worth</td><td class="calc">${usd(n.total)}</td></tr>
         <tr><td class="lab" style="color:var(--muted)">Invested and liquid, excluding the home<span class="note">Cash + brokerage + retirement</span></td><td class="calc" style="color:var(--muted)">${usd(n.cash)}</td></tr>
       </tbody></table>
-    </div>
-    <div class="card nwhist">
-      <h3>Logged history <span class="caprule">Each entry becomes a point on the chart</span></h3>
-      <div class="logrow">
+
+      <div class="calcband">Log it</div>
+      <div class="logrow nwlog">
         <input class="cell" type="date" id="nwDate" value="${today()}" aria-label="Entry date">
         <input class="cell" type="text" inputmode="decimal" data-num="1" id="nwVal" value="${nf(Math.round(n.total))}" aria-label="Net worth amount">
         <button class="addrow" style="margin:0" data-addnw="history">Log entry</button>
       </div>
+      <p class="caprule" style="margin:0">${loggedNow ? `Already logged — ${lastOn} matches the total above.` : n.last ? `Last logged ${usd(n.last[1])} on ${lastOn}. Logging adds a point to the chart above.` : "Logging adds a point to the chart above."}</p>
+    </div>
+  </div>
+
+  ${chapter("nwYears", "By year", "Income and tax, read from the tax tab")}
+  <div class="card" id="yearTable">
+    <h3>Income and tax by year <span class="caprule">Pick a year up top to change its figures</span></h3>
+    <div class="hscroll">
+    <table class="yeartbl">
+      <thead><tr><th>Year</th>${FILED_KEYS.map(([,l]) => `<th>${l}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${ys.map(r => `<tr${r.y === YEAR ? ' class="on"' : ""}>
+          <td class="lab"><button type="button" class="yrlink" data-year="${r.y}" data-goto="tax" title="Open the ${r.y} tax tab">${r.y}</button><span class="note">${kindTag[r.kind]}</span></td>
+          ${FILED_KEYS.map(([k,l]) => `<td class="calc" data-l="${l}">${yv(r[k])}</td>`).join("")}</tr>`).join("")}
+      </tbody>
+    </table>
+    </div>
+    <p class="section-note" style="max-width:none;margin-top:10px">Short- and long-term are net realized gains before
+    they are netted against each other; dividends and interest are in total income. ${thisYear()} is the tax tab's
+    projection and settles as the year's figures go in.</p>
+  </div>
+  <details class="card refsec nwhist" id="nwLog"${TAX_OPEN.get("nwLog") ? " open" : ""}>
+    <summary><h3>Logged history <span class="caprule">${n.hist.length} entries, each a point on the chart</span></h3></summary>
       <div class="scroller">
         <table>
           <thead><tr><th>Date</th><th>Net worth</th><th>Change</th><th></th></tr></thead>
@@ -4799,27 +5007,21 @@ function networth(){
           </tbody>
         </table>
       </div>
-    </div>
-
-  </div>
-
-  <div class="card" id="yearTable" style="margin-top:14px">
-    <h3>Income and tax by year <span class="caprule">From the tax tab — pick a year up top to change its figures</span></h3>
-    <div class="hscroll">
-    <table class="yeartbl">
-      <thead><tr><th>Year</th>${FILED_KEYS.map(([,l]) => `<th>${l}</th>`).join("")}</tr></thead>
-      <tbody>
-        ${ys.map(r => `<tr${r.y === YEAR ? ' class="on"' : ""}>
-          <td class="lab"><button type="button" class="yrlink" data-year="${r.y}" data-goto="tax" title="Open the ${r.y} tax tab">${r.y}</button><span class="note">${kindTag[r.kind]}</span></td>
-          ${FILED_KEYS.map(([k,l]) => `<td class="calc" data-l="${l}">${yv(r[k])}</td>`).join("")}</tr>`).join("")}
-      </tbody>
-    </table>
-    </div>
-    <p class="section-note" style="max-width:none;margin-top:10px">Short- and long-term are net realized gains before
-    they are netted against each other; dividends and interest are in total income. ${thisYear()} is the tax tab's
-    projection and settles as the year's figures go in.</p>
-  </div>`;
+  </details>`;
 }
+
+// A chapter heading on the tax, income and net worth tabs. It carries the figure the
+// chapter hands on, so the headings alone tell the story.
+const chapter = (id, name, q, figLab, fig, sub="") => `
+  <div class="chap" id="${id}">
+    <h3 class="chap-name">${name}</h3>
+    <span class="chap-q">${q}</span>
+    ${figLab ? `<span class="chap-fig"><span class="eyebrow">${figLab}</span><b class="num">${fig}</b>${sub?`<span class="chap-sub">${sub}</span>`:""}</span>` : ""}
+  </div>`;
+// Names where a figure goes next. When that is another tab, it is a link there.
+const handoff = (s, view) => view
+  ? `<a href="#" class="to" data-goto="${view}">→ ${s}</a>`
+  : `<span class="to">→ ${s}</span>`;
 
 function taxview(){
   const t = taxModel(), T = S.tax;
@@ -4864,7 +5066,7 @@ function taxview(){
       <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
       <tbody>
         ${row("Paychecks received",[`${k.checksPaid} of ${k.paychecks}`,""],"sub")}
-        ${row("Withheld per check",[usd2(k.fedPer), usd2(k.caPer)],"","Income-tax lines only. Social Security, Medicare and CA SDI (" + usd2(k.ficaPer) + " a check) don't count toward the return")}
+        ${row("Withheld per check",[usd2(k.fedPer), usd2(k.caPer)],"","Income-tax lines only — " + usd2(k.ficaPer) + " of FICA and SDI left out")}
         ${row("Withheld so far",[usd(k.wh.fed.ytd), usd(k.wh.ca.ytd)],"","Paystub year-to-date")}
         ${row("Still to be withheld",[usd(k.fedPer*k.checksLeft), usd(k.caPer*k.checksLeft)],"",
           k.checksLeft > 0 ? `${k.checksLeft} ${k.checksLeft === 1 ? "paycheck" : "paychecks"} to come` : "Every paycheck this year has been received")}
@@ -4874,24 +5076,38 @@ function taxview(){
     </table>`;
   const qLabels = ["Q1 — Apr 15","Q2 — Jun 15","Q3 — Sep 15","Q4 — Jan 15"];
 
+  // The headings on their own read as the return: income, less deductions,
+  // the tax on what is left, and what has been paid against it.
+  const chap = chapter, to = s => handoff(s);
+  const refund = t.combinedBal >= 0;
+  const balColor = refund ? "var(--pos)" : "var(--red)";
+  // Figures under a phone-width restack, where the column headings are hidden
+  const dl = (l, v, cls="calc") => `<td class="${cls}" data-l="${l}">${v}</td>`;
+  const refOpen = id => TAX_OPEN.has(id) ? TAX_OPEN.get(id) : (id === "taxParams" && !!T.params.carried);
+
   return `
   <div class="pagehead"><h2 class="section">Tax planning</h2>
-  <p class="section-note">Wages, 401k and withholding all come from the income plan — enter the paystub there and this tab follows. What is typed here is the part payroll never sees: investment income, deductions and any estimated payments sent directly. A plain-language walkthrough sits at the bottom of this tab.</p></div>
+  <p class="section-note">Wages, 401k and withholding all come from the income plan — enter the paystub there and this tab follows. What is typed here is the part payroll never sees: investment income, deductions and any estimated payments sent directly. The tab reads like the return, from income down to the refund; rates and a plain-language walkthrough sit at the bottom.</p></div>
   ${T.params.carried ? `<div class="callout warn" style="margin:0 0 16px">
     <strong>These are ${T.params.carried}'s tax brackets and limits.</strong> ${YEAR} opened with last year's statutory
     figures, since the new ones are published on the IRS's schedule rather than on January 1. Update the ones marked
     yearly under <a href="#" data-goto="tax" data-focus="taxParams">Tax rates and thresholds</a> — and the 401k and IRA
     limits on the income plan — once they are out. This note clears on the first edit there.</div>` : ""}
 
-  <div class="kpis six sticky">
+  <div class="pinbar">
+    <span><span class="eyebrow">Total tax</span><b class="num">${usd(t.totalTax)}</b></span>
+    <span><span class="eyebrow">${refund ? "Projected refund" : "Projected owed"}</span><b class="num" style="color:${balColor}">${usd(Math.abs(t.combinedBal))}</b></span>
+  </div>
+
+  <div class="kpis six sticky pinkpis">
     <div class="kpi accent">
       <div class="eyebrow">Total tax</div>
       <div class="v">${usd(t.totalTax)}</div>
       <div class="sub">Federal ${usd(t.fedTax)} · California ${usd(t.caTax)}</div>
     </div>
     <div class="kpi">
-      <div class="eyebrow">${t.combinedBal >= 0 ? "Projected refund" : "Projected owed"}</div>
-      <div class="v" style="color:${t.combinedBal >= 0 ? "var(--pos)" : "var(--red)"}">${usd(Math.abs(t.combinedBal))}</div>
+      <div class="eyebrow">${refund ? "Projected refund" : "Projected owed"}</div>
+      <div class="v" style="color:${balColor}">${usd(Math.abs(t.combinedBal))}</div>
       <div class="sub">Fed ${t.fedBal>=0?"+":"−"}${usd(Math.abs(t.fedBal))} · CA ${t.caBal>=0?"+":"−"}${usd(Math.abs(t.caBal))}</div>
     </div>
     <div class="kpi">
@@ -4918,65 +5134,12 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
-    <h3>Inputs <span class="caprule">Everything the calculation below is built from</span></h3>
-    <div class="inputwrap">
-
-      <section class="ig">
-        <div class="calcband tight">Wages</div>
-        <div class="ig-head">
-          <span class="eyebrow"></span>
-          <span class="eyebrow">${esc(S.people[1].name)}</span>
-          <span class="eyebrow">${esc(S.people[0].name)}</span>
-        </div>
-        <div class="ig-row">
-          <span class="ig-lab">Gross earnings<em>From the income plan — salary, any raise, and bonus</em></span>
-          <span class="val">${usd(t.grossK)}</span><span class="val">${usd(t.grossS)}</span>
-        </div>
-        <div class="ig-row">
-          <span class="ig-lab">less 401k<em>Projected full year, from the 401k tracker</em></span>
-          <span class="val">${usd(t.k401kK)}</span><span class="val">${usd(t.k401kS)}</span>
-        </div>
-        <div class="ig-row">
-          <span class="ig-lab">less other pre-tax<em>Dental, FSA, HSA — the per-paycheck figure on the income plan, over the year</em></span>
-          <span class="val">${usd(t.preTaxK)}</span><span class="val">${usd(t.preTaxS)}</span>
-        </div>
-        <div class="ig-row sub">
-          <span class="ig-lab">Taxable wages (W-2 Box 1)</span>
-          <span class="val">${usd(t.boxK)}</span><span class="val">${usd(t.boxS)}</span>
-        </div>
-        <div class="ig-row grand">
-          <span class="ig-lab">Combined taxable wages</span>
-          <span class="val span2">${usd(t.wages)}</span>
-        </div>
-      </section>
-
-      <section class="ig one">
-        <div class="calcband tight">Deduction inputs</div>
-        <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">Annual</span></div>
-        <div class="ig-row"><span class="ig-lab">Mortgage interest</span>${n("mortInterest",T.mortInterest)}</div>
-        <div class="ig-row"><span class="ig-lab">Property tax</span>${n("propTax",T.propTax)}</div>
-        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion of vehicle registration</em></span>${n("vlf",T.vlf)}</div>
-        <div class="ig-row"><span class="ig-lab">Charitable</span>${n("charitable",T.charitable)}</div>
-        <div class="ig-row sub"><span class="ig-lab">Itemized before SALT cap</span><span class="val">${usd(t.itemized)}</span></div>
-      </section>
-
-      <section class="ig one">
-        <div class="calcband tight">Prior year</div>
-        <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">${TP().year-1}</span></div>
-        <div class="ig-row"><span class="ig-lab">Total federal tax<em>Form 1040, line 24</em></span>${n("priorFed",T.priorFed)}</div>
-        <div class="ig-row"><span class="ig-lab">Total California tax</span>${n("priorCA",T.priorCA)}</div>
-        <div class="ig-row sub"><span class="ig-lab">Safe harbor at 110%</span><span class="val">${usd(1.1*(T.priorFed+T.priorCA))}</span></div>
-      </section>
-
-    </div>
-  </div>
-
+  ${chap("taxIncome", "Income", "Pay and investments, added up", "Adjusted gross income", usd(t.agi))}
   <div class="grid2">
-    <div class="card">
+    <div class="card" id="taxGains">
       <h3>Realized gains and losses <span class="tag ${t.netCap>=0?"warn":"ok"}">${t.netCap>=0?"Net gain":"Net loss"}</span></h3>
 
-      <div class="calcband">Realized year to date, by account</div>
+      <div class="calcband tight">Realized year to date, by account</div>
       <table class="calctbl">
         <colgroup><col><col style="width:130px"><col style="width:24px"></colgroup>
         <tbody>
@@ -5003,7 +5166,7 @@ function taxview(){
     <div class="card">
       <h3>Dividends and interest</h3>
 
-      <div class="calcband">Received this year</div>
+      <div class="calcband tight">Received this year</div>
       <section class="ig one">
         <div class="ig-row"><span class="ig-lab">Interest income</span>${n("interest",T.interest)}</div>
         <div class="ig-row"><span class="ig-lab">Ordinary dividends<em>Total across all accounts</em></span>${n("ordDiv",T.ordDiv)}</div>
@@ -5021,102 +5184,168 @@ function taxview(){
 
   <div class="grid2">
     <div class="card">
-      <h3>Tax calculation <span class="caprule">${TP().year} rates</span></h3>
+      <h3>Wages <span class="caprule">From the income plan — <a href="#" data-goto="income">change them there</a></span></h3>
+      <section class="ig">
+        <div class="ig-head">
+          <span class="eyebrow"></span>
+          <span class="eyebrow">${esc(S.people[1].name)}</span>
+          <span class="eyebrow">${esc(S.people[0].name)}</span>
+        </div>
+        <div class="ig-row">
+          <span class="ig-lab">Gross earnings<em>Salary, any raise, and bonus</em></span>
+          <span class="val">${usd(t.grossK)}</span><span class="val">${usd(t.grossS)}</span>
+        </div>
+        <div class="ig-row">
+          <span class="ig-lab">less 401k<em>Projected full year, from the 401k tracker</em></span>
+          <span class="val">${usd(t.k401kK)}</span><span class="val">${usd(t.k401kS)}</span>
+        </div>
+        <div class="ig-row">
+          <span class="ig-lab">less other pre-tax<em>Dental, FSA, HSA — the per-paycheck figure, over the year</em></span>
+          <span class="val">${usd(t.preTaxK)}</span><span class="val">${usd(t.preTaxS)}</span>
+        </div>
+        <div class="ig-row sub">
+          <span class="ig-lab">Taxable wages (W-2 Box 1)</span>
+          <span class="val">${usd(t.boxK)}</span><span class="val">${usd(t.boxS)}</span>
+        </div>
+      </section>
+    </div>
+
+    <div class="card">
+      <h3>Adjusted gross income <span class="caprule">The two cards above and wages, added up</span></h3>
+      <div class="calcflow">
+        <div class="cf-line"><span>Taxable wages, both</span><b>${usd(t.wages)}</b></div>
+        <div class="cf-line"><span>Interest</span><b>${usd(T.interest)}</b></div>
+        <div class="cf-line"><span>Ordinary dividends<em>Qualified included — they are taxed at a lower rate, not left out</em></span><b>${usd(T.ordDiv)}</b></div>
+        <div class="cf-line"><span>Net capital gain / (loss)<em>${t.netCap < -3000
+          ? "A net loss counts only to −$3,000 here; the rest carries forward"
+          : "Short- and long-term together"}</em></span><b>${usd(t.stComp + t.ltComp)}</b></div>
+        <div class="cf-line grand"><span>Adjusted gross income ${to("Deductions")}</span><b>${usd(t.agi)}</b></div>
+      </div>
+    </div>
+  </div>
+
+  ${chap("taxDeductions", "Deductions", "Itemized or standard, whichever is larger", "Deduction taken", usd(t.fedDeduction), `California ${usd(t.caDeduction)}`)}
+  <div class="grid2">
+    <div class="card">
+      <h3>Itemized or standard <span class="tag ok">${t.useItemized ? "Itemizing" : "Standard"}</span></h3>
+
+      <div class="calcband tight">What you enter</div>
+      <section class="ig one">
+        <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">Annual</span></div>
+        <div class="ig-row"><span class="ig-lab">Mortgage interest</span>${n("mortInterest",T.mortInterest)}</div>
+        <div class="ig-row"><span class="ig-lab">Property tax<em>Counts toward SALT on the federal return</em></span>${n("propTax",T.propTax)}</div>
+        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion of vehicle registration</em></span>${n("vlf",T.vlf)}</div>
+        <div class="ig-row"><span class="ig-lab">Charitable</span>${n("charitable",T.charitable)}</div>
+      </section>
+
+      <div class="calcband">What each return allows</div>
+      <table class="calctbl">
+        <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
+        <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
+        <tbody>
+          ${row("Mortgage interest",[usd(T.mortInterest), usd(T.mortInterest)])}
+          ${row("State and local taxes",[usd(t.saltAllowed), usd(T.propTax + T.vlf)],"",
+            "Federal: capped — see the SALT cap. California: no cap, but its own income tax doesn't count")}
+          ${row("Charitable",[usd(t.charDeductible), usd(T.charitable)],"",
+            `Federal counts only the part above ${pct(TPF().charFloor,1)} of AGI; California counts all of it`)}
+          ${row("Itemized",[usd(t.itemRaw), usd(t.caItemRaw)],"sub")}
+          ${t.caPhaseout > 0 ? `
+          ${row("less high-income reduction",["—", `−${usd(t.caPhaseout)}`],"",
+            `${pct(TPC().itemRate,0)} of AGI above ${usd(TPC().itemThresh)}, capped at ${pct(TPC().itemCapPct,0)} of itemized`)}
+          ${row("Itemized after reduction",[usd(t.itemRaw), usd(t.caItemized)],"sub")}` : ""}
+          ${row("Standard deduction",[usd(TPF().std), usd(TPC().std)],"","Taken instead, if larger")}
+          ${row(`Deduction used ${to("Tax")}`,[usd(t.fedDeduction), usd(t.caDeduction)],"total",
+            t.useItemized === (t.caItemized > TPC().std)
+              ? `${t.useItemized ? "Itemizing" : "The standard deduction"} wins on both`
+              : `${t.useItemized ? "Itemizing" : "The standard"} wins federally, ${t.caItemized > TPC().std ? "itemizing" : "the standard"} in California`)}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>The SALT cap <span class="caprule">State and local taxes, on the federal return</span></h3>
+      <div class="calcflow">
+        <div class="cf-line"><span>California income tax<em>Worked out under Tax, below — it counts toward SALT</em></span><b>${usd(t.caTax)}</b></div>
+        <div class="cf-line"><span>Property tax</span><b>${usd(T.propTax)}</b></div>
+        <div class="cf-line"><span>Vehicle license fee</span><b>${usd(T.vlf)}</b></div>
+        <div class="cf-line result"><span>SALT before the cap</span><b>${usd(t.saltSubtotal)}</b></div>
+        <div class="cf-line"><span>Cap at this income<em>${t.saltStatus}</em></span><b>${usd(t.saltCap)}</b></div>
+        <div class="cf-line grand"><span>SALT allowed<em>Lesser of the two above</em></span><b>${usd(t.saltAllowed)}</b></div>
+      </div>
+    </div>
+  </div>
+
+  ${chap("taxTax", "Tax", "Each return's rates, on what is left", "Total tax", usd(t.totalTax))}
+  <div class="grid2">
+    <div class="card">
+      <h3>Federal <span class="caprule">${TP().year} rates</span></h3>
 
       <div class="calcflow">
-        <div class="cf-line"><span>Total income (AGI)</span><b>${usd(t.agi)}</b></div>
+        <div class="cf-line"><span>Adjusted gross income</span><b>${usd(t.agi)}</b></div>
         <div class="cf-line"><span>less deduction<em>${t.useItemized?`Itemized, beating the ${usd(TPF().std)} standard`:"Standard deduction"}</em></span><b>−${usd(t.fedDeduction)}</b></div>
         <div class="cf-line result"><span>Federal taxable income</span><b>${usd(t.ordTaxable + t.prefTaxable)}</b></div>
       </div>
 
-      <div class="calcband">Federal tax</div>
-      <table class="calctbl">
+      <div class="calcband">What each part is taxed at</div>
+      <table class="calctbl comptbl">
         <colgroup><col style="width:42%"><col style="width:19%"><col style="width:19%"><col style="width:20%"></colgroup>
         <thead><tr><th>Component</th><th>Rate</th><th>Applies to</th><th>Tax</th></tr></thead>
         <tbody>
           <tr><td class="lab">Ordinary income<span class="note">Wages, interest, short-term gains</span></td>
-            <td class="calc rate"><b>${pct(t.fedTopRate,0)}</b><em>top bracket</em></td>
-            <td class="calc">${usd(t.ordTaxable)}</td><td class="calc">${usd(t.fedOrd)}</td></tr>
+            ${dl("Rate", `<b>${pct(t.fedTopRate,0)}</b><em>top bracket</em>`, "calc rate")}
+            ${dl("Applies to", usd(t.ordTaxable))}${dl("Tax", usd(t.fedOrd))}</tr>
           <tr><td class="lab">Qualified dividends and long-term gains<span class="note">Stacked on top of ordinary income</span></td>
-            <td class="calc rate"><b>${pct(t.prefRateUsed,0)}</b></td>
-            <td class="calc">${usd(t.prefTaxable)}</td><td class="calc">${usd(t.fedPref)}</td></tr>
+            ${dl("Rate", `<b>${pct(t.prefRateUsed,0)}</b>`, "calc rate")}
+            ${dl("Applies to", usd(t.prefTaxable))}${dl("Tax", usd(t.fedPref))}</tr>
           <tr><td class="lab">Net investment income tax<span class="note">Investment income, or AGI over ${usd(TPF().niitThresh)} — whichever is less</span></td>
-            <td class="calc rate"><b>${pct(TPF().niitRate,1)}</b></td>
-            <td class="calc">${usd(t.niitBase)}</td><td class="calc">${usd(t.niit)}</td></tr>
+            ${dl("Rate", `<b>${pct(TPF().niitRate,1)}</b>`, "calc rate")}
+            ${dl("Applies to", usd(t.niitBase))}${dl("Tax", usd(t.niit))}</tr>
           <tr><td class="lab">Additional Medicare<span class="note">Gross wages above ${usd(TPF().addMedThresh)}</span></td>
-            <td class="calc rate"><b>${pct(TPF().addMedRate,1)}</b></td>
-            <td class="calc">${usd(t.addMedBase)}</td><td class="calc">${usd(t.addMed)}</td></tr>
+            ${dl("Rate", `<b>${pct(TPF().addMedRate,1)}</b>`, "calc rate")}
+            ${dl("Applies to", usd(t.addMedBase))}${dl("Tax", usd(t.addMed))}</tr>
           <tr class="total"><td colspan="3">Total federal</td><td class="calc">${usd(t.fedTax)}</td></tr>
         </tbody>
       </table>
+    </div>
 
-      <div class="calcband">California tax</div>
+    <div class="card">
+      <h3>California <span class="caprule">No lower rate for long-term gains</span></h3>
+
       <div class="calcflow">
-        <div class="cf-line"><span>Total income (AGI)</span><b>${usd(t.agi)}</b></div>
+        <div class="cf-line"><span>Adjusted gross income</span><b>${usd(t.agi)}</b></div>
         <div class="cf-line"><span>less US govt obligation dividends<em>Treasury funds and similar — taxed federally, exempt in California</em></span><b>−${usd(T.usGovDiv)}</b></div>
         <div class="cf-line"><span>less deduction<em>${t.caItemized > TPC().std
           ? `Itemized, beating the ${usd(TPC().std)} California standard`
           : "California standard deduction"}</em></span><b>−${usd(t.caDeduction)}</b></div>
         <div class="cf-line result"><span>California taxable income</span><b>${usd(t.caTaxable)}</b></div>
       </div>
-      <table class="calctbl">
+
+      <div class="calcband">What it is taxed at</div>
+      <table class="calctbl comptbl">
         <colgroup><col style="width:42%"><col style="width:19%"><col style="width:19%"><col style="width:20%"></colgroup>
+        <thead><tr><th>Component</th><th>Rate</th><th>Applies to</th><th>Tax</th></tr></thead>
         <tbody>
           <tr><td class="lab">Tax on that income<span class="note">Capital gains taxed as ordinary income</span></td>
-            <td class="calc rate"><b>${pct(t.caTopRate,1)}</b><em>top bracket</em></td>
-            <td class="calc">${usd(t.caTaxable)}</td><td class="calc">${usd(t.caTax)}</td></tr>
+            ${dl("Rate", `<b>${pct(t.caTopRate,1)}</b><em>top bracket</em>`, "calc rate")}
+            ${dl("Applies to", usd(t.caTaxable))}${dl("Tax", usd(t.caTax))}</tr>
           <tr class="total"><td colspan="3">Total California</td><td class="calc">${usd(t.caTax)}</td></tr>
         </tbody>
       </table>
-
-      <div class="calcflow bottom">
-        <div class="cf-line grand"><span>Total tax, federal and California</span><b>${usd(t.totalTax)}</b></div>
-        <div class="cf-line muted"><span>Blended rates applied</span>
-          <b>${pct(t.fedBlended)} federal · ${pct(t.caBlended)} California</b></div>
-      </div>
     </div>
-
-    <div class="card">
-      <h3>How the deduction was built</h3>
-
-      <div class="calcband">State and local taxes</div>
-      <div class="calcflow">
-        <div class="cf-line"><span>California income tax<em>The tax computed above counts toward SALT</em></span><b>${usd(t.caTax)}</b></div>
-        <div class="cf-line"><span>Property tax</span><b>${usd(T.propTax)}</b></div>
-        <div class="cf-line"><span>Vehicle license fee</span><b>${usd(T.vlf)}</b></div>
-        <div class="cf-line result"><span>SALT before the cap</span><b>${usd(t.saltSubtotal)}</b></div>
-        <div class="cf-line"><span>Cap at this income<em>${t.saltStatus}</em></span><b>${usd(t.saltCap)}</b></div>
-        <div class="cf-line result"><span>SALT allowed<em>Lesser of the two above</em></span><b>${usd(t.saltAllowed)}</b></div>
-      </div>
-
-      <div class="calcband">Other itemized deductions</div>
-      <div class="calcflow">
-        <div class="cf-line"><span>Mortgage interest</span><b>${usd(T.mortInterest)}</b></div>
-        <div class="cf-line"><span>Charitable that counts<em>Only the part above ${pct(TPF().charFloor,1)} of AGI</em></span><b>${usd(t.charDeductible)}</b></div>
-        <div class="cf-line result"><span>Total itemized</span><b>${usd(t.itemRaw)}</b></div>
-
-        <div class="cf-line"><span>Standard deduction<em>Taken instead, if larger</em></span><b>${usd(TPF().std)}</b></div>
-        <div class="cf-line grand"><span>Deduction used<em>${t.useItemized?"Itemizing wins":"Standard deduction wins"}</em></span><b>${usd(t.fedDeduction)}</b></div>
-      </div>
-
-      <div class="calcband">California, which follows different rules</div>
-      <div class="calcflow">
-        <div class="cf-line"><span>Mortgage interest</span><b>${usd(T.mortInterest)}</b></div>
-        <div class="cf-line"><span>Property tax<em>No cap on the state return</em></span><b>${usd(T.propTax)}</b></div>
-        <div class="cf-line"><span>Vehicle license fee</span><b>${usd(T.vlf)}</b></div>
-        <div class="cf-line"><span>Charitable<em>Full amount — California has no 0.5% floor</em></span><b>${usd(T.charitable)}</b></div>
-        <div class="cf-line"><span>California income tax<em>Not deductible on its own return</em></span><b>${usd(0)}</b></div>
-        <div class="cf-line result"><span>California itemized</span><b>${usd(t.caItemRaw)}</b></div>
-        ${t.caPhaseout > 0 ? `<div class="cf-line"><span>less high-income reduction<em>${pct(TPC().itemRate,0)} of AGI above ${usd(TPC().itemThresh)}, capped at ${pct(TPC().itemCapPct,0)} of itemized</em></span><b>−${usd(t.caPhaseout)}</b></div>
-        <div class="cf-line result"><span>Itemized after reduction</span><b>${usd(t.caItemized)}</b></div>` : ""}
-        <div class="cf-line"><span>California standard deduction<em>Taken instead, if larger</em></span><b>${usd(TPC().std)}</b></div>
-        <div class="cf-line grand"><span>Deduction used<em>${t.caItemized > TPC().std ? "Itemizing wins" : "Standard deduction wins"}</em></span><b>${usd(t.caDeduction)}</b></div>
-      </div>
+  </div>
+  <div class="card chapend">
+    <div class="calcflow">
+      <div class="cf-line grand"><span>Total tax, federal and California ${to("Paid")}</span><b>${usd(t.totalTax)}</b></div>
+      <div class="cf-line muted"><span>Blended rates applied</span>
+        <b>${pct(t.fedBlended)} federal · ${pct(t.caBlended)} California</b></div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
-      <h3>Withholding <span class="caprule">From the paystubs on the income plan</span></h3>
+  ${chap("taxPaid", "Paid", "What payroll and your own payments have covered",
+    refund ? "Projected refund" : "Projected owed", `<span style="color:${balColor}">${usd(Math.abs(t.combinedBal))}</span>`,
+    `Safe harbor ${t.fedShort > 0 || t.caShort > 0 ? "not yet met" : "met"}`)}
+  <div class="card">
+      <h3>Withholding <span class="caprule">From the paystubs on the income plan. Income-tax lines only — Social Security, Medicare and CA SDI settle nothing on the return</span></h3>
       <div class="grid2" style="margin-top:0">
         <div>${whBlock(t.k)}</div>
         <div>${whBlock(t.sb)}</div>
@@ -5133,7 +5362,7 @@ function taxview(){
     <div class="card">
       <h3>Estimated payments <span class="caprule">Quarterly payments you send directly</span></h3>
 
-      <div class="calcband">Payments made this year</div>
+      <div class="calcband tight">Payments made this year</div>
       <table class="calctbl">
         <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
         <thead><tr><th>Quarter</th><th>Federal</th><th>California</th></tr></thead>
@@ -5156,8 +5385,8 @@ function taxview(){
         </tbody>
       </table>
       <div class="calcflow bottom">
-        <div class="cf-line grand"><span>${t.combinedBal>=0?"Projected refund":"Projected balance due"}</span>
-          <b style="color:${t.combinedBal>=0?"var(--pos)":"var(--red)"}">${usd(Math.abs(t.combinedBal))}</b></div>
+        <div class="cf-line grand"><span>${refund?"Projected refund":"Projected balance due"}</span>
+          <b style="color:${balColor}">${usd(Math.abs(t.combinedBal))}</b></div>
         <div class="cf-line muted"><span>Split</span>
           <b>${t.fedBal>=0?"refund":"owed"} ${usd(Math.abs(t.fedBal))} federal · ${t.caBal>=0?"refund":"owed"} ${usd(Math.abs(t.caBal))} California</b></div>
       </div>
@@ -5166,10 +5395,20 @@ function taxview(){
     <div class="card">
       <h3>Safe harbor <span class="caprule">Pay at least this much to avoid a penalty</span></h3>
 
-      <div class="calcband">The minimum required</div>
+      <div class="calcband tight">Last year's return</div>
       <table class="calctbl">
         <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
         <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Total tax, ${TP().year-1}<span class="note">Federal from Form 1040, line 24</span></td>
+            <td style="text-align:right">${n("priorFed",T.priorFed)}</td>
+            <td style="text-align:right">${n("priorCA",T.priorCA)}</td></tr>
+        </tbody>
+      </table>
+
+      <div class="calcband">The minimum required</div>
+      <table class="calctbl">
+        <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
         <tbody>
           ${row("90% of this year's tax",[usd(0.9*t.fedTax),usd(0.9*t.caTax)])}
           ${row("110% of last year's tax",[usd(1.1*T.priorFed),usd(1.1*T.priorCA)])}
@@ -5181,9 +5420,7 @@ function taxview(){
       <table class="calctbl">
         <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
         <tbody>
-          ${row("Withholding",[usd(t.fedWH),usd(t.caWH)])}
-          ${row("Estimates already sent",[usd(t.fedEst),usd(t.caEst)])}
-          ${row("Total covered",[usd(t.fedWH+t.fedEst),usd(t.caWH+t.caEst)],"sub")}
+          ${row("Withheld and sent so far",[usd(t.fedWH+t.fedEst),usd(t.caWH+t.caEst)],"","Total paid, under estimated payments")}
           <tr class="total"><td>Still to pay</td>
             <td class="calc">${t.fedShort>0?usd(t.fedShort):`<span class="tag ok">Met</span>`}</td>
             <td class="calc">${t.caShort>0?usd(t.caShort):`<span class="tag ok">Met</span>`}</td></tr>
@@ -5194,9 +5431,10 @@ function taxview(){
     </div>
   </div>
 
-  <div class="card" style="margin-top:14px">
+  ${chap("taxSell", "Before you sell", "What a trade would do to the tax", "Marginal rate", pct(t.marginal), `long-term ${pct(t.marginalLT)}`)}
+  <div class="card">
     <h3>What the next $1,000 of gain costs</h3>
-    <div class="calcband">Each rate that applies</div>
+    <div class="calcband tight">Each rate that applies</div>
     <table class="calctbl">
       <colgroup><col style="width:52%"><col style="width:24%"><col style="width:24%"></colgroup>
       <thead><tr><th>Component</th><th>Short-term</th><th>Long-term</th></tr></thead>
@@ -5231,8 +5469,7 @@ function taxview(){
       <div class="cf-line"><span>Federal rate past that point</span><b>${pct(t.nextBracketRate,0)}</b></div>` : ""}
       <div class="cf-line"><span>Room before the SALT phase-out<em>Keyed to AGI of ${usd(t.agi)}, not taxable income</em></span>
         <b>${t.headroom > 0 ? usd(t.headroom) : "already past it"}</b></div>
-      <div class="cf-line muted"><span>Realizing more than that in one year</span>
-        <b>use the estimator below — it re-runs the whole return</b></div>
+      <div class="cf-line muted"><span>Realizing more than that in one year? The estimator below re-runs the whole return.</span></div>
     </div>
   </div>
 
@@ -5249,18 +5486,18 @@ function taxview(){
       <span class="caprule">Negative harvests a loss, positive realizes a gain</span>
     </div>
     <div class="calcband">Current plan versus the trade</div>
-    <table class="calctbl">
+    <table class="calctbl comptbl">
       <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
       <thead><tr><th></th><th>Now</th><th>After the trade</th><th>Change</th></tr></thead>
       <tbody>
         ${[["Net capital gain / (loss)","netCap"],["AGI / MAGI","agi"],["SALT allowed","saltAllowed"],
            ["Federal deduction","fedDeduction"],["Federal tax","fedTax"],["California tax","caTax"]]
           .map(([lab,key])=>`<tr><td class="lab">${lab}</td>
-            <td class="calc">${usd(t[key])}</td>
-            <td class="calc">${usd(t.scen[key])}</td>
-            <td class="calc" style="color:${t.scen[key]-t[key]===0?"var(--muted)":(t.scen[key]-t[key]<0?"var(--green)":"var(--red)")}">${t.scen[key]-t[key]>=0?"+":"−"}${usd(Math.abs(t.scen[key]-t[key]))}</td></tr>`).join("")}
-        <tr class="total"><td>Total tax</td><td class="calc">${usd(t.totalTax)}</td><td class="calc">${usd(t.scen.totalTax)}</td>
-          <td class="calc" style="color:${t.scenChange<=0?"var(--green)":"var(--red)"}">${t.scenChange>=0?"+":"−"}${usd(Math.abs(t.scenChange))}</td></tr>
+            ${dl("Now", usd(t[key]))}
+            ${dl("After", usd(t.scen[key]))}
+            <td class="calc" data-l="Change" style="color:${t.scen[key]-t[key]===0?"var(--muted)":(t.scen[key]-t[key]<0?"var(--green)":"var(--red)")}">${t.scen[key]-t[key]>=0?"+":"−"}${usd(Math.abs(t.scen[key]-t[key]))}</td></tr>`).join("")}
+        <tr class="total"><td>Total tax</td>${dl("Now", usd(t.totalTax))}${dl("After", usd(t.scen.totalTax))}
+          <td class="calc" data-l="Change" style="color:${t.scenChange<=0?"var(--green)":"var(--red)"}">${t.scenChange>=0?"+":"−"}${usd(Math.abs(t.scenChange))}</td></tr>
       </tbody>
     </table>
     ${t.scen.carryforward < 0 ? `<div class="calcflow bottom">
@@ -5278,15 +5515,16 @@ function taxview(){
         <div class="sub">${t.scen.agi > TPF().saltThresh ? "above" : "below"} the ${usd(TPF().saltThresh)} SALT threshold</div></div>
     </div>
   </div>
-  <div class="card" style="margin-top:14px" id="taxParams">
-    <h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3>
+
+  ${chap("taxRef", "Reference", "The statutory figures, and how the tab works")}
+  <details class="card refsec" id="taxParams"${refOpen("taxParams") ? " open" : ""}>
+    <summary><h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3></summary>
     <div class="calcflow">
       <div class="cf-line"><span><span class="yearly">yearly</span> marks the figures that change every January — brackets, standard deductions, and the three thresholds below. Everything else is set by statute and only changes if the law does.</span></div>
     </div>
     <div class="ig-row" style="max-width:320px;border-bottom:0">
       <span class="ig-lab">Tax year</span><span class="num" style="font-weight:700">${YEAR}</span>
     </div>
-
     <div class="grid2" style="margin-top:4px">
       <div>
         <div class="calcband">Federal brackets <span class="yearly">yearly</span></div>
@@ -5357,26 +5595,26 @@ function taxview(){
           <td>${nl(i,2,b[2],true)}</td></tr>`).join("")}
       </tbody>
     </table>
-  </div>
+  </details>
 
-  <div class="card guide" style="margin-top:14px">
-    <h3>How this tab works</h3>
-    <p>Tax is worked out in four stages, and the cards above follow that order.</p>
+  <details class="card refsec guide" id="taxGuide"${refOpen("taxGuide") ? " open" : ""}>
+    <summary><h3>How this tab works <span class="caprule">A plain-language walkthrough</span></h3></summary>
+    <p>Tax is worked out in four stages, and the chapters above follow that order.</p>
 
     <div class="guide-grid">
-    <p><strong>1 — Add up the income.</strong> Wages come from the income plan automatically. Everything earned from investments is entered here: gains from selling, dividends, and interest. Added together these give <strong>adjusted gross income</strong>, or AGI, the figure most thresholds are measured against.</p>
+    <p><strong>Income — add it up.</strong> Wages come from the income plan automatically. Everything earned from investments is entered here: gains from selling, dividends, and interest. Added together these give <strong>adjusted gross income</strong>, or AGI, the figure most thresholds are measured against.</p>
 
-    <p><strong>2 — Subtract the deductions.</strong> Everyone may subtract a fixed <strong>standard deduction</strong>. Alternatively you may add up specific costs — mortgage interest, property tax, charitable giving, state taxes paid — and subtract those instead. That is <strong>itemizing</strong>, and it is worth doing only when the total is larger. What remains is <strong>taxable income</strong>.</p>
+    <p><strong>Deductions — subtract them.</strong> Everyone may subtract a fixed <strong>standard deduction</strong>. Alternatively you may add up specific costs — mortgage interest, property tax, charitable giving, state taxes paid — and subtract those instead. That is <strong>itemizing</strong>, and it is worth doing only when the total is larger. What remains is <strong>taxable income</strong>.</p>
 
-    <p><strong>3 — Apply the rates.</strong> Income is taxed in bands: the first slice at the lowest rate, each later slice higher. So a "24% bracket" means only the portion above that bracket's floor is taxed at 24%, not the whole amount. Investments held longer than a year are taxed at lower rates than everything else, which is why the calculation separates them. Two surtaxes may also apply at higher incomes.</p>
+    <p><strong>Tax — apply the rates.</strong> Income is taxed in bands: the first slice at the lowest rate, each later slice higher. So a "24% bracket" means only the portion above that bracket's floor is taxed at 24%, not the whole amount. Investments held longer than a year are taxed at lower rates than everything else, which is why the calculation separates them. Two surtaxes may also apply at higher incomes.</p>
 
-    <p><strong>4 — Compare against what has been paid.</strong> Tax is paid through the year, through payroll withholding and any quarterly payments sent directly. If those add up to more than the tax owed, the difference comes back as a refund; less, and the balance is due at filing. <strong>Safe harbor</strong> is the minimum that must be paid during the year to avoid a late-payment penalty, even if the rest is settled later.</p>
+    <p><strong>Paid — compare against what has gone in.</strong> Tax is paid through the year, through payroll withholding and any quarterly payments sent directly. If those add up to more than the tax owed, the difference comes back as a refund; less, and the balance is due at filing. <strong>Safe harbor</strong> is the minimum that must be paid during the year to avoid a late-payment penalty, even if the rest is settled later.</p>
     </div>
 
-    <p class="guide-note">Two terms worth knowing. The <strong>marginal rate</strong> is what the next dollar earned would be taxed at, which is always higher than the <strong>effective rate</strong> — the average across all income. And California computes its own tax separately, with different deductions and no lower rate for long-term investments, which is why it appears as its own section throughout.</p>
+    <p class="guide-note"><strong>Before you sell</strong> works the other way round: it re-runs the whole return with a trade added, to show what the next dollar of gain would cost. That is the <strong>marginal rate</strong> — what the next dollar is taxed at, always higher than the <strong>effective rate</strong>, the average across all income. California computes its own tax separately, with different deductions and no lower rate for long-term investments, which is why it appears beside federal throughout.</p>
 
     <p class="guide-note">This is a planning model built from published rates, not a tax return. It does not handle alternative minimum tax, and a preparer has the final word.</p>
-  </div>
+  </details>
   `;
 }
 
@@ -5601,6 +5839,15 @@ function yearSummary(){
 const views = { dash, income, spend, tax: taxview, cards: cardsview, networth };
 let current = "dash";
 
+// Folding sections (the tax tab's reference, the net worth log). Every
+// keystroke rebuilds the tab, so whether each is open is kept here rather
+// than read off the page,
+// or a section would snap shut while a bracket in it was being typed.
+const TAX_OPEN = new Map();
+document.addEventListener("toggle", e => {
+  if(e.target.matches && e.target.matches("details.refsec")) TAX_OPEN.set(e.target.id, e.target.open);
+}, true);
+
 function render(){
   // With sync configured, nothing is drawn until we know who is signed in.
   // Previously the cached plan painted first and the gate arrived a moment
@@ -5647,6 +5894,8 @@ function goTab(view, focus){
   const b = document.querySelector(`nav.tabs button[data-view="${view}"]`);
   if(!b) return;
   current = view;
+  // A link to a folded section opens it on the way
+  if(focus) TAX_OPEN.set(focus, true);
   document.querySelectorAll("nav.tabs button").forEach(x=>x.setAttribute("aria-selected", String(x===b)));
   document.querySelectorAll(".view").forEach(v=>v.hidden = v.id !== "view-"+current);
   render();

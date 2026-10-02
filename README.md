@@ -175,7 +175,8 @@ connection returns — asking first if the shared plan moved on meanwhile.
 | `demo.html` | The app, with fictional data and no database. What the live demo serves. |
 | `supabase-setup.sql` | Database schema, access rules, and recovery recipes. Safe to publish. |
 | `manifest.json` | Metadata, so it installs as an app on macOS and iOS. |
-| `icon.svg`, `apple-touch-icon*.png`, `icon-*.png`, `favicon-*.png` | The app icon, at the sizes iOS, Android and browsers ask for. Regenerate with `node buildkit/makeicons.js .` |
+| `icon.svg`, `favicon.svg`, `favicon.ico`, `apple-touch-icon*.png`, `icon-*.png`, `favicon-*.png` | The app icon, at the sizes iOS, Android and browsers ask for. Regenerate from `brand/` with `node buildkit/makeicons.js .` (macOS) |
+| `brand/` | The icon pack: full-bleed, rounded and macOS masters, the header mark, and the macOS `.icns` with its iconset |
 | `.gitignore` | Blocks the deployable file, which carries keys and real data, from ever being committed. |
 
 ---

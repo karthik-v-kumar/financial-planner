@@ -461,6 +461,126 @@
   }
   .chart-empty{color:var(--muted);font-size:12px;padding:20px 0}
 
+  /* Income and tax by year, drawn — see yearChart(). Room either side for
+     the two axes' labels: percent left, dollars right. */
+  .ychart{margin:26px 0 0;padding:0 50px 0 36px}
+  .yc-plot{position:relative;height:260px;isolation:isolate}
+  .yc-grid{position:absolute;left:0;right:0;border-top:1px solid var(--rule);pointer-events:none}
+  .yc-grid.base{border-top-color:var(--rule-2)}
+  .yc-grid i{
+    position:absolute;top:-8px;font-style:normal;white-space:nowrap;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:10.5px;font-weight:600;color:var(--muted);
+  }
+  .yc-grid i.l{right:calc(100% + 8px)}
+  .yc-grid i.r{left:calc(100% + 8px)}
+  .yc-band{position:absolute;top:0;bottom:0;outline:none;cursor:default}
+  .yc-band:hover, .yc-band.open, .yc-band:focus-visible{background:rgba(32,30,29,.035)}
+  .yc-band:focus-visible .yc-tip{display:block}
+  .yc-band:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+  /* Bars are capped at 24px and gapped 2px; the band's leftover is air */
+  .yc-bars{position:absolute;top:0;bottom:0;left:50%;transform:translateX(-50%);
+    width:min(78%, 76px);display:flex;gap:2px}
+  .yc-bar{flex:1 1 0;position:relative;min-width:0}
+  .yc-bar i{position:absolute;left:0;right:0;background:var(--c);border-radius:4px 4px 0 0}
+  .yc-bar i.neg{border-radius:0 0 4px 4px}
+  /* A stack: the lower segment square, the upper one rounded and set off
+     from it by a gap in the card colour */
+  .yc-bar i.lower{border-radius:0}
+  .yc-bar i.upper{border-bottom:2px solid var(--card)}
+  /* Projected: a light tint of the hue, struck through with the hue itself */
+  .yc-bar i.pj{background:repeating-linear-gradient(135deg, var(--c) 0 1.5px, var(--t) 1.5px 5px)}
+  .ychart svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:2}
+  .ychart line.halo{stroke:var(--card);stroke-width:4px;stroke-linecap:round}
+  .ychart line.ln{stroke:var(--ink);stroke-width:2px;stroke-linecap:round}
+  .ychart line.ln.dashed{stroke-dasharray:5 4;stroke-linecap:butt}
+  .yc-dot{
+    position:absolute;z-index:3;width:10px;height:10px;border-radius:50%;background:var(--c, var(--ink));
+    box-shadow:0 0 0 2px var(--card);transform:translate(-50%,-50%);pointer-events:none;
+  }
+  .yc-dot.pj{background:var(--card);border:2px solid var(--c, var(--ink))}
+  .yc-val{
+    position:absolute;z-index:3;transform:translate(-50%,-100%);margin-top:-8px;pointer-events:none;white-space:nowrap;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:var(--ink);
+    background:var(--card);border-radius:3px;padding:0 4px;line-height:1.35;
+  }
+  .yc-val.pj{color:var(--muted)}
+  .yc-val.below{transform:translate(-50%,0);margin-top:8px}
+  .yc-tip{
+    display:none;position:absolute;z-index:5;top:6px;left:50%;transform:translateX(-50%);
+    width:max-content;min-width:200px;pointer-events:none;
+    background:var(--ink);color:#fff;border-radius:6px;padding:7px 10px;
+    font-size:11.5px;line-height:1.55;box-shadow:0 2px 10px rgba(32,30,29,.22);
+  }
+  .yc-band.first .yc-tip{left:0;transform:none}
+  .yc-band.last .yc-tip{left:auto;right:0;transform:none}
+  .yc-band:hover .yc-tip, .yc-band.open .yc-tip{display:block}
+  /* iOS sends a tap on to the page's click handler only from something that
+     looks clickable */
+  @media (hover:none){ .yc-band{cursor:pointer} .yc-band:hover .yc-tip{display:none} .yc-band.open .yc-tip{display:block} }
+  .yc-tip em{display:block;font-style:normal;font-weight:700;font-size:12px;margin-bottom:2px}
+  .yc-tip > span{display:flex;align-items:center;gap:7px}
+  .yc-tip > span i{width:9px;height:9px;border-radius:2px;background:var(--c);flex:none}
+  .yc-tip > span.sum{font-weight:700}
+  .yc-tip > span.sum i{background:none}
+  .yc-tip > span.rate{border-top:1px solid rgba(255,255,255,.18);margin-top:3px;padding-top:3px}
+  /* A line's key: a short run of the line, solid or dashed, in its colour */
+  i.lk{display:inline-block;width:16px;height:2px;border-radius:0;flex:none;background:var(--c)}
+  i.lk.dash{background:repeating-linear-gradient(90deg,var(--c) 0 4px,transparent 4px 7px)}
+  .yc-tip > span i.lk{width:14px;height:2px;border-radius:0}
+  .yc-tip > span i.lk.dash{background:repeating-linear-gradient(90deg,var(--c) 0 4px,transparent 4px 7px)}
+  .yc-tip b{margin-left:auto;padding-left:14px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700}
+  .yc-x{position:relative;height:16px;margin-top:8px}
+  .yc-x span{
+    position:absolute;transform:translateX(-50%);white-space:nowrap;
+    font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ink);
+  }
+  .yc-x span.pj{color:var(--muted)}
+  .ychart figcaption{margin:14px -50px 0 -36px}
+  .yc-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--text)}
+  .yc-legend li{display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .yc-legend i{width:10px;height:10px;border-radius:2px;background:var(--c);flex:none}
+  .yc-legend li.ln i.lk{width:18px;height:2px;border-radius:0;position:relative}
+  .yc-legend li.ln i.lk::after{content:"";position:absolute;left:5px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--c)}
+  /* Total tax: the two colours stacked, state over federal, as in the bar */
+  .yc-legend li.stack i{height:12px;border-radius:2px 2px 0 0;
+    background:linear-gradient(to top, var(--c) 0 50%, var(--card) 50% 62%, var(--c2) 62%)}
+  .yc-legend li span{color:var(--muted)}
+  .yc-legend li.pj i{background:repeating-linear-gradient(135deg, var(--muted) 0 1.5px, #e3e0e0 1.5px 5px)}
+  .yc-note{margin:8px 0 0;font-size:12px;color:var(--muted)}
+
+  /* Tax history: years across, so a year reads down its column and a row
+     compares the years. The projected year is set back; the year in the
+     picker is shaded. A whole column opens its year. */
+  .histtbl{table-layout:fixed;min-width:100%}
+  .histtbl th, .histtbl td{white-space:nowrap}
+  .histtbl th.ycol{text-align:right;vertical-align:bottom;cursor:pointer}
+  .histtbl th.ycol .note{display:block;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;margin-top:2px}
+  .histtbl col.labcol{width:34%}
+  .histtbl td.ycol{cursor:pointer}
+  .histtbl .ycol.on{background:#f8f4f4}
+  .histtbl .ycol.proj{color:var(--muted)}
+  .histtbl .ycol.proj .yrlink{color:var(--muted)}
+  .histtbl td.ycol.proj{font-style:italic}
+  .histtbl tbody tr:hover{background:transparent}
+  .histtbl tr.effrow td{border-top:1px solid var(--rule-2);padding-top:9px;font-weight:800}
+  .histtbl tr.effrow td.lab{font-weight:600}
+
+  /* The tax tab's three parts. Pinned under the masthead, with the stat row
+     pinned under it in turn, so switching is always one tap away. The top
+     padding sits behind the masthead and closes the gap above the control. */
+  .subnav{position:sticky;top:80px;z-index:12;background:var(--paper);padding:20px 0 10px}
+  .segctl{display:inline-flex;border:1px solid var(--ink);background:var(--card)}
+  .segctl button{
+    font:inherit;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--ink);
+    background:transparent;border:0;border-radius:0;padding:0 20px;height:34px;cursor:pointer;line-height:1;white-space:nowrap;
+  }
+  .segctl button + button{border-left:1px solid var(--ink)}
+  .segctl button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+  .segctl button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  /* 80 + 20 padding + 36 control + 10 padding: the stat row starts where it ends */
+  #view-tax .kpis.sticky{top:146px}
+  .subnav + .pagehead{padding-top:14px}
+
   /* The way out of a panel to the tab that can act on it */
   .panelbtn{
     font:inherit;font-size:12px;font-weight:700;letter-spacing:.02em;color:var(--ink);
@@ -484,8 +604,13 @@
     position:absolute;top:0;height:100%;
     background:repeating-linear-gradient(90deg,#9b9797 0 3px,transparent 3px 6px);
   }
+  /* The bonus still to come, after the paychecks: the same run, denser */
+  .track .proj.bonus{background:repeating-linear-gradient(90deg,#605d5d 0 3px,transparent 3px 5px)}
   .gauge .hint{font-size:11.5px;color:var(--muted)}
   .gauge .hint strong{color:var(--red);font-weight:600}
+  .gauge .hint.basis{margin-top:3px;font-size:11px}
+  .basis{font-size:11.5px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+  .basis b{font-weight:600;color:var(--text)}
 
   .tag{
     font-size:11px;font-weight:600;letter-spacing:.02em;
@@ -704,6 +829,10 @@
      longer than the box, and focusing the field still scrolls to all of it —
      which is better at every width than a name cut mid-letter. */
   input.cell.wide{width:100%;text-align:left;font-weight:400;text-overflow:ellipsis}
+  input.cell.datecell{width:150px;-webkit-appearance:none;appearance:none;line-height:normal;min-height:28px}
+  input.cell.datecell::-webkit-date-and-time-value{text-align:right}
+  /* A figure worked out from others, where a typed one would otherwise sit */
+  .derived{display:inline-block;min-width:104px;text-align:right;padding:4px 8px;font-weight:700;font-size:13px}
   /* Spending plan: the long fixed-costs ledger on the left, the short
      sections stacked beside it. The last row is flexible so the ledger's
      extra height lands there rather than as gaps between the right cards.
@@ -1022,11 +1151,6 @@
   .nwtbl td.calc{white-space:nowrap}
   table.nwnext{margin-top:22px}
   .hscroll{overflow-x:auto}
-  .yeartbl{min-width:760px}
-  .yeartbl th:not(:first-child){text-align:right}
-  .yeartbl td.lab{white-space:nowrap}
-  .yeartbl tr.on td{background:#f8f4f4}
-  .yeartbl .nil{color:var(--muted);font-weight:400}
   .yrlink{
     font:inherit;font-family:var(--mono);font-weight:700;font-size:13.5px;color:var(--ink);cursor:pointer;
     background:none;border:0;border-bottom:1px dotted var(--muted);padding:0;border-radius:0;
@@ -1253,16 +1377,24 @@
        fixed layout and a colgroup, its first column's width was handed to
        the whole stacked body, which came out 30% wide. */
     table.stk{display:block;width:100%;min-width:0}
-    /* Seven columns will not go across a phone: each year becomes a block */
-    .yeartbl{min-width:0;display:block;width:100%}
-    .yeartbl tbody, .yeartbl tr{width:100%}
-    .yeartbl thead{display:none}
-    .yeartbl tbody{display:block}
-    .yeartbl tr{display:grid;grid-template-columns:minmax(0,1fr);gap:3px;padding:10px 0;border-bottom:1px solid var(--rule)}
-    .yeartbl tr.on td{background:transparent}
-    .yeartbl td{display:flex;justify-content:space-between;gap:8px;padding:0;border:0;white-space:nowrap}
-    .yeartbl td.lab{grid-column:1 / -1;justify-content:flex-start;align-items:baseline;gap:10px;margin-bottom:2px}
-    .yeartbl td[data-l]::before{content:attr(data-l);font-family:var(--sans);font-weight:400;color:var(--muted);font-size:12px}
+    /* Three or four years fit across a phone once the figures are compact;
+       the label column gives up the width, and a fifth year scrolls */
+    .histtbl col.labcol{width:36%}
+    .histtbl td.lab{white-space:normal}
+    .histtbl th, .histtbl td{padding:6px 4px;font-size:12.5px}
+    .histtbl td.lab .note{font-size:11px}
+    /* The chart keeps its two axes; the plot gives up the width instead */
+    .ychart{padding:0 42px 0 30px}
+    .ychart figcaption{margin:14px -42px 0 -30px}
+    .yc-plot{height:220px}
+    .yc-bars{width:86%;gap:1.5px}
+    .yc-bar i{border-radius:3px 3px 0 0}
+    .yc-bar i.neg{border-radius:0 0 3px 3px}
+    .yc-grid i{font-size:10px}
+    .yc-grid i.l{right:calc(100% + 5px)}
+    .yc-grid i.r{left:calc(100% + 5px)}
+    .yc-val{font-size:11.5px}
+    .yc-legend{gap:6px 12px;font-size:12.5px}
     .stk thead, .stk colgroup{display:none}
     .stk tbody{display:block}
     .stk tr{
@@ -1466,6 +1598,12 @@
       border-top:2px solid rgba(32,30,29,.4);border-bottom:1px solid var(--rule-2);
     }
     .pinbar > span{display:flex;flex-direction:column;gap:1px}
+    /* The tax tab's switcher pins under the tabs, and its stat bar under that */
+    .subnav{top:calc(env(safe-area-inset-top) + 41px);margin:0 -14px;padding:7px 14px}
+    .segctl{display:flex;width:100%}
+    .segctl button{flex:1 1 0;padding:0}
+    /* 41 tabs + 7 + 36 control + 7 */
+    #view-tax .pinbar{top:calc(env(safe-area-inset-top) + 91px)}
     .pinbar b{font-size:19px;font-weight:800;color:var(--ink)}
     .kpis.pinkpis{border-top:0}
     .pinkpis .kpi:nth-child(-n+2){display:none}
@@ -1672,7 +1810,8 @@ const DEFAULTS = {
       "stubUpdated": "2026-09-15",
       "ytd401k": 10650,
       "checksLeft": 6,
-      "bonusLeft": 10000
+      "bonusLeft": 10000,
+      "stubPayDate": ""
     },
     {
       "key": "jordan",
@@ -1698,7 +1837,8 @@ const DEFAULTS = {
       "stubUpdated": "2026-09-15",
       "ytd401k": 13061.54,
       "checksLeft": 7,
-      "bonusLeft": 0
+      "bonusLeft": 0,
+      "stubPayDate": ""
     }
   ],
   "fixed": [
@@ -2353,7 +2493,7 @@ const DEFAULTS = {
         "lt": 15000,
         "deductions": 44800,
         "fedTax": 41300,
-        "caTax": 16900
+        "stateTax": 16900
       }
     },
     "2025": {
@@ -2363,7 +2503,7 @@ const DEFAULTS = {
         "lt": 22000,
         "deductions": 50600,
         "fedTax": 48200,
-        "caTax": 19300
+        "stateTax": 19300
       }
     }
   }
@@ -2482,9 +2622,20 @@ const FILED_KEYS = [
   ["lt",         "Long-term gains",   "Schedule D line 15"],
   ["deductions", "Deductions",        "1040 line 12 — standard or itemized"],
   ["fedTax",     "Federal tax",       "1040 line 24"],
-  ["caTax",      "California tax",    "540 line 64"]
+  // Every state's return added together — a year can be filed in more than one
+  ["stateTax",   "State tax",         "each state return's total tax, summed"]
 ];
 const blankFiled = () => Object.fromEntries(FILED_KEYS.map(([k]) => [k, null]));
+// The state figure was saved as caTax while only California was filed. It is
+// the total across every state, so it moves to stateTax with its value as it
+// was. The old key is read only when the new one is absent — a stateTax left
+// blank on purpose stays blank — and is dropped, so only the new key is saved.
+// Runs before blankFiled() is laid under it, which would make stateTax present.
+function renameFiled(f){
+  if(f.stateTax === undefined && f.caTax !== undefined) f.stateTax = f.caTax;
+  delete f.caTax;
+  return f;
+}
 // What the net worth tab carried for 2025 before years were tracked here
 const LEGACY_GAINS = null;
 
@@ -2499,7 +2650,14 @@ const fullYears = s => yearList(s).filter(y => (s || S).years[y].people);
 function fillYear(yd, y){
   const defs = Object.fromEntries(YEAR_KEYS.map(k => [k, DEFAULTS[k]]));
   deepFill(yd, defs);
-  yd.people = yd.people.map((p,i) => deepFill(p, DEFAULTS.people[i] || DEFAULTS.people[0]));
+  yd.people = yd.people.map((p,i) => {
+    // taxRate was typed in before version 55; it has been worked out from the
+    // paystub's three withholding lines ever since and the stored copy never
+    // read. Left in the document it is a stale figure for anything else that
+    // reads the plan, such as an exported JSON.
+    delete p.taxRate;
+    return deepFill(p, DEFAULTS.people[i] || DEFAULTS.people[0]);
+  });
   for(const k of Object.keys(DEFAULTS.caps))
     if(typeof yd.caps[k] !== "object") yd.caps = structuredClone(DEFAULTS.caps);
   yd.tax.params.year = +y;
@@ -2516,7 +2674,7 @@ function rollForward(prev, y){
     return {...p,
       salary: raised ? p.newSalary : p.salary, newSalary:0, raiseChecks:0,
       ytdGross:0, ytdFed:0, ytdCA:0, ytdFica:0, ytd401k:0,
-      checksLeft:p.paychecks, bonusLeft:p.bonus, stubUpdated:""};
+      checksLeft:p.paychecks, bonusLeft:p.bonus, stubUpdated:"", stubPayDate:""};
   });
   const T = yd.tax;
   Object.assign(T, {interest:0, ordDiv:0, qualDiv:0, usGovDiv:0, ltPortion:0,
@@ -2579,7 +2737,7 @@ function splitYears(out, saved){
   });
   for(let y = FIRST_YEAR; y < first; y++){
     Y[y] = Y[y] || {filed:blankFiled()};
-    Y[y].filed = {...blankFiled(), ...(Y[y].filed || {})};
+    Y[y].filed = {...blankFiled(), ...renameFiled(Y[y].filed || {})};
   }
   bindYears(out);
 
@@ -2982,6 +3140,43 @@ const taxableAt = (p, annual) => {
   return gross - gross * p.pre401k - p.otherPre;
 };
 
+/* ---- Where a paystub sits in the year ------------------------------------
+   A paystub's year-to-date column runs through one payday, and every
+   projection adds the paychecks after it. Both halves must describe the same
+   stub. Year to date from a September stub beside a count of paychecks left
+   taken in November drops every check in between; the reverse counts them
+   twice. Either way the 401k, withholding and income figures all move with it.
+
+   So the count is worked out rather than typed whenever the stub's pay date is
+   known: the date and the number of paychecks a year fix how many paydays
+   fall on or before it, and so how many are left. The typed count is only the
+   fallback for a stub entered without its date. */
+const DAY_MS = 864e5;
+const isIso = s => typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s);
+// Whole days in UTC, so a daylight-saving change never moves a count by one
+const dayNo = iso => Math.round(Date.parse(iso + "T00:00:00Z") / DAY_MS);
+// Paydays on or before a pay date, and in its whole year, for the common
+// schedules. Weekly and bi-weekly run from the date itself, so a year with an
+// extra payday is caught; semi-monthly counts the first payday of a month as
+// the one on or before the 15th. Null for a schedule this can't place.
+function paySchedule(perYear, iso){
+  const y = +iso.slice(0,4), m = +iso.slice(5,7), d = +iso.slice(8,10);
+  const doy = dayNo(iso) - dayNo(`${y}-01-01`) + 1;
+  const diy = dayNo(`${y+1}-01-01`) - dayNo(`${y}-01-01`);
+  const every = n => { const r = (doy - 1) % n + 1;
+    return {paid: Math.floor((doy - 1)/n) + 1, total: Math.floor((diy - r)/n) + 1}; };
+  if(perYear === 52) return every(7);
+  if(perYear === 26) return every(14);
+  if(perYear === 24) return {paid: 2*(m - 1) + (d <= 15 ? 1 : 2), total: 24};
+  if(perYear === 12) return {paid: m, total: 12};
+  return null;
+}
+// Rounded up to the cent or the hundredth of a percent: a contribution that
+// has to reach the limit can't be rounded down to it. The nudge keeps a value
+// that is already whole, give or take floating point, where it is.
+const upCent = x => Math.ceil(x*100 - 1e-6)/100;
+const upPct  = x => Math.ceil(x*10000 - 1e-6)/10000;
+
 function person(p){
   // A mid-year raise splits the year into two rates. raiseChecks is how many
   // of this year's paychecks land at the new salary; the rest are at the old.
@@ -3010,6 +3205,21 @@ function person(p){
   const A          = checkAt(p, p.salary, taxRate);            // before the raise
   const B          = checkAt(p, rateB, taxRate);               // after the raise
 
+  // ---- paychecks after the stub ----------------------------------------
+  // From the stub's pay date when there is one (see paySchedule), otherwise
+  // the count as typed. Every remaining figure below reads this, never p's.
+  const thisPlanYear = YEAR;
+  const datedStub  = isIso(p.stubPayDate) ? p.stubPayDate : "";
+  const sched      = datedStub && +datedStub.slice(0,4) === thisPlanYear ? paySchedule(p.paychecks, datedStub) : null;
+  const derivedLeft = !!sched;
+  const checksLeft = sched ? Math.max(0, sched.total - sched.paid) : Math.max(0, p.checksLeft || 0);
+  const checksPaid = sched ? sched.paid : Math.max(0, p.paychecks - checksLeft);
+  // The new salary covers the last raiseChecks paychecks of the year, so the
+  // checks still to come are at the new rate first; any beyond that number
+  // reach back to before the raise.
+  const newLeft    = Math.min(checksLeft, checksB);
+  const oldLeft    = checksLeft - newLeft;
+
   // The visible per-paycheck chain reflects the rate now in effect
   const gross      = B.gross;
   const preAmt     = B.preAmt;
@@ -3020,28 +3230,40 @@ function person(p){
   // The projection and the recommender must share one basis, or they contradict
   // each other. Both work forward from what's already been contributed:
   //   projected = YTD  +  rate x (gross x paychecks left)  +  rate x bonus still to come
-  const grossLeft     = B.gross * p.checksLeft;
+  const grossLeft     = A.gross * oldLeft + B.gross * newLeft;
   const fromRemaining = grossLeft * p.pre401k;
+  // The bonus is deferred at the election in force when it pays — today's,
+  // as far as the plan knows — and shown as its own line wherever the 401k is.
   const fromBonus     = p.bonusLeft * p.pre401k;
   const total401k     = p.ytd401k + fromRemaining + fromBonus;
   const room          = S.irsLimit - total401k;
-  const denom         = grossLeft + p.bonusLeft;
   // True when YTD is blank but the year is already part-spent — the inputs
   // can't both be right, and every 401k figure below depends on it.
-  const dataGap       = p.ytd401k === 0 && p.checksLeft < p.paychecks;
+  const dataGap       = p.ytd401k === 0 && checksLeft < p.paychecks;
+
+  // What it takes to land on the limit, paid over the remaining paychecks with
+  // the bonus deferring at today's election. A rate or an amount to reach the
+  // limit is rounded up, never to the nearest: rounded down, it falls short.
+  // Also given without the bonus, for a plan that doesn't defer from bonuses.
+  const stillToGo     = S.irsLimit - p.ytd401k;
+  const needChecks    = Math.max(0, stillToGo - fromBonus);
+  const perCheckGross = newLeft > 0 ? B.gross : A.gross;
+  const recPct        = grossLeft > 0 ? needChecks / grossLeft
+                      : p.bonusLeft > 0 ? Math.max(0, stillToGo) / p.bonusLeft : 0;
+  const recPctNoBonus = grossLeft > 0 ? Math.max(0, stillToGo) / grossLeft : 0;
 
   // ---- withholding, projected to year end ------------------------------
   // Built forward from the paystub's year-to-date column, not from per-check
   // dollars times checks already paid. The two agree only if pay never
   // changed mid-year; the YTD column is right either way.
-  const checksPaid = Math.max(0, p.paychecks - p.checksLeft);
   // Bonuses are withheld at the flat supplemental rates, not at the rate on a
   // regular paycheck, so a bonus still to come is projected separately.
   const bonusFed   = p.bonusLeft * (p.bonusFedRate || 0);
   const bonusCA    = p.bonusLeft * (p.bonusCARate  || 0);
   const whLine = (per, ytd, bonus) => {
-    const rem = per * p.checksLeft + (bonus || 0);
-    return { per, ytd, rem, year: ytd + rem };
+    const checks = per * checksLeft;
+    const rem = checks + (bonus || 0);
+    return { per, ytd, checks, rem, year: ytd + rem };
   };
   const wh = {
     fed:  whLine(fedPer,  p.ytdFed  || 0, bonusFed),
@@ -3059,7 +3281,39 @@ function person(p){
   // year — the two ends of the same measure, so drift between the plan and
   // payroll shows up as a number rather than as a surprise in April.
   const ytdGross    = p.ytdGross || 0;
-  const grossToCome = B.gross * p.checksLeft + p.bonusLeft;
+  const grossToCome = grossLeft + p.bonusLeft;
+
+  // ---- is the stub consistent, and is it current? ----------------------
+  // Year-to-date gross says how many paychecks it holds: the bonus already
+  // paid comes off, then the salary checks at each rate in turn. Set against
+  // the paychecks counted as paid, a gap of a paycheck or more means the two
+  // come from different stubs — the failure that once had the plan projecting
+  // three paychecks too many. Gross above the count can also be stock or
+  // other pay landing on payroll, so that direction is worded as a question.
+  const bonusPaid  = Math.max(0, (p.bonus || 0) - (p.bonusLeft || 0));
+  const salaryYtd  = ytdGross - bonusPaid;
+  const impliedPaid = ytdGross > 0 && A.gross > 0 && B.gross > 0
+    ? (salaryYtd <= checksA * A.gross ? salaryYtd / A.gross
+       : checksA + (salaryYtd - checksA * A.gross) / B.gross)
+    : null;
+  const gap = impliedPaid === null ? 0 : checksPaid - impliedPaid;
+  // How old the stub is. The pay date when known; otherwise the day it was
+  // typed in, which is the latest the stub could be. Only this year's plan
+  // has paydays still to come, and only while some are.
+  const asOf    = sched ? datedStub : (isIso(p.stubUpdated) ? p.stubUpdated : "");
+  const cycle   = p.paychecks > 0 ? 365 / p.paychecks : 0;
+  const ageDays = asOf ? dayNo(today()) - dayNo(asOf) : null;
+  const live    = thisPlanYear === thisYear() && checksLeft > 0;
+  const missed  = live && ageDays !== null && cycle ? Math.max(0, Math.floor(ageDays / cycle)) : 0;
+  const stub = {
+    payDate: datedStub, derived: derivedLeft, asOf, ageDays, missed,
+    total: sched ? sched.total : p.paychecks,
+    wrongYear: !!datedStub && !sched && +datedStub.slice(0,4) !== thisPlanYear,
+    implied: impliedPaid, gap,
+    issue: impliedPaid !== null && gap >= 0.6 ? "behind"
+         : impliedPaid !== null && gap <= -0.75 ? "ahead"
+         : missed >= 1 ? "stale" : ""
+  };
   // Gross as the plan would model it: each salary rate times its share of the
   // year's paychecks. It misses whatever payroll paid that is not salary —
   // vesting stock, stipends, a bonus already banked — so the paystub figure
@@ -3078,7 +3332,8 @@ function person(p){
 
   return {
     ...p, gross, preAmt, taxable, tax, postAmt, net,   // p.pre401k / p.post401k stay as rates
-    fedPer, caPer, ficaPer, whPerCheck, taxRate, wh, checksPaid, ytdGross, grossToCome,
+    fedPer, caPer, ficaPer, whPerCheck, taxRate, wh, checksPaid, checksLeft, newLeft, oldLeft, stub,
+    ytdGross, grossToCome, perCheckGross, perCheck401k: perCheckGross * p.pre401k,
     hasRaise, raisePending, rateB, checksA, checksB, netA: A.net, netB: B.net,
     grossA: A.gross, grossB: B.gross,
     raiseDelta: B.net - A.net,
@@ -3096,10 +3351,17 @@ function person(p){
     //   room > 0        -> projected below the limit      -> Under target (amber)
     //   -500 <= room <=0 -> at the limit, up to $500 past -> On target (green)
     //   room < -500      -> more than $500 past           -> Over limit (red)
-    status: dataGap ? "warn" : room > 0 ? "warn" : room >= -500 ? "ok" : "bad",
-    statusText: dataGap ? "Needs YTD" : room > 0 ? "Under target" : room >= -500 ? "On target" : "Over limit",
-    recPct: denom > 0 ? (S.irsLimit - p.ytd401k)/denom : 0,
-    recPerCheck: denom > 0 ? B.gross * (S.irsLimit - p.ytd401k)/denom : 0,
+    // A stub whose year to date and paychecks left disagree makes every one
+    // of these figures wrong by the gap, so it is named before any verdict.
+    status: dataGap ? "warn" : (stub.issue === "behind" || stub.issue === "ahead") ? "warn"
+          : room > 0 ? "warn" : room >= -500 ? "ok" : "bad",
+    statusText: dataGap ? "Needs YTD" : (stub.issue === "behind" || stub.issue === "ahead") ? "Check paystub"
+          : room > 0 ? "Under target" : room >= -500 ? "On target" : "Over limit",
+    stillToGo, needChecks,
+    recPct: upPct(recPct),
+    recPerCheck: upCent(needChecks > 0 && checksLeft > 0 ? recPct * perCheckGross : 0),
+    recPctNoBonus: upPct(recPctNoBonus),
+    recPerCheckNoBonus: upCent(stillToGo > 0 && checksLeft > 0 ? recPctNoBonus * perCheckGross : 0),
   };
 }
 
@@ -3135,6 +3397,8 @@ function model(){
 const usd  = n => (n<0?"−":"") + "$" + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:0});
 const usd2 = n => (n<0?"−":"") + "$" + Math.abs(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 const pct  = (n,d=1) => (n*100).toFixed(d) + "%";
+// A rate as entered — 11%, 10.5% — without padding it to a fixed width
+const pctT = n => +(n*100).toFixed(2) + "%";
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtDay = iso => new Date(iso+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
 // Drawn rather than typed — see .arw for why
@@ -3638,10 +3902,14 @@ function dash(){
   // block can be dropped from the list below it rather than said twice.
   const alerts = [];
   m.P.forEach(p=>{
+    // A stub that disagrees with itself comes first: every 401k verdict
+    // after it would be off by the same paychecks.
+    if(p.stub.issue) alerts.push([p.stub.issue === "stale" ? "warn" : "bad", stubIssue(p), "stub:"+p.name]);
     if(p.dataGap) alerts.push(["warn", `${p.name}: 401k year-to-date is $0 with ${p.checksLeft} of ${p.paychecks} paychecks left. Enter the paystub figure.`, "k401k:"+p.name]);
-    else if(p.room > 0) alerts.push(["warn", `${p.name}'s 401k lands <strong>${usd(p.room)}</strong> under the max. Recommender says ${pct(p.recPct,2)}.`, "k401k:"+p.name]);
+    else if(p.stub.issue === "behind" || p.stub.issue === "ahead") alerts.push(["warn", `${p.name}'s 401k projects ${usd(p.total401k)}, but only as far as the paystub can be trusted — fix it before changing the rate.`, "k401k:"+p.name]);
+    else if(p.room > 0) alerts.push(["warn", `${p.name}'s 401k lands <strong>${usd(p.room)}</strong> under the max at ${pctT(p.pre401k)}. Set at least ${pct(p.recPct,2)} — ${usd2(p.recPerCheck)} a paycheck${p.bonusLeft > 0 ? `, with the bonus deferring ${usd(p.fromBonus)}` : ""}.`, "k401k:"+p.name]);
     else if(p.room >= -500) alerts.push(["ok", `${p.name}: 401k reaches the ${usd(S.irsLimit)} max at ${pct(p.pre401k,1)}.`, "k401k:"+p.name]);
-    else alerts.push(["bad", `${p.name}: 401k projects ${usd(p.total401k)} at ${pct(p.pre401k,1)} — <strong>${usd(-p.room)}</strong> past the max. Recommender: ${pct(p.recPct,2)}.`, "k401k:"+p.name]);
+    else alerts.push(["bad", `${p.name}: 401k projects ${usd(p.total401k)} at ${pct(p.pre401k,1)} — <strong>${usd(-p.room)}</strong> past the max. Set ${pct(p.recPct,2)} to land on it.`, "k401k:"+p.name]);
   });
   if(m.pct.fixed > cap) alerts.push(["bad", `Fixed costs are ${pct(m.pct.fixed)} of take-home, <strong>${usd(m.fixedTotal - m.netTotal*cap)}</strong>/mo above the ${pct(cap,0)} ceiling.`, "fixed"]);
   else alerts.push(["ok", `Fixed costs are ${pct(m.pct.fixed)} of take-home, ${usd(m.netTotal*cap - m.fixedTotal)}/mo under the ${pct(cap,0)} ceiling.`, "fixed"]);
@@ -3687,7 +3955,11 @@ function dash(){
   const overCap = m.pct.fixed - cap;
   const savingsShort = Math.max(0, m.netTotal * S.caps.savings.min - m.savingsTotal);
   const nearest = cardSoon.length ? cardSoon.filter(x => x.days === cardSoon[0].days) : [];
-  const worst401k = m.P.find(p => p.dataGap) || m.P.find(p => p.room < -500);
+  const badStubs = m.P.filter(p => p.stub.issue === "behind" || p.stub.issue === "ahead");
+  const badStub = badStubs[0];
+  // Under the limit is the outcome the plan exists to avoid, so it is raised
+  // here as well as over — but only from a stub that agrees with itself.
+  const worst401k = m.P.find(p => p.dataGap) || m.P.find(p => p.room < -500) || m.P.find(p => p.room > 0);
   let hero;
   if(m.free < 0){
     hero = {k:"free", t:"Over budget", l:`Allocations run ${usd(-m.free)} past what comes in`,
@@ -3695,12 +3967,22 @@ function dash(){
   } else if(overCap > 0){
     hero = {k:"fixed", t:"Over the cap", l:`Fixed costs are ${pct(overCap)} above the ceiling`,
             s:`${usd(m.fixedTotal)} a month against a ${pct(cap,0)} ceiling of ${usd(m.netTotal*cap)}.`, go:"spend", cta:"Open spending plan"};
+  } else if(badStub){
+    const each = badStubs.map(p => { const g = Math.round(Math.abs(p.stub.gap));
+      return `${p.name}'s about ${g} ${g === 1 ? "paycheck" : "paychecks"} ${p.stub.issue === "behind" ? "short" : "over"}`; });
+    hero = {k:"stub:"+badStub.name, t:"Check the paystubs",
+            l:badStubs.length > 1 ? "Both paystubs mix figures from two different stubs" : `${badStub.name}'s paystub mixes figures from two different stubs`,
+            s:`Year to date and paychecks left don't describe the same payday, so every 401k, withholding and income projection is off — ${each.join(", ")}. Fix the stubs before acting on any of them.`,
+            go:"income", cta:"Open the paystubs"};
   } else if(worst401k){
     hero = worst401k.dataGap
       ? {k:"k401k:"+worst401k.name, t:"Missing figure", l:`${worst401k.name}'s 401k year-to-date is still $0`,
          s:`With ${worst401k.checksLeft} of ${worst401k.paychecks} paychecks left, every 401k figure here is unreliable.`, go:"income", cta:"Open income plan"}
+      : worst401k.room > 0
+      ? {k:"k401k:"+worst401k.name, t:"Short of the limit", l:`${worst401k.name}'s 401k lands ${usd(worst401k.room)} under the max`,
+         s:`Projected ${usd(worst401k.total401k)} against ${usd(S.irsLimit)}. At least ${pct(worst401k.recPct,2)} closes it. Assumes ${k401Assume(worst401k)}.`, go:"income", cta:"Open income plan"}
       : {k:"k401k:"+worst401k.name, t:"Over the limit", l:`${worst401k.name}'s 401k lands ${usd(-worst401k.room)} past the max`,
-         s:`Projected ${usd(worst401k.total401k)} against a ${usd(S.irsLimit)} limit. Recommender says ${pct(worst401k.recPct,2)}.`, go:"income", cta:"Open income plan"};
+         s:`Projected ${usd(worst401k.total401k)} against a ${usd(S.irsLimit)} limit; ${pct(worst401k.recPct,2)} lands on it. Assumes ${k401Assume(worst401k)}.`, go:"income", cta:"Open income plan"};
   } else if(tx.fedShort > 0 || tx.caShort > 0){
     hero = {k:"harbor", t:"Safe harbor short", l:`${usd(tx.fedShort + tx.caShort)} of estimated tax is still due`,
             s:`Federal ${usd(tx.fedShort)}, California ${usd(tx.caShort)}. The federal share splits to ${usd(tx.fedPerQuarter)} a quarter.`, go:"tax", cta:"Open tax planning"};
@@ -3718,7 +4000,8 @@ function dash(){
     hero = {calm:true, t:"All clear", l:`Every band is inside its guardrail`,
             s:`Fixed ${pct(m.pct.fixed)}, investing ${pct(m.pct.invest)}, savings ${pct(m.pct.savings)}, guilt-free ${pct(m.pct.free)}.`, go:"spend", cta:"Open spending plan"};
   }
-  const rest = alerts.filter(a => a[2] !== hero.k);
+  // The stubs hero speaks for every stub that disagrees, not only the first
+  const rest = alerts.filter(a => a[2] !== hero.k && !(hero.k.startsWith("stub:") && a[2].startsWith("stub:") && badStubs.some(p => "stub:"+p.name === a[2])));
 
   const allOk = inBand(m.pct.fixed,"fixed") && inBand(m.pct.invest,"invest")
              && inBand(m.pct.savings,"savings") && inBand(m.pct.free,"free");
@@ -3818,16 +4101,24 @@ function dash(){
         <p class="subhead">Against this year's ${usd(S.irsLimit)} IRS deferral limit</p>
         ${m.P.map(p=>{
           const inSoFar = Math.min(1, p.ytd401k/S.irsLimit);
-          const toCome  = Math.max(0, Math.min(1 - inSoFar, (p.fromRemaining + p.fromBonus)/S.irsLimit));
+          const toCome  = Math.max(0, Math.min(1 - inSoFar, p.fromRemaining/S.irsLimit));
+          const toBonus = Math.max(0, Math.min(1 - inSoFar - toCome, p.fromBonus/S.irsLimit));
           return `<div class="gauge">
             <div class="row"><span class="who">${esc(p.name)}</span>
               <span class="amt">${usd(p.total401k)} / ${usd(S.irsLimit)}</span></div>
             <div class="track">
               <div class="fill ${p.room<-500?"over":""}" style="width:${(inSoFar*100).toFixed(1)}%"></div>
               <div class="proj" style="left:${(inSoFar*100).toFixed(1)}%;width:${(toCome*100).toFixed(1)}%"></div>
+              ${toBonus > 0 ? `<div class="proj bonus" style="left:${((inSoFar+toCome)*100).toFixed(1)}%;width:${(toBonus*100).toFixed(1)}%"></div>` : ""}
             </div>
-            <div class="hint">${usd(p.ytd401k)} in · ${usd(p.fromRemaining+p.fromBonus)} to come at ${pct(p.pre401k,1)} over ${p.checksLeft} checks · ${
-              p.dataGap ? `<strong>enter YTD</strong>` : `<strong>set ${pct(p.recPct,2)}</strong>`}</div>
+            <div class="hint">${usd(p.ytd401k)} in · ${usd(p.fromRemaining)} from ${p.checksLeft} ${p.checksLeft === 1 ? "check" : "checks"} at ${pctT(p.pre401k)}${
+              p.bonusLeft > 0 ? ` · ${usd(p.fromBonus)} from the bonus` : ""} · ${
+              p.dataGap ? `<strong>enter YTD</strong>`
+              : (p.stub.issue === "behind" || p.stub.issue === "ahead") ? `<strong>check the paystub</strong>`
+              : p.room > 0 ? `<strong>${usd(p.room)} short — set ${pct(p.recPct,2)}</strong>`
+              : p.room >= -500 ? `reaches the max` : `<strong>${usd(-p.room)} over — set ${pct(p.recPct,2)}</strong>`}</div>
+            <div class="hint basis">${p.stub.payDate ? `Stub paid ${fmtDay(p.stub.payDate)}` : p.stubUpdated ? `Stub entered ${fmtDay(p.stubUpdated)}` : "No stub entered"} · ${p.checksLeft} left at ${usd2(p.perCheckGross)} gross, ${usd2(p.perCheck401k)} to the 401k${
+              p.stub.issue === "stale" ? ` · <strong>${p.stub.missed} payday${p.stub.missed === 1 ? "" : "s"} since</strong>` : ""}</div>
           </div>`;
         }).join("")}
         <button type="button" class="panelbtn" data-goto="income" data-focus="rec401k">Adjust 401k contribution</button>
@@ -3930,6 +4221,44 @@ function dash(){
   </div>`;
 }
 
+/* What a person's stub says about itself, in words, for every tab that shows
+   a projection built on it. Empty when the stub is consistent and current. */
+function stubIssue(p){
+  const st = p.stub, n = esc(p.name), k = x => `${x} ${Math.abs(x) === 1 ? "paycheck" : "paychecks"}`;
+  if(st.issue === "behind"){
+    const held = Math.round(st.implied), gap = Math.round(st.gap);
+    return `<strong>${n}'s paystub figures disagree.</strong> Year-to-date gross covers about ${k(held)},
+      but ${st.derived ? "the stub's pay date" : `${p.checksLeft} paychecks left`} counts ${p.checksPaid} as paid. The ${k(gap)} in between
+      are in neither, so the 401k, withholding and income projections are short by about that much.
+      Enter the year-to-date figures from the latest stub${st.derived ? "" : ", with its pay date"}.`;
+  }
+  if(st.issue === "ahead"){
+    const held = Math.round(st.implied), gap = Math.round(-st.gap);
+    return `<strong>Check ${n}'s paystub.</strong> Year-to-date gross is about ${k(gap)} more than
+      ${st.derived ? "the stub's pay date" : `${p.checksLeft} paychecks left`} allows (${held} against ${p.checksPaid} paid). Unless stock or
+      other pay went through payroll, ${st.derived ? "the pay date is too early" : "paychecks left is too high"} and the projections count
+      those paychecks twice.`;
+  }
+  if(st.issue === "stale"){
+    return `<strong>${n}'s stub is ${st.payDate ? "from " + fmtDay(st.asOf) : "as entered " + fmtDay(st.asOf)}</strong> —
+      about ${k(st.missed)} ${st.missed === 1 ? "has" : "have"} been paid since. The projection still counts
+      ${st.missed === 1 ? "it" : "them"} as to come at today's rates; the newest stub would settle ${st.missed === 1 ? "it" : "them"}.`;
+  }
+  return "";
+}
+// The figures a 401k verdict rests on, printed beside it so they can be
+// checked against a real paystub before anyone changes an election.
+function k401Assume(p){
+  const parts = [`${p.checksLeft} ${p.checksLeft === 1 ? "paycheck" : "paychecks"} after the stub at ${usd2(p.perCheckGross)} gross,
+    ${usd2(p.perCheck401k)} each to the 401k at ${pctT(p.pre401k)}`];
+  if(p.oldLeft > 0) parts[0] += ` (${p.oldLeft} of them still at the old salary)`;
+  if(p.bonusLeft > 0) parts.push(`${usd(p.bonusLeft)} bonus deferring ${usd2(p.fromBonus)}`);
+  parts.push(`${usd2(p.ytd401k)} in so far`);
+  parts.push(p.stub.payDate ? `stub paid ${fmtDay(p.stub.payDate)}`
+    : p.stubUpdated ? `stub entered ${fmtDay(p.stubUpdated)}, pay date not given` : "stub date not entered");
+  return parts.join(" · ");
+}
+
 function income(){
   const m = model();
   const P = m.P;
@@ -3951,9 +4280,16 @@ function income(){
     return `
     <div class="card">
       <h3>Latest paystub — ${esc(p.name)} <span class="caprule">${p.stubUpdated ? "Entered "+fmtDay(p.stubUpdated) : "Not yet entered"}</span></h3>
+      ${stubIssue(p) ? `<div class="callout warn" style="margin:0 0 12px">${stubIssue(p)}</div>` : ""}
       <div class="calcflow">
-        <div class="cf-line"><span>Paychecks remaining<em>${p.checksPaid} of ${p.paychecks} already received · the tax tab projects withholding over these</em></span>
-          <b>${inp(i,"checksLeft",p.checksLeft)}</b></div>
+        <div class="cf-line"><span>Pay date on this stub<em>The payday the year-to-date column runs through — not the day it was entered</em></span>
+          <b><input class="cell datecell" type="date" value="${esc(p.stub.payDate)}" data-p="${i}" data-f="stubPayDate" aria-label="Pay date on ${esc(p.name)}'s stub"></b></div>
+        ${p.stub.wrongYear ? `<div class="callout warn" style="margin:4px 0 8px">That date isn't in ${YEAR}. Paychecks left falls back to the number typed below until it is.</div>` : ""}
+        <div class="cf-line"><span>Paychecks after this stub<em>${p.stub.derived
+            ? `Worked out from the pay date: ${p.checksPaid} of ${p.stub.total} paid through it${p.stub.total !== p.paychecks ? ` — this year has ${p.stub.total} paydays on that schedule, not ${p.paychecks}` : ""}`
+            : p.stub.payDate && !p.stub.wrongYear ? `${p.checksPaid} of ${p.paychecks} paid through this stub. ${p.paychecks} paychecks a year isn't a schedule the date can place, so type the count`
+            : `${p.checksPaid} of ${p.paychecks} paid through this stub. Give the pay date above and this is worked out for you`}</em></span>
+          <b>${p.stub.derived ? `<span class="derived num">${p.checksLeft}</span>` : inp(i,"checksLeft",p.checksLeft)}</b></div>
       </div>
 
       <table class="calctbl stubtbl">
@@ -4172,14 +4508,20 @@ function income(){
       <table class="calctbl">
         <colgroup><col style="width:44%"><col style="width:28%"><col style="width:28%"></colgroup>
         <tbody>
-          ${row("Still to contribute", P.map(p=>usd2(S.irsLimit - p.ytd401k)),"","The limit, less contributed so far")}
-          ${row("Paychecks remaining", P.map(p=>`${p.checksLeft} of ${p.paychecks}`),"","From the paystub card")}
-          ${row("Bonus still to be paid", P.map(p=>usd2(p.bonusLeft)),"","From the paystub card")}
-          ${row("Pay still to come", P.map(p=>usd2(p.grossLeft + p.bonusLeft)),"sub","Paychecks left, plus the bonus")}
-          ${row("Pre-tax percentage to set", P.map(p=>`<strong>${pct(p.recPct,2)}</strong>`),"total","Still to contribute ÷ pay still to come")}
-          ${row("Contribution per paycheck at that %", P.map(p=>usd2(p.recPerCheck)),"sub")}
+          ${row("Still to contribute", P.map(p=>usd2(p.stillToGo)),"","The limit, less contributed so far")}
+          ${row("From the bonus, at today's rate", P.map(p=>p.bonusLeft > 0 ? usd2(p.fromBonus) : "—"),"",
+            "Bonus still to be paid × the pre-tax rate set now")}
+          ${row("Left for the paychecks", P.map(p=>usd2(p.needChecks)),"sub")}
+          ${row("Paychecks after the stub", P.map(p=>`${p.checksLeft} at ${usd2(p.perCheckGross)}`),"","From the paystub card")}
+          ${row("Pre-tax percentage to set", P.map(p=>`<strong>${pct(p.recPct,2)}</strong>`),"total","Left for the paychecks ÷ their gross, rounded up")}
+          ${row("Contribution per paycheck at that rate", P.map(p=>usd2(p.recPerCheck)),"sub","Enough to reach the limit — the plan stops at it")}
+          ${P.some(p=>p.bonusLeft > 0) ? row("If the bonus isn't deferred", P.map(p=>p.bonusLeft > 0 ? `${usd2(p.recPerCheckNoBonus)} · ${pct(p.recPctNoBonus,2)}` : "—"),"",
+            "Per paycheck, for a plan that takes nothing from a bonus") : ""}
         </tbody>
       </table>
+      ${P.some(p=>p.bonusLeft > 0) ? `<p class="basis">A rate changed before the bonus pays applies to the bonus too, so the limit is reached a little sooner — contributions stop there.</p>` : ""}
+      ${P.map(p=>`<p class="basis"><b>${esc(p.name)}:</b> ${k401Assume(p)}</p>`).join("")}
+      ${P.map(p=>stubIssue(p) && (p.stub.issue === "behind" || p.stub.issue === "ahead") ? `<div class="callout warn">${stubIssue(p)}</div>` : "").join("")}
       ${P.some(p=>p.dataGap) ? `<div class="callout warn">${P.filter(p=>p.dataGap).map(p=>esc(p.name)).join(" and ")}: contributed-so-far is $0 with paychecks already paid this year. Enter the figure from the latest paystub.</div>` : ""}
     </div>
 
@@ -4194,8 +4536,8 @@ function income(){
         <thead><tr><th></th>${P.map(p=>`<th>${esc(p.name)}</th>`).join("")}</tr></thead>
         <tbody>
           ${row("Contributed so far", P.map(p=>usd2(p.ytd401k)),"","From the paystub card")}
-          ${row("From remaining paychecks", P.map(p=>usd2(p.fromRemaining)))}
-          ${row("From bonus still to come", P.map(p=>usd2(p.fromBonus)))}
+          ${row("From remaining paychecks", P.map(p=>usd2(p.fromRemaining)),"",`${P.map(p=>`${esc(p.name)} ${p.checksLeft} × ${usd2(p.perCheck401k)}`).join(" · ")}`)}
+          ${row("From bonus still to come", P.map(p=>usd2(p.fromBonus)),"",`${P.filter(p=>p.bonusLeft>0).map(p=>`${esc(p.name)} ${usd(p.bonusLeft)} × ${pctT(p.pre401k)}`).join(" · ") || "No bonus still to come"}`)}
           ${row(`Projected full-year ${handoff("Saving")}`, P.map(p=>usd2(p.total401k)),"total")}
           ${row("Room left vs. limit", P.map(p=>usd2(p.room)),"sub")}
           <tr><td class="lab">Status</td>${P.map(p=>`<td style="text-align:right"><span class="tag ${p.status}">${p.statusText}</span></td>`).join("")}</tr>
@@ -4884,11 +5226,6 @@ function networth(){
              + `<col style="width:96px"><col style="width:22px"></colgroup>`
              + `<thead><tr><th>${first}</th><th>Held at</th><th>Balance</th><th></th><th></th></tr></thead>`;
 
-  // Income and tax by year — read, never typed. See yearSummary().
-  const ys = yearSummary();
-  const yv = v => (v === null || v === undefined) ? `<span class="nil">—</span>` : usd(v);
-  const kindTag = {projected:"Projected", planned:"Planned", tracked:"Tracked here", filed:"As filed"};
-
   const owned = n.assets + n.cash;
   const lastOn = n.last ? new Date(n.last[0]+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric"}) : "";
   // A balance already logged today reads as done rather than as a prompt
@@ -4972,23 +5309,6 @@ function networth(){
     </div>
   </div>
 
-  ${chapter("nwYears", "By year", "Income and tax, read from the tax tab")}
-  <div class="card" id="yearTable">
-    <h3>Income and tax by year <span class="caprule">Pick a year up top to change its figures</span></h3>
-    <div class="hscroll">
-    <table class="yeartbl">
-      <thead><tr><th>Year</th>${FILED_KEYS.map(([,l]) => `<th>${l}</th>`).join("")}</tr></thead>
-      <tbody>
-        ${ys.map(r => `<tr${r.y === YEAR ? ' class="on"' : ""}>
-          <td class="lab"><button type="button" class="yrlink" data-year="${r.y}" data-goto="tax" title="Open the ${r.y} tax tab">${r.y}</button><span class="note">${kindTag[r.kind]}</span></td>
-          ${FILED_KEYS.map(([k,l]) => `<td class="calc" data-l="${l}">${yv(r[k])}</td>`).join("")}</tr>`).join("")}
-      </tbody>
-    </table>
-    </div>
-    <p class="section-note" style="max-width:none;margin-top:10px">Short- and long-term are net realized gains before
-    they are netted against each other; dividends and interest are in total income. ${thisYear()} is the tax tab's
-    projection and settles as the year's figures go in.</p>
-  </div>
   <details class="card refsec nwhist" id="nwLog"${TAX_OPEN.get("nwLog") ? " open" : ""}>
     <summary><h3>Logged history <span class="caprule">${n.hist.length} entries, each a point on the chart</span></h3></summary>
       <div class="scroller">
@@ -5064,15 +5384,17 @@ function taxview(){
       <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
       <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
       <tbody>
-        ${row("Paychecks received",[`${k.checksPaid} of ${k.paychecks}`,""],"sub")}
+        ${row("Paychecks received",[`${k.checksPaid} of ${k.paychecks}`,""],"sub",
+          k.stub.payDate ? `Through the stub paid ${fmtDay(k.stub.payDate)}` : k.stubUpdated ? `Through the stub entered ${fmtDay(k.stubUpdated)}` : "")}
         ${row("Withheld per check",[usd2(k.fedPer), usd2(k.caPer)],"","Income-tax lines only — " + usd2(k.ficaPer) + " of FICA and SDI left out")}
         ${row("Withheld so far",[usd(k.wh.fed.ytd), usd(k.wh.ca.ytd)],"","Paystub year-to-date")}
-        ${row("Still to be withheld",[usd(k.fedPer*k.checksLeft), usd(k.caPer*k.checksLeft)],"",
+        ${row("Still to be withheld",[usd(k.wh.fed.checks), usd(k.wh.ca.checks)],"",
           k.checksLeft > 0 ? `${k.checksLeft} ${k.checksLeft === 1 ? "paycheck" : "paychecks"} to come` : "Every paycheck this year has been received")}
         ${bonusRow(k)}
         ${row("Projected year-end withholding",[usd(k.wh.fed.year), usd(k.wh.ca.year)],"total")}
       </tbody>
-    </table>`;
+    </table>
+    ${stubIssue(k) ? `<div class="callout warn">${stubIssue(k)}</div>` : ""}`;
   const qLabels = ["Q1 — Apr 15","Q2 — Jun 15","Q3 — Sep 15","Q4 — Jan 15"];
 
   // The headings on their own read as the return: income, less deductions,
@@ -5082,16 +5404,19 @@ function taxview(){
   const balColor = refund ? "var(--pos)" : "var(--red)";
   // Figures under a phone-width restack, where the column headings are hidden
   const dl = (l, v, cls="calc") => `<td class="${cls}" data-l="${l}">${v}</td>`;
-  const refOpen = id => TAX_OPEN.has(id) ? TAX_OPEN.get(id) : (id === "taxParams" && !!T.params.carried);
-
-  return `
-  <div class="pagehead"><h2 class="section">Tax planning</h2>
-  <p class="section-note">Wages, 401k and withholding all come from the income plan — enter the paystub there and this tab follows. What is typed here is the part payroll never sees: investment income, deductions and any estimated payments sent directly. The tab reads like the return, from income down to the refund; rates and a plain-language walkthrough sit at the bottom.</p></div>
-  ${T.params.carried ? `<div class="callout warn" style="margin:0 0 16px">
+  const refOpen = id => TAX_OPEN.has(id) ? TAX_OPEN.get(id) : false;
+  const carried = T.params.carried ? `<div class="callout warn" style="margin:0 0 16px">
     <strong>These are ${T.params.carried}'s tax brackets and limits.</strong> ${YEAR} opened with last year's statutory
     figures, since the new ones are published on the IRS's schedule rather than on January 1. Update the ones marked
     yearly under <a href="#" data-goto="tax" data-focus="taxParams">Tax rates and thresholds</a> — and the 401k and IRA
-    limits on the income plan — once they are out. This note clears on the first edit there.</div>` : ""}
+    limits on the income plan — once they are out. This note clears on the first edit there.</div>` : "";
+  const toSetup = (label, focus) => `<a href="#" data-goto="tax" data-focus="${focus}">${label}</a>`;
+  if(TAX_SUB === "setup") return taxSetup(t, T, {n, np, nb, nl, row, carried});
+
+  return `
+  <div class="pagehead"><h2 class="section">Tax planning</h2>
+  <p class="section-note">Wages, 401k and withholding all come from the income plan — enter the paystub there and this tab follows. What is typed here is what moves through the year: investment income, gains, charitable giving and any estimated payments sent directly. The fixed deductions, last year's tax and the rates are under Setup. The tab reads like the return, from income down to the refund.</p></div>
+  ${carried}
 
   <div class="pinbar">
     <span><span class="eyebrow">Total tax</span><b class="num">${usd(t.totalTax)}</b></span>
@@ -5227,14 +5552,9 @@ function taxview(){
   <div class="grid2">
     <div class="card">
       <h3>Itemized or standard <span class="tag ok">${t.useItemized ? "Itemizing" : "Standard"}</span></h3>
-
-      <div class="calcband tight">What you enter</div>
+      <div class="calcband tight">Given this year</div>
       <section class="ig one">
-        <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">Annual</span></div>
-        <div class="ig-row"><span class="ig-lab">Mortgage interest</span>${n("mortInterest",T.mortInterest)}</div>
-        <div class="ig-row"><span class="ig-lab">Property tax<em>Counts toward SALT on the federal return</em></span>${n("propTax",T.propTax)}</div>
-        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion of vehicle registration</em></span>${n("vlf",T.vlf)}</div>
-        <div class="ig-row"><span class="ig-lab">Charitable</span>${n("charitable",T.charitable)}</div>
+        <div class="ig-row"><span class="ig-lab">Charitable<em>Update it as you give — mortgage interest, property tax and the vehicle fee are under ${toSetup("Setup", "taxDeductIn")}</em></span>${n("charitable",T.charitable)}</div>
       </section>
 
       <div class="calcband">What each return allows</div>
@@ -5394,23 +5714,13 @@ function taxview(){
     <div class="card">
       <h3>Safe harbor <span class="caprule">Pay at least this much to avoid a penalty</span></h3>
 
-      <div class="calcband tight">Last year's return</div>
-      <table class="calctbl">
-        <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
-        <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
-        <tbody>
-          <tr><td class="lab">Total tax, ${TP().year-1}<span class="note">Federal from Form 1040, line 24</span></td>
-            <td style="text-align:right">${n("priorFed",T.priorFed)}</td>
-            <td style="text-align:right">${n("priorCA",T.priorCA)}</td></tr>
-        </tbody>
-      </table>
-
-      <div class="calcband">The minimum required</div>
+      <div class="calcband tight">The minimum required</div>
       <table class="calctbl">
         <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
         <tbody>
           ${row("90% of this year's tax",[usd(0.9*t.fedTax),usd(0.9*t.caTax)])}
-          ${row("110% of last year's tax",[usd(1.1*T.priorFed),usd(1.1*T.priorCA)])}
+          ${row("110% of last year's tax",[usd(1.1*T.priorFed),usd(1.1*T.priorCA)],"",
+            `${TP().year-1}'s ${usd(T.priorFed)} federal and ${usd(T.priorCA)} California, from ${toSetup("Setup", "taxPrior")}`)}
           ${row("Required for the year",[usd(t.fedRequired),usd(t.caRequired)],"sub","Whichever is lower")}
         </tbody>
       </table>
@@ -5515,9 +5825,72 @@ function taxview(){
     </div>
   </div>
 
-  ${chap("taxRef", "Reference", "The statutory figures, and how the tab works")}
-  <details class="card refsec" id="taxParams"${refOpen("taxParams") ? " open" : ""}>
-    <summary><h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3></summary>
+  ${chap("taxRef", "Reference", "How the tab works — the rates and thresholds are under Setup")}
+
+  <details class="card refsec guide" id="taxGuide"${refOpen("taxGuide") ? " open" : ""}>
+    <summary><h3>How this tab works <span class="caprule">A plain-language walkthrough</span></h3></summary>
+    <p>Tax is worked out in four stages, and the chapters above follow that order.</p>
+
+    <div class="guide-grid">
+    <p><strong>Income — add it up.</strong> Wages come from the income plan automatically. Everything earned from investments is entered here: gains from selling, dividends, and interest. Added together these give <strong>adjusted gross income</strong>, or AGI, the figure most thresholds are measured against.</p>
+
+    <p><strong>Deductions — subtract them.</strong> Everyone may subtract a fixed <strong>standard deduction</strong>. Alternatively you may add up specific costs — mortgage interest, property tax, charitable giving, state taxes paid — and subtract those instead. That is <strong>itemizing</strong>, and it is worth doing only when the total is larger. What remains is <strong>taxable income</strong>.</p>
+
+    <p><strong>Tax — apply the rates.</strong> Income is taxed in bands: the first slice at the lowest rate, each later slice higher. So a "24% bracket" means only the portion above that bracket's floor is taxed at 24%, not the whole amount. Investments held longer than a year are taxed at lower rates than everything else, which is why the calculation separates them. Two surtaxes may also apply at higher incomes.</p>
+
+    <p><strong>Paid — compare against what has gone in.</strong> Tax is paid through the year, through payroll withholding and any quarterly payments sent directly. If those add up to more than the tax owed, the difference comes back as a refund; less, and the balance is due at filing. <strong>Safe harbor</strong> is the minimum that must be paid during the year to avoid a late-payment penalty, even if the rest is settled later.</p>
+    </div>
+
+    <p class="guide-note"><strong>Before you sell</strong> works the other way round: it re-runs the whole return with a trade added, to show what the next dollar of gain would cost. That is the <strong>marginal rate</strong> — what the next dollar is taxed at, always higher than the <strong>effective rate</strong>, the average across all income. California computes its own tax separately, with different deductions and no lower rate for long-term investments, which is why it appears beside federal throughout.</p>
+
+    <p class="guide-note">This is a planning model built from published rates, not a tax return. It does not handle alternative minimum tax, and a preparer has the final word.</p>
+  </details>
+  `;
+}
+
+/* Tax setup: what is set once a year rather than tracked through it. The
+   deductions claimed, last year's tax for safe harbor, and the statutory
+   rates. This year reads all of it and shows where each figure came from. */
+function taxSetup(t, T, {n, np, nb, nl, row, carried}){
+  return `
+  <div class="pagehead"><h2 class="section">Tax setup</h2>
+  <p class="section-note">What is set once a year rather than tracked through it: the fixed deductions, last year's tax for safe harbor, and the statutory rates and thresholds, the SALT cap among them. Everything here feeds This year.</p></div>
+  ${carried}
+
+  <div class="grid2">
+    <div class="card" id="taxDeductIn">
+      <h3>Fixed deductions <span class="caprule">Annual amounts</span></h3>
+      <section class="ig one">
+        <div class="ig-head"><span class="eyebrow"></span><span class="eyebrow">Annual</span></div>
+        <div class="ig-row"><span class="ig-lab">Mortgage interest</span>${n("mortInterest",T.mortInterest)}</div>
+        <div class="ig-row"><span class="ig-lab">Property tax<em>Counts toward SALT on the federal return</em></span>${n("propTax",T.propTax)}</div>
+        <div class="ig-row"><span class="ig-lab">Vehicle license fee<em>Deductible portion of vehicle registration</em></span>${n("vlf",T.vlf)}</div>
+      </section>
+      <div class="calcflow bottom">
+        <div class="cf-line"><span>Charitable<em>Tracked through the year — entered under <a href="#" data-goto="tax" data-sub="year">This year</a></em></span><b>${usd(T.charitable)}</b></div>
+        <div class="cf-line"><span>Itemized, federal<em>With the SALT cap applied at this year's income</em></span><b>${usd(t.itemRaw)}</b></div>
+        <div class="cf-line grand"><span>Deduction used <a href="#" class="to" data-goto="tax" data-sub="year">→ This year</a></span>
+          <b>${usd(t.fedDeduction)} · ${t.useItemized ? "itemized" : "standard"}</b></div>
+      </div>
+    </div>
+
+    <div class="card" id="taxPrior">
+      <h3>Last year's return <span class="caprule">The base for safe harbor</span></h3>
+      <table class="calctbl">
+        <colgroup><col style="width:46%"><col style="width:27%"><col style="width:27%"></colgroup>
+        <thead><tr><th></th><th>Federal</th><th>California</th></tr></thead>
+        <tbody>
+          <tr><td class="lab">Total tax, ${TP().year-1}<span class="note">Federal from Form 1040, line 24</span></td>
+            <td style="text-align:right">${n("priorFed",T.priorFed)}</td>
+            <td style="text-align:right">${n("priorCA",T.priorCA)}</td></tr>
+          ${row("110% of it",[usd(1.1*T.priorFed),usd(1.1*T.priorCA)],"sub","Safe harbor asks for the lower of this and 90% of this year's tax")}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="taxParams" style="margin-top:14px">
+    <h3>Tax rates and thresholds <span class="caprule">The statutory figures behind every calculation</span></h3>
     <div class="calcflow">
       <div class="cf-line"><span><span class="yearly">yearly</span> marks the figures that change every January — brackets, standard deductions, and the three thresholds below. Everything else is set by statute and only changes if the law does.</span></div>
     </div>
@@ -5594,26 +5967,7 @@ function taxview(){
           <td>${nl(i,2,b[2],true)}</td></tr>`).join("")}
       </tbody>
     </table>
-  </details>
-
-  <details class="card refsec guide" id="taxGuide"${refOpen("taxGuide") ? " open" : ""}>
-    <summary><h3>How this tab works <span class="caprule">A plain-language walkthrough</span></h3></summary>
-    <p>Tax is worked out in four stages, and the chapters above follow that order.</p>
-
-    <div class="guide-grid">
-    <p><strong>Income — add it up.</strong> Wages come from the income plan automatically. Everything earned from investments is entered here: gains from selling, dividends, and interest. Added together these give <strong>adjusted gross income</strong>, or AGI, the figure most thresholds are measured against.</p>
-
-    <p><strong>Deductions — subtract them.</strong> Everyone may subtract a fixed <strong>standard deduction</strong>. Alternatively you may add up specific costs — mortgage interest, property tax, charitable giving, state taxes paid — and subtract those instead. That is <strong>itemizing</strong>, and it is worth doing only when the total is larger. What remains is <strong>taxable income</strong>.</p>
-
-    <p><strong>Tax — apply the rates.</strong> Income is taxed in bands: the first slice at the lowest rate, each later slice higher. So a "24% bracket" means only the portion above that bracket's floor is taxed at 24%, not the whole amount. Investments held longer than a year are taxed at lower rates than everything else, which is why the calculation separates them. Two surtaxes may also apply at higher incomes.</p>
-
-    <p><strong>Paid — compare against what has gone in.</strong> Tax is paid through the year, through payroll withholding and any quarterly payments sent directly. If those add up to more than the tax owed, the difference comes back as a refund; less, and the balance is due at filing. <strong>Safe harbor</strong> is the minimum that must be paid during the year to avoid a late-payment penalty, even if the rest is settled later.</p>
-    </div>
-
-    <p class="guide-note"><strong>Before you sell</strong> works the other way round: it re-runs the whole return with a trade added, to show what the next dollar of gain would cost. That is the <strong>marginal rate</strong> — what the next dollar is taxed at, always higher than the <strong>effective rate</strong>, the average across all income. California computes its own tax separately, with different deductions and no lower rate for long-term investments, which is why it appears beside federal throughout.</p>
-
-    <p class="guide-note">This is a planning model built from published rates, not a tax return. It does not handle alternative minimum tax, and a preparer has the final word.</p>
-  </details>
+  </div>
   `;
 }
 
@@ -5786,7 +6140,7 @@ function pastView(){
   <div class="card pastcard">
     <h3>${YEAR} predates this plan</h3>
     <p>The full plan — paystubs, budget, card credits — is kept from ${fullYears()[0]} on. For ${YEAR} there is only the
-    return that was filed, entered on the tax tab. Its figures feed the year-by-year table on the net worth tab.</p>
+    return that was filed, entered on the tax tab. Its figures appear beside the other years under History there.</p>
     <button type="button" class="panelbtn" data-goto="tax">Open the ${YEAR} return</button>
   </div>`;
 }
@@ -5797,12 +6151,12 @@ function filedView(){
       value="${v === null || v === undefined ? "" : nf(v)}" placeholder="—">`;
   const where = {income:"Total income on the 1040", st:"Net short-term gain or loss, from Schedule D",
     lt:"Net long-term gain or loss, from Schedule D", deductions:"Standard or itemized, whichever was taken",
-    fedTax:"Total tax on the 1040", caTax:"Total tax on the California 540"};
-  const tot = (f.fedTax || 0) + (f.caTax || 0);
+    fedTax:"Total tax on the 1040", stateTax:"Total tax on every state return filed, added together"};
+  const tot = (f.fedTax || 0) + (f.stateTax || 0);
   return `
   <div class="pagehead"><h2 class="section">Tax planning</h2>
   <p class="section-note">${YEAR} was filed before this plan began, so there is nothing to project — just the
-  return's headline figures. Copy them from the 1040 and the 540. Leave a field blank if it isn't to hand yet.</p></div>
+  return's headline figures. Copy them from the 1040 and the state returns. Leave a field blank if it isn't to hand yet.</p></div>
   <div class="grid2">
     <div class="card">
       <h3>${YEAR} return as filed</h3>
@@ -5811,15 +6165,14 @@ function filedView(){
           <td style="text-align:right">${cell(k, f[k])}</td></tr>`).join("")}
         <tr class="total"><td>Total income tax</td><td class="calc">${usd(tot)}</td></tr>
         <tr><td class="lab" style="color:var(--muted)">Effective rate on total income</td>
-          <td class="calc" style="color:var(--muted)">${f.income > 0 && (f.fedTax !== null || f.caTax !== null) ? pct(tot / f.income) : "—"}</td></tr>
+          <td class="calc" style="color:var(--muted)">${effRate(f) === null ? "—" : pct(effRate(f))}</td></tr>
       </tbody></table>
     </div>
     <div class="card">
       <h3>Where this goes</h3>
-      <p class="section-note" style="max-width:none">These figures are the ${YEAR} row of <b>Income and tax by year</b> on
-      the net worth tab. From ${fullYears()[0]} on, that table fills itself from the tax tab's own calculation, so nothing
-      is typed twice.</p>
-      <button type="button" class="panelbtn" data-goto="networth" data-focus="yearTable" style="margin-top:14px">See the year-by-year table</button>
+      <p class="section-note" style="max-width:none">These figures are the ${YEAR} column of <b>History</b>, on this tab.
+      From ${fullYears()[0]} on, that table fills itself from the tax tab's own calculation, so nothing is typed twice.</p>
+      <button type="button" class="panelbtn" data-taxsub="history" style="margin-top:14px">See every year in History</button>
     </div>
   </div>`;
 }
@@ -5830,12 +6183,242 @@ function yearSummary(){
   return yearList().map(y => {
     const r = withYear(y, () => taxRun(0));
     if(r) return {y, kind: y === thisYear() ? "projected" : y > thisYear() ? "planned" : "tracked",
-      income:r.agi, st:r.stRaw, lt:r.ltRaw, deductions:r.fedDeduction, fedTax:r.fedTax, caTax:r.caTax};
+      income:r.agi, st:r.stRaw, lt:r.ltRaw, deductions:r.fedDeduction, fedTax:r.fedTax, stateTax:r.caTax};
     return {y, kind:"filed", ...S.years[y].filed};
   });
 }
+/* Income and tax by year, drawn. Three bars a year on a dollar axis at the
+   right — total income, deductions, and total tax with federal stacked under
+   state — and two lines on a percent axis at the left: the effective tax
+   rate, solid, in the federal red (federal is most of the tax it measures),
+   and deductions as a share of income, dashed, in the deductions green. The
+   axes share their gridlines and their zero, so each line reads in both units.
 
-const views = { dash, income, spend, tax: taxview, cards: cardsview, networth };
+   Laid out like chart(): bars and labels are HTML positioned in percent, so
+   type and corners stay true at any width; only the lines are a stretched SVG.
+   A year still being projected is hatched, its points open and its stretch
+   of each line dashed.
+
+   The gains stay in the table but not here: they are already inside total
+   income, and their bars made the groups too busy to read.
+
+   Hues are by role — income blue, deductions green, the taxes warm — and the
+   order was checked for colour-blind separation (the green/red pair leans on
+   the gap between bars and on the legend). */
+const YC_HUES = {income:"#2a78d6", deductions:"#008300", fedTax:"#e34948", stateTax:"#eda100"};
+function ycTint(hex, a){
+  const n = parseInt(hex.slice(1), 16), mix = c => Math.round(c*a + 255*(1-a));
+  return "#" + [n >> 16, n >> 8 & 255, n & 255].map(c => mix(c).toString(16).padStart(2,"0")).join("");
+}
+// Deductions over total income, from the year's own figures; null when either is missing
+function dedShare(r){
+  const num = v => typeof v === "number" && isFinite(v);
+  return num(r.income) && r.income > 0 && num(r.deductions) ? r.deductions / r.income : null;
+}
+function yearChart(ys){
+  if(!ys.length) return "";
+  const isNum = v => typeof v === "number" && isFinite(v);
+  const proj = r => r.kind === "projected" || r.kind === "planned";
+  const label = Object.fromEntries(FILED_KEYS.map(([k,l]) => [k, l]));
+  const pos = v => isNum(v) && v > 0 ? v : 0;
+  const taxOf = r => isNum(r.fedTax) || isNum(r.stateTax) ? pos(r.fedTax) + pos(r.stateTax) : null;
+
+  // Percent axis, left: 0–40% in tens, taller only if a line and its label
+  // would leave it. The dollar axis, right, has as many steps, each a round
+  // amount, enough for the tallest bar — so every gridline is round in both.
+  const rates = ys.map(effRate), deds = ys.map(dedShare);
+  const maxPct = Math.max(0, ...rates.filter(isNum), ...deds.filter(isNum));
+  const pstep = 0.1, steps = Math.max(4, Math.ceil(maxPct * 1.08 / pstep));
+  const hi = Math.max(0, ...ys.flatMap(r => [r.income, r.deductions, taxOf(r)]).filter(isNum));
+  const step = niceStep(hi || 1000, steps), y1 = step * steps;
+  const money = axisScale([0, y1], step);
+  const fy = v => (1 - v / y1) * 100;
+  const fp = r => (1 - r / (steps * pstep)) * 100;
+  const pcLab = v => +(v*100).toFixed(1) + "%";
+
+  const bw = 100 / ys.length, cx = i => (i + 0.5) * bw;
+  const grid = Array.from({length: steps + 1}, (_, k) => `<span class="yc-grid${k === 0 ? " base" : ""}" style="top:${fy(k*step).toFixed(2)}%">
+      <i class="l">${pcLab(k*pstep)}</i><i class="r">${money(k*step)}</i></span>`).join("");
+
+  const fill = (c, pj, cls, from, to) => `<i class="${[cls, pj ? "pj" : ""].filter(Boolean).join(" ")}" style="--c:${c};--t:${ycTint(c, .3)};top:${fy(to).toFixed(2)}%;height:${(fy(from) - fy(to)).toFixed(2)}%"></i>`;
+  const bar = (v, c, pj) => `<span class="yc-bar">${pos(v) ? fill(c, pj, "", 0, v) : ""}</span>`;
+  // Federal at the base, state on top of it; only the top of the stack is rounded
+  const stack = (r, pj) => { const f = pos(r.fedTax), st = pos(r.stateTax);
+    return `<span class="yc-bar">${f ? fill(YC_HUES.fedTax, pj, st ? "lower" : "", 0, f) : ""}${st ? fill(YC_HUES.stateTax, pj, f ? "upper" : "", f, f + st) : ""}</span>`; };
+  const key = (c, dash) => `<i class="lk${dash ? " dash" : ""}" style="--c:${c}"></i>`;
+
+  const bands = ys.map((r, i) => {
+    const pj = proj(r), e = rates[i], d = deds[i], tax = taxOf(r);
+    const amt = v => isNum(v) ? usd(v) : "—";
+    const rows = `
+        <span><i style="--c:${YC_HUES.income}"></i>${label.income}<b>${amt(r.income)}</b></span>
+        <span><i style="--c:${YC_HUES.deductions}"></i>${label.deductions}<b>${amt(r.deductions)}</b></span>
+        <span><i style="--c:${YC_HUES.fedTax}"></i>${label.fedTax}<b>${amt(r.fedTax)}</b></span>
+        <span><i style="--c:${YC_HUES.stateTax}"></i>${label.stateTax}<b>${amt(r.stateTax)}</b></span>
+        <span class="sum"><i></i>Total tax<b>${tax === null ? "—" : usd(tax)}</b></span>
+        <span class="rate">${key(YC_HUES.fedTax)}Effective tax rate<b>${e === null ? "—" : pct(e)}</b></span>
+        <span class="rate2">${key(YC_HUES.deductions, true)}Deductions % of income<b>${d === null ? "—" : pct(d)}</b></span>`;
+    const name = `${r.y}${pj ? ", projected" : ""}: total income ${amt(r.income)}, deductions ${amt(r.deductions)}, `
+      + `federal tax ${amt(r.fedTax)}, state tax ${amt(r.stateTax)}, total tax ${tax === null ? "—" : usd(tax)}`
+      + (e === null ? "" : `, effective tax rate ${pct(e)}`) + (d === null ? "" : `, deductions ${pct(d)} of income`);
+    return `<div class="yc-band${i === 0 ? " first" : i === ys.length - 1 ? " last" : ""}" style="left:${(i*bw).toFixed(3)}%;width:${bw.toFixed(3)}%"
+        tabindex="0" role="img" aria-label="${esc(name)}">
+      <div class="yc-bars">${bar(r.income, YC_HUES.income, pj)}${bar(r.deductions, YC_HUES.deductions, pj)}${stack(r, pj)}</div>
+      <div class="yc-tip" aria-hidden="true"><em>${r.y}${pj ? " · projected" : ""}</em>${rows}</div>
+    </div>`;
+  }).join("");
+
+  // Each line: a segment wherever two neighbouring years both have a value
+  const lines = [{v: rates, c: YC_HUES.fedTax, dash: false}, {v: deds, c: YC_HUES.deductions, dash: true}];
+  const segs = lines.flatMap(L => ys.slice(0, -1).map((r, i) => L.v[i] === null || L.v[i+1] === null ? null
+    : {x1:cx(i), y1:fp(L.v[i]), x2:cx(i+1), y2:fp(L.v[i+1]), c:L.c, dash:L.dash, pj:proj(r) || proj(ys[i+1])}).filter(Boolean));
+  const seg = (d, halo) => `<line x1="${d.x1.toFixed(2)}" y1="${d.y1.toFixed(2)}" x2="${d.x2.toFixed(2)}" y2="${d.y2.toFixed(2)}"
+      class="${halo ? "halo" : "ln"}${!halo && (d.dash || d.pj) ? " dashed" : ""}"${halo ? "" : ` style="stroke:${d.c}"`} vector-effect="non-scaling-stroke"/>`;
+  // Labels sit above their points; the deductions label drops below its point
+  // when it would otherwise run into the rate's
+  const dots = ys.map((r, i) => {
+    const pj = proj(r) ? " pj" : "", out = [];
+    const near = rates[i] !== null && deds[i] !== null && Math.abs(fp(deds[i]) - fp(rates[i])) < 11;
+    lines.forEach((L, li) => { const v = L.v[i]; if(v === null) return;
+      const below = li === 1 && near && fp(v) > fp(rates[i]) && fp(v) < 88;
+      out.push(`<span class="yc-dot${pj}" style="--c:${L.c};left:${cx(i).toFixed(2)}%;top:${fp(v).toFixed(2)}%"></span>
+      <span class="yc-val${pj}${below ? " below" : ""}" style="left:${cx(i).toFixed(2)}%;top:${fp(v).toFixed(2)}%">${pct(v)}</span>`); });
+    return out.join("");
+  }).join("");
+
+  return `<figure class="ychart" role="group" aria-label="Income, deductions and total tax by year, with the effective tax rate and deductions as a share of income">
+    <div class="yc-plot">
+      ${grid}
+      ${bands}
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        ${segs.map(d => seg(d, true)).join("")}${segs.map(d => seg(d, false)).join("")}
+      </svg>
+      ${dots}
+    </div>
+    <div class="yc-x">${ys.map((r, i) => `<span class="${proj(r) ? "pj" : ""}" style="left:${cx(i).toFixed(2)}%">${r.y}${proj(r) ? " (proj.)" : ""}</span>`).join("")}</div>
+    <figcaption>
+      <ul class="yc-legend">
+        <li><i style="--c:${YC_HUES.income}"></i>${label.income}</li>
+        <li><i style="--c:${YC_HUES.deductions}"></i>${label.deductions}</li>
+        <li class="stack"><i style="--c:${YC_HUES.fedTax};--c2:${YC_HUES.stateTax}"></i>Total tax <span>federal, state on top</span></li>
+        <li class="ln">${key(YC_HUES.fedTax)}Effective tax rate <span>left axis</span></li>
+        <li class="ln">${key(YC_HUES.deductions, true)}Deductions % of income <span>left axis</span></li>
+        <li class="pj"><i></i>Projected</li>
+      </ul>
+      <p class="yc-note">Total income already includes the short- and long-term gains shown in the table. Tap or hover a year for its figures.</p>
+    </figcaption>
+  </figure>`;
+}
+
+// Federal and state tax over total income, from the year's own figures and
+// never stored. Null when any of the three is missing, so a half-entered year
+// shows no rate rather than 0% or NaN.
+function effRate(r){
+  const num = v => typeof v === "number" && isFinite(v);
+  if(!num(r.income) || r.income <= 0 || !num(r.fedTax) || !num(r.stateTax)) return null;
+  return (r.fedTax + r.stateTax) / r.income;
+}
+
+const views = { dash, income, spend, tax: taxTab, cards: cardsview, networth };
+
+/* The tax tab in three parts. This year is the projection being worked on;
+   History lays the years side by side; Setup holds what is set once a year —
+   the deductions claimed, last year's tax, the statutory rates. Which part is
+   open is kept per device and never saved, like the folded sections. */
+let TAX_SUB = "year";
+const TAX_SUBS = [["year","This year"],["history","History"],["setup","Setup"]];
+// A link to a block names it; the block names its part
+const TAX_FOCUS_SUB = {taxParams:"setup", taxPrior:"setup", taxDeductIn:"setup", taxHistory:"history"};
+function taxTab(){
+  const nav = `<div class="subnav"><div class="segctl" role="tablist" aria-label="Tax views">${TAX_SUBS.map(([k,l]) =>
+    `<button type="button" role="tab" aria-selected="${TAX_SUB === k}" data-taxsub="${k}">${l}</button>`).join("")}</div></div>`;
+  const body = TAX_SUB === "history" ? taxHistory()
+    : isFull(YEAR) ? taxview()
+    : TAX_SUB === "setup" ? setupPast() : filedView();
+  return nav + body;
+}
+// A year kept only as its filed return has nothing to set up
+function setupPast(){
+  return `
+  <div class="pagehead"><h2 class="section">Tax setup</h2>
+  <p class="section-note">${YEAR}</p></div>
+  <div class="card pastcard">
+    <h3>${YEAR} has no setup</h3>
+    <p>Rates, deductions and last year's tax are kept from ${fullYears()[0]} on, where they feed the projection. ${YEAR}
+    was filed before this plan began, so all there is to change is the return's headline figures.</p>
+    <button type="button" class="panelbtn" data-taxsub="year">Open the ${YEAR} return</button>
+  </div>`;
+}
+
+/* Every year side by side: filed returns as filed, this year as projected.
+   Figures are compact here — the full amounts are a tap away, on the year's
+   own screen, which is where they are changed. */
+const usdK = v => {
+  if(v === null || v === undefined || !isFinite(v)) return "—";
+  const a = Math.abs(v), sign = v < 0 ? "−" : "";
+  const body = a >= 1e6 ? (a/1e6).toFixed(2) + "M" : a >= 1e5 ? Math.round(a/1e3) + "k"
+             : a >= 1e3 ? (a/1e3).toFixed(1) + "k" : String(Math.round(a));
+  return sign + "$" + body;
+};
+function taxHistory(){
+  const ys = yearSummary();
+  const kindTag = {projected:"Projected", planned:"Planned", tracked:"Tracked here", filed:"As filed"};
+  const proj = r => r.kind === "projected" || r.kind === "planned";
+  const colCls = r => [proj(r) ? "proj" : "", r.y === YEAR ? "on" : ""].filter(Boolean).join(" ");
+  // The whole column opens its year, as the year picker would
+  const tap = r => `data-year="${r.y}" data-goto="tax" data-sub="year" title="Open ${r.y}${proj(r) ? " — the projection" : " — the return as filed"}"`;
+  const cell = (r, v, full) => `<td class="calc ycol ${colCls(r)}" ${tap(r)}${full !== undefined && full !== null ? ` aria-label="${esc(full)}"` : ""}>${v}</td>`;
+  const rows = FILED_KEYS.map(([k,l]) => `<tr><td class="lab">${l}</td>${ys.map(r => cell(r, usdK(r[k]), r[k] === null || r[k] === undefined ? null : usd(r[k]))).join("")}</tr>`).join("");
+  const effs = ys.map(effRate);
+
+  // The projected year's paystubs, if they disagree, move every figure in its column
+  const bad = isFull(thisYear()) ? (withYear(thisYear(), () => model().P.filter(p => p.stub.issue === "behind" || p.stub.issue === "ahead")) || []) : [];
+  const stubNote = bad.length ? `<div class="callout warn"><strong>${thisYear()} is projected from paystubs whose year to date and paychecks left don't match</strong> —
+      ${bad.map(p => { const g = Math.round(Math.abs(p.stub.gap));
+        return `${esc(p.name)}'s by about ${g} ${g === 1 ? "paycheck" : "paychecks"} ${p.stub.issue === "behind" ? "missing" : "counted twice"}`; }).join(", ")}.
+      Its income, withholding and tax move by those paychecks once the stubs are fixed on the income tab.</div>` : "";
+  // Total income is wages as the W-2 will show them — gross pay less the
+  // pre-tax 401k and other pre-tax deductions — plus the investment income,
+  // not year-to-date gross plus what is still to come. Spelled out because
+  // the two are easy to mix up when checking it by hand.
+  const t = withYear(thisYear(), () => taxRun(0));
+  const T = isFull(thisYear()) ? S.years[thisYear()].tax : null;
+  const build = t && T ? `<p class="section-note" style="max-width:none;margin-top:6px">${thisYear()}'s ${usd(t.agi)} total income is W-2 wages of
+      ${usd(t.wages)} — ${usd(t.grossK + t.grossS)} gross pay, less ${usd(t.k401kTotal)} pre-tax 401k and
+      ${usd(t.preTaxK + t.preTaxS)} other pre-tax deductions — plus ${usd(T.interest)} interest, ${usd(T.ordDiv)} dividends
+      and ${usd(t.stComp + t.ltComp)} net gains.</p>` : "";
+
+  return `
+  <div class="pagehead"><h2 class="section">Tax history</h2>
+  <p class="section-note">Each year's income and tax side by side — filed returns as filed, ${thisYear()} as projected so far.
+  Tap a year to open it and change its figures.</p></div>
+
+  <div class="card" id="taxHistory">
+    <h3>Income and tax by year <span class="caprule">Federal and state, every year on record</span></h3>
+    ${yearChart(ys)}
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="hscroll">
+    <table class="histtbl">
+      <colgroup><col class="labcol">${ys.map(() => "<col>").join("")}</colgroup>
+      <thead><tr><th></th>${ys.map(r => `<th class="ycol ${colCls(r)}" ${tap(r)}>
+        <button type="button" class="yrlink" data-year="${r.y}" data-goto="tax" data-sub="year">${r.y}</button>
+        <span class="note">${kindTag[r.kind]}</span></th>`).join("")}</tr></thead>
+      <tbody>
+        ${rows}
+        <tr class="effrow"><td class="lab">Effective tax rate<span class="note">Federal + state tax ÷ total income</span></td>
+          ${ys.map((r,i) => cell(r, effs[i] === null ? "—" : pct(effs[i]))).join("")}</tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="section-note" style="max-width:none;margin-top:12px">Short- and long-term are net realized gains before
+    they are netted against each other, and they sit inside total income, not on top of it; dividends and interest are
+    in total income too. ${thisYear()} is the projection on This year and settles as the year's figures go in.</p>
+    ${build}
+    ${stubNote}
+  </div>`;
+}
 let current = "dash";
 
 // Folding sections (the tax tab's reference, the net worth log). Every
@@ -5861,8 +6444,7 @@ function render(){
   // Years before this tool have a filed return and nothing else. The tax tab
   // is where that is entered; the tabs built on a full plan say so and point there.
   document.getElementById("view-"+current).innerHTML =
-    current === "networth" || isFull(YEAR) ? views[current]()
-    : current === "tax" ? filedView() : pastView();
+    current === "networth" || current === "tax" || isFull(YEAR) ? views[current]() : pastView();
   paintYear();
   const d = new Date(S.updated+"T00:00:00");
   document.getElementById("stamp").textContent =
@@ -5889,9 +6471,10 @@ function render(){
 // focus is the id of a section to land on rather than the top of the tab —
 // the masthead is sticky, so it is scrolled to by hand rather than with
 // scrollIntoView, which would put its heading underneath the header.
-function goTab(view, focus){
+function goTab(view, focus, sub){
   const b = document.querySelector(`nav.tabs button[data-view="${view}"]`);
   if(!b) return;
+  if(view === "tax") TAX_SUB = sub || TAX_FOCUS_SUB[focus] || (current === "tax" ? TAX_SUB : "year");
   current = view;
   // A link to a folded section opens it on the way
   if(focus) TAX_OPEN.set(focus, true);
@@ -5912,7 +6495,7 @@ const nf = v => (typeof v === "number" && isFinite(v))
 // The figures that come off a paystub, as opposed to the standing terms of
 // employment. Editing any of them restamps that person's card.
 const STUB_FIELDS = new Set(["fedPer","caPer","ficaPer","ytdGross","ytdFed",
-                             "ytdCA","ytdFica","ytd401k","checksLeft"]);
+                             "ytdCA","ytdFica","ytd401k","checksLeft","stubPayDate"]);
 
 const parseNum = s => {
   const n = parseFloat(String(s).replace(/[$,\s]/g,""));
@@ -6023,9 +6606,19 @@ document.addEventListener("change", e=>{
 });
 
 document.addEventListener("click", e=>{
+  // A tap on a year in the income-and-tax chart opens its readout, and a tap
+  // anywhere else closes it. Hover alone isn't dependable on a phone.
+  const band = e.target.closest(".yc-band");
+  document.querySelectorAll(".yc-band.open").forEach(b => { if(b !== band) b.classList.remove("open"); });
+  if(band){ band.classList.toggle("open"); return; }
+
   // The rail's red block always names the tab where the thing can be fixed
   const goto = e.target.closest("[data-goto]");
-  if(goto){ e.preventDefault(); if(goto.dataset.year) YEAR = +goto.dataset.year; goTab(goto.dataset.goto, goto.dataset.focus); return; }
+  if(goto){ e.preventDefault(); if(goto.dataset.year) YEAR = +goto.dataset.year; goTab(goto.dataset.goto, goto.dataset.focus, goto.dataset.sub); return; }
+
+  // The tax tab's three parts
+  const sub = e.target.closest("[data-taxsub]");
+  if(sub){ e.preventDefault(); TAX_SUB = sub.dataset.taxsub; render(); window.scrollTo({top:0}); return; }
 
   const addbrk = e.target.closest("[data-addbrk]");
   if(addbrk){

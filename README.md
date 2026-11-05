@@ -27,7 +27,7 @@ net worth: everything that resets in January — pay, the budget, the tax
 picture, card credits used — is kept per calendar year, a new year opens from
 the last one's shape on January 1, and a closed year stays as its record.
 Years before the plan began hold just the headline figures of the return as
-filed.
+filed, with state tax as the total across every state filed in.
 
 **Dashboard** — net income, savings rate, fixed-cost share and a ribbon
 showing where every dollar goes against 50/60/10/30 guardrails, plus charts
@@ -46,9 +46,13 @@ paystubs, take-home, 401k, saving, each heading carrying the figure it hands
 on. Per-paycheck take-home built up line by line: gross, 401k
 deferral, pre-tax deductions, tax, after-tax deductions. Each person's latest
 paystub is entered once, laid out like the stub itself — federal, California
-and FICA withholding per check and year to date, 401k so far, paychecks
-remaining, any bonus still to come at the supplemental rates — and the 401k
-tracker and the whole tax tab read it rather than asking again. The
+and FICA withholding per check and year to date, 401k so far, the stub's pay
+date, any bonus still to come at the supplemental rates — and the 401k
+tracker and the whole tax tab read it rather than asking again. The paychecks
+still to come are worked out from the pay date and the pay schedule, so the
+count can't drift from the stub it belongs to. The year-to-date pay is checked
+against that count: a stub that mixes figures from two different paydays,
+or one that has gone stale, is flagged before anything is built on it. The
 withholding rate is derived from the stub, and payroll drifting from the
 salary figures shows up as a number rather than a surprise. Handles a mid-year
 raise, splitting the year between two salaries so annual figures blend both
@@ -62,10 +66,18 @@ with a configurable buffer for things you forget, then investing, savings, and
 guilt-free spending as the remainder, each card handing what is left to the
 next. Each section is measured against its guardrail band.
 
-**Tax planning** — a real return, not a flat effective rate, laid out the
+**Tax planning** — in three parts, pinned at the top of the tab.
+*This year* is a real return, not a flat effective rate, laid out the
 way a return reads: income, deductions, tax, what has been paid, then what a
 sale would cost, with each chapter heading carrying its figure so the
-headings alone tell the story. Progressive
+headings alone tell the story. What moves through the year is typed here:
+gains, dividends, charitable giving, estimated payments. *Setup* holds what
+is set once — the fixed deductions, last year's tax for the safe harbor, and
+the rates. *History* lays every year side by side: total income, deductions
+and total tax (federal, with state stacked on top) as bars, the effective
+tax rate and deductions as a share of income as lines, and a table with the
+filed returns as filed and this year as projected. Tap a year to open it.
+Progressive
 federal brackets, the preferential rate stacked on top of ordinary income,
 NIIT, Additional Medicare, California computed separately with its own
 deduction rules, the SALT cap with its phase-out, and California's
@@ -84,8 +96,7 @@ on the dashboard.
 **Net worth** — balances to update first, then debt beside the balance
 sheet it is subtracted in, with the total logged from there and charted
 over time; drag or tap along the line for the value on any
-date and the change since the reading before. An income-and-tax-by-year table
-reads each year off the tax tab, or off the filed return for earlier years.
+date and the change since the reading before.
 
 ---
 
@@ -100,8 +111,8 @@ calculation. Change a salary and the tax tab, dashboard and spending plan
 all move.
 
 **Statutory parameters are data, not code.** Brackets, standard deductions,
-SALT thresholds, NIIT and surtax rates all live in editable fields at the
-bottom of the tax tab, with the eight that are inflation-indexed flagged so
+SALT thresholds, NIIT and surtax rates all live in editable fields under
+the tax tab's Setup, with the eight that are inflation-indexed flagged so
 it is obvious what to update each January. When a new year's figures are
 published you type them in — no new build required.
 

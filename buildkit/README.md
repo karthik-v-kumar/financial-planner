@@ -20,11 +20,12 @@ var), defaulting to `finance-planner.html` in the current directory.
                    (fictional data, no keys, no card art). This is the ONLY
                    HTML that belongs in the public repo. It aborts without
                    writing if a replacement's target has moved in the source,
-                   or if any term in `demo-map.local.json` survives.
+                   if the live plan has a field it doesn't know how to
+                   replace, or if any term in `demo-map.local.json` survives.
 - `verify.js`    — paychecks, paystub withholding, 401k, spending and net worth totals
 - `ratecheck.js` — tax engine
 - `cardcheck.js` — card credits and offers
-- `raisecheck.js`— mid-year raise math
+- `raisecheck.js`— salary rates through the year: raises dated by their first paycheck
 - `phaseout.js`  — SALT and California itemized phase-outs
 - `_app.js`      — loads the app under Node for the tests, with the database off
 

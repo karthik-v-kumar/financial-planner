@@ -13,7 +13,8 @@ data. Edit anything; it saves to your browser and nothing you type leaves it.
 
 | | Interface | File | Tag |
 |---|---|---|---|
-| **V2** | Modernist: Archivo, square corners, rules rather than boxes, red kept for what needs attention | [`demo.html`](demo.html) | [`v2`](../../releases/tag/v2) |
+| **V3** | White cards on a warm paper ground, Inter Tight, Lucide icons, light and dark themes that follow the system or a choice under *Settings → Appearance*, each spending band in one colour wherever it appears, red kept for what needs attention | [`demo.html`](demo.html) | — |
+| **V2** | Modernist: Archivo, square corners, rules rather than boxes | — | [`v2`](../../releases/tag/v2) |
 
 V1, the original navy-and-moss interface, is no longer carried here.
 
@@ -27,44 +28,58 @@ net worth: everything that resets in January — pay, the budget, the tax
 picture, card credits used — is kept per calendar year, a new year opens from
 the last one's shape on January 1, and a closed year stays as its record.
 Years before the plan began hold just the headline figures of the return as
-filed, with state tax as the total across every state filed in.
+filed, with state tax as the total across every state filed in. Each screen
+shows the figures; how one is worked out sits behind an info button beside
+it.
 
 **Dashboard** — net income, savings rate, fixed-cost share and a ribbon
 showing where every dollar goes against 50/60/10/30 guardrails, plus charts
 for the federal bracket the next dollar falls in (with the all-in marginal
 rate broken into its pieces) and what net worth is actually made of. A cash
 flow Sankey traces gross pay through taxes, 401k and deductions to each
-spending band, by the month, the year or share of gross; tap a ribbon on a
-phone to trace it, where it also redraws as a stacked ledger. A rail down the right ranks everything competing for
-attention and gives the single most urgent item — a 401k running over the
-IRS limit, fixed costs through their ceiling, card credits about to expire —
-the one red block on the page, along with a what-if for moving money into
-savings that recalculates without touching the saved plan.
+spending band, by the month, the year or share of gross; tap a ribbon or a
+block to trace it, and on a narrow phone it redraws as a stacked ledger. A
+rail down the right ranks everything competing for attention and gives the
+single most urgent item — a 401k short of the IRS limit or already over it,
+a paystub that disagrees with itself, fixed costs through their ceiling, card
+credits about to expire — the one red block on the page. The rest follow as a
+list, each with the amount that would bring it back inside its band.
 
-**Income plan** — laid out in chapters in the order the money moves: pay,
-paystubs, take-home, 401k, saving, each heading carrying the figure it hands
-on. Per-paycheck take-home built up line by line: gross, 401k
-deferral, pre-tax deductions, tax, after-tax deductions. Each person's latest
-paystub is entered once, laid out like the stub itself — federal, California
-and FICA withholding per check and year to date, 401k so far, the stub's pay
-date, any bonus still to come at the supplemental rates — and the 401k
-tracker and the whole tax tab read it rather than asking again. The paychecks
-still to come are worked out from the pay date and the pay schedule, so the
-count can't drift from the stub it belongs to. The year-to-date pay is checked
-against that count: a stub that mixes figures from two different paydays,
-or one that has gone stale, is flagged before anything is built on it. The
-withholding rate is derived from the stub, and payroll drifting from the
-salary figures shows up as a number rather than a surprise. Handles a mid-year
-raise, splitting the year between two salaries so annual figures blend both
-while the monthly figure tracks the rate now in effect. Includes a 401k
+**Income plan** — laid out for coming back to it once a month: where the
+year stands, the one decision (the 401k rate), the one chore (a new paystub),
+then take-home, the pay it rests on and what is saved, each chapter heading
+saying whether anything is typed there. Per-paycheck take-home is built up
+line by line: gross, 401k deferral, pre-tax deductions, tax, after-tax
+deductions. Each person's latest paystub is entered once, laid out like the
+stub itself — federal, California, FICA and CA SDI withholding per check and
+year to date, the check's own gross, 401k so far, the stub's pay date, any
+bonus still to come at the supplemental rates — and the 401k tracker and the
+whole tax tab read it rather than asking again. The paychecks still to come
+are worked out from the pay date and the pay schedule, so the count can't
+drift from the stub it belongs to; where an employer's real pay calendar is
+known, the stub also rolls forward through the paydays since it was taken.
+The stub is checked against itself and against the salary on file: year to
+date a paycheck or more out of step with its pay date, a bonus marked the
+wrong way, or a check's gross the salary on file can't explain is named,
+with the numbers and where to fix it, before anything is built on it. Pay
+that varies check to check is held to a band around the salary instead.
+Pay is kept as the salary rates actually paid, each from the date of its
+first paycheck, so a year with two raises is three runs of paychecks: annual
+figures blend them while the monthly figure tracks the rate now in effect.
+The withholding rate is derived from the stub, and payroll drifting from the
+salary figures shows up as a number rather than a surprise. Includes a 401k
 contribution recommender that works forward from what has already been
 contributed, so its answer and the limit tracker can never contradict each
-other.
+other. Payroll stops taking contributions at the IRS limit, so the
+projection stops there too; only money already in past it is flagged as
+over.
 
 **Spending plan** — one flow of money, income first: fixed costs by category
 with a configurable buffer for things you forget, then investing, savings, and
 guilt-free spending as the remainder, each card handing what is left to the
-next. Each section is measured against its guardrail band.
+next. Each section is measured against its guardrail band. Fixed costs fold
+into their categories, each showing its monthly total until it is opened,
+and a yearly cost is carried as its monthly share.
 
 **Tax planning** — in three parts, pinned at the top of the tab.
 *This year* is a real return, not a flat effective rate, laid out the
@@ -80,7 +95,8 @@ filed returns as filed and this year as projected. Tap a year to open it.
 Progressive
 federal brackets, the preferential rate stacked on top of ordinary income,
 NIIT, Additional Medicare, California computed separately with its own
-deduction rules, the SALT cap with its phase-out, and California's
+deduction rules, the SALT cap with its phase-out (CA SDI withheld from pay
+counts toward it, as the federal return allows), and California's
 high-income reduction of itemized deductions. Includes a marginal rate that
 re-runs the entire return with $1,000 more income, so it captures the SALT
 phase-out rather than just quoting a bracket, alongside how far the current
@@ -114,7 +130,10 @@ all move.
 SALT thresholds, NIIT and surtax rates all live in editable fields under
 the tax tab's Setup, with the eight that are inflation-indexed flagged so
 it is obvious what to update each January. When a new year's figures are
-published you type them in — no new build required.
+published you type them in — no new build required. The IRS 401k limit is
+kept per year and typed on the income plan; a new year starts from the
+published figure where the file knows it, and from the year before's where
+it doesn't.
 
 **Structure encodes the arithmetic.** Running totals render as flow lines,
 rate detail as fixed-width tables, so a tax calculation reads the way a
@@ -153,6 +172,10 @@ Then add it to the Dock (Chrome: Install page as app) or a phone Home Screen
 (Safari: Add to Home Screen) and it behaves like a native app.
 
 Leave those two values blank and it stays a self-contained local file.
+
+To have stubs roll forward on an employer's real pay calendar, add it to
+`PAY_RULES` in the script: the comment above it gives both shapes, fixed days
+of the month or every second week from a known payday.
 
 **On the anon key being public:** that is how Supabase is designed to work.
 Access is enforced by row-level security in the database, which checks the

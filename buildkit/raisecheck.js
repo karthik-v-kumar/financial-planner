@@ -1,47 +1,74 @@
-const X=require('./_app')(["S","model","income","checkAt"]);
+const X=require('./_app')(["S","model","income","checkAt","nthPayday","YEAR"]);
 let f=0;const chk=(l,g,w,tol=0.02)=>{const ok=Math.abs(g-w)<=tol;if(!ok)f++;
-  console.log((ok?'  PASS ':'  FAIL '),l.padEnd(36),g.toFixed(2).padStart(12),'expect',w.toFixed(2));};
+  console.log((ok?'  PASS ':'  FAIL '),l.padEnd(40),g.toFixed(2).padStart(12),'expect',w.toFixed(2));};
+const count=(l,g,w)=>chk(l,g,w,0);
 
 /* Self-deriving, like cardcheck: the raise is 8% on whatever the second
-   person earns, and every expected value comes from checkAt() at the
-   withholding rate the app derives, so nothing from the plan is named here. */
-const who=X.S.people[1];
-const keep={newSalary:who.newSalary,raiseChecks:who.raiseChecks};
-who.newSalary=0; who.raiseChecks=0;
+   person earns, dated the way a real one is, and every expected value comes
+   from checkAt() at the withholding rate the app derives, so nothing from the
+   plan is named here. Pay is a list of salary rates, each from the date of the
+   first paycheck paid at it; see rateRuns(). */
+const who=X.S.people[1], Y=X.YEAR, n=who.paychecks;
+const keep=JSON.parse(JSON.stringify(who.rates));
+const base=keep[0].annual;
 
-console.log('--- no raise entered: one rate all year ---');
+console.log('--- one rate all year ---');
+who.rates=[{annual:base,from:""}];
 let m=X.model(), p=m.P[1];
-const flat=X.checkAt(who, who.salary, p.taxRate);
-chk('net/check at the one salary', p.net, flat.net);
-chk('annual = before-raise net everywhere', p.netA, p.netB);
-chk('monthly = net x checks/12', p.monthly, flat.net*who.paychecks/12);
+const flat=X.checkAt(who, base, p.taxRate);
+count('runs', p.runs.length, 1);
+count('paychecks in it', p.runs[0].checks, p.stub.total);
+chk('net/check at the one rate', p.net, flat.net);
+chk('monthly = net x checks/12', p.monthly, flat.net*n/12);
 chk('combined monthly = both people', m.netTotal, m.P.reduce((t,x)=>t+x.monthly,0));
+if(p.hasRaise){f++;console.log('  FAIL  one rate reads as a raise');}
 
-const raise=Math.round(who.salary*1.08), late=Math.min(9, who.paychecks);
-console.log('\n--- '+who.name+': salary up 8% for the last '+late+' of '+who.paychecks+' checks ---');
-who.newSalary=raise; who.raiseChecks=late;
+const raise=Math.round(base*1.08), late=Math.min(9, n);
+const from=X.nthPayday(who, Y, n-late+1);
+console.log('\n--- '+who.name+': a rate 8% higher from '+from+', the last '+late+' of '+n+' paychecks ---');
+who.rates=[{annual:base,from:""},{annual:raise,from}];
 m=X.model(); p=m.P[1];
-const A=X.checkAt(who, who.salary, p.taxRate), B=X.checkAt(who, raise, p.taxRate);
-chk('net per check before', p.netA, A.net);
-chk('net per check after',  p.netB, B.net);
-chk('change per check',     p.raiseDelta, B.net - A.net);
-chk('checks at old rate',   p.checksA, who.paychecks - late);
-chk('checks at new rate',   p.checksB, late);
-chk('monthly uses current rate', p.monthly, B.net*who.paychecks/12);
+const A=X.checkAt(who, base, p.taxRate), B=X.checkAt(who, raise, p.taxRate);
+const [rA,rB]=p.runs;
+count('paychecks at the first rate', rA.checks, n-late);
+count('paychecks at the new rate', rB.checks, late);
+count('the new rate starts at paycheck', rB.first, n-late+1);
+chk('net per check before', rA.net, A.net);
+chk('net per check after', rB.net, B.net);
+// monthly is what the rate paying the next paycheck brings in
+const next=p.checksLeft>0?p.checksPaid+1:p.stub.total;
+chk('monthly uses the rate in force now', p.monthly, (next>=rB.first?B:A).net*n/12);
 console.log('   before', A.net.toFixed(2), '-> after', B.net.toFixed(2), '| +'+(B.net-A.net).toFixed(2)+'/check');
 
-console.log('\n--- 401k projection uses the post-raise rate for remaining checks ---');
-chk('grossLeft = new gross x checks left', p.grossLeft, B.gross*who.checksLeft);
+console.log('\n--- the 401k projection prices each paycheck left at its own rate ---');
+let left=0; for(let k=p.checksPaid+1;k<=p.stub.total;k++) left+=(k>=rB.first?B:A).gross;
+chk('gross left = each check at its rate', p.grossLeft, left);
 console.log('   projected 401k', p.total401k.toFixed(2), '| room', p.room.toFixed(2), '|', p.statusText);
 
-console.log('\n--- raise larger than the year, and zero-check raise ---');
-who.raiseChecks = who.paychecks + 14;
-chk('raiseChecks past the year is capped', X.model().P[1].checksB, who.paychecks);
-who.raiseChecks = 0;
-console.log('   raiseChecks 0 -> hasRaise', X.model().P[1].hasRaise, '| flagged pending', X.model().P[1].raisePending);
-Object.assign(who, keep);
+console.log('\n--- a second raise: three rates, three runs ---');
+const third=Math.round(raise*1.05), from3=X.nthPayday(who, Y, n-2);
+who.rates=[{annual:base,from:""},{annual:raise,from},{annual:third,from:from3}];
+p=X.model().P[1];
+count('runs', p.runs.length, 3);
+count('their paychecks fill the year', p.runs.reduce((t,r)=>t+r.checks,0), p.stub.total);
+count('the third rate pays the last 3', p.runs[2].checks, 3);
+
+console.log('\n--- a rate with no date waits, flagged, and changes nothing ---');
+who.rates=[{annual:base,from:""},{annual:raise,from:""}];
+p=X.model().P[1];
+count('rates waiting for a date', p.pendingRates.length, 1);
+count('runs', p.runs.length, 1);
+chk('net/check unchanged', p.net, flat.net);
+
+console.log('\n--- a rate dated after the year pays none of it ---');
+who.rates=[{annual:base,from:""},{annual:raise,from:(Y+1)+"-01-15"}];
+p=X.model().P[1];
+count('paychecks at the new rate', p.runs[1].checks, 0);
+chk('net/check unchanged', p.net, flat.net);
+who.rates=keep;
 
 const v=X.income();
-console.log('\nraise inputs rendered:', (v.match(/data-f="newSalary"/g)||[]).length, 'salary +', (v.match(/data-f="raiseChecks"/g)||[]).length, 'checks');
-console.log('income view clean:', !['undefined','NaN','[object Object]'].some(x=>v.includes(x)));
+const clean=!['undefined','NaN','[object Object]'].some(x=>v.includes(x)); if(!clean) f++;
+console.log('\nrate inputs rendered:', (v.match(/data-f="annual"/g)||[]).length, 'rates +', (v.match(/data-f="from"/g)||[]).length, 'dates');
+console.log('income view clean:', clean);
 console.log(f===0?'\n>>> ALL CHECKS PASSED':'\n>>> '+f+' FAILURES');

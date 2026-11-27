@@ -2341,7 +2341,7 @@
 const DEFAULTS = {
   "dataVersion": 55,
   "cardsRev": 2,
-  "updated": "2026-11-25",
+  "updated": "2026-11-27",
   "irsLimit": 24500,
   "iraTotal": 15000,
   "miscPct": 0.15,
@@ -2358,27 +2358,27 @@ const DEFAULTS = {
       "bonus": 10000,
       "paychecks": 24,
       "variablePay": false,
-      "pre401k": 0.1,
+      "pre401k": 0.17,
       "post401k": 0,
       "otherPre": 5.2,
       "otherPost": 8,
-      "fedPer": 905.4,
-      "caPer": 318.6,
+      "bonusFedRate": 0.22,
+      "bonusCARate": 0.1023,
+      "bonusLeft": 10000,
+      "fedPer": 833.96,
+      "caPer": 294.34,
       "ficaPer": 452.63,
       "sdiPer": 76.92,
       "grossPer": 5916.67,
-      "ytdGross": 106500,
-      "ytdFed": 16297.2,
-      "ytdCA": 5734.8,
-      "ytdFica": 8147.34,
-      "ytdSdi": 1384.56,
-      "bonusFedRate": 0.22,
-      "bonusCARate": 0.1023,
-      "stubUpdated": "2026-11-17",
-      "ytd401k": 10650,
-      "checksLeft": 6,
-      "bonusLeft": 10000,
-      "stubPayDate": ""
+      "ytdGross": 130166.74,
+      "ytd401k": 22128.26,
+      "ytdFed": 18347.12,
+      "ytdCA": 6475.48,
+      "ytdFica": 9957.86,
+      "ytdSdi": 1692.24,
+      "checksLeft": 2,
+      "stubPayDate": "2026-11-20",
+      "stubUpdated": "2026-11-21"
     },
     {
       "key": "jordan",
@@ -2390,33 +2390,33 @@ const DEFAULTS = {
         },
         {
           "annual": 136000,
-          "from": "2026-08-28"
+          "from": "2026-04-03"
         }
       ],
       "bonus": 15000,
       "paychecks": 26,
       "variablePay": false,
-      "pre401k": 0.12,
+      "pre401k": 0.16,
       "post401k": 0,
       "otherPre": 14,
       "otherPost": 11.5,
-      "fedPer": 772.3,
-      "caPer": 291.1,
+      "bonusFedRate": 0.22,
+      "bonusCARate": 0.1023,
+      "bonusLeft": 0,
+      "fedPer": 735.81,
+      "caPer": 275.93,
       "ficaPer": 400.15,
       "sdiPer": 68,
       "grossPer": 5230.77,
-      "ytdGross": 108846.15,
-      "ytdFed": 17349.7,
-      "ytdCA": 6888.4,
-      "ytdFica": 8326.73,
-      "ytdSdi": 1415,
-      "bonusFedRate": 0.22,
-      "bonusCARate": 0.1023,
-      "stubUpdated": "2026-11-17",
-      "ytd401k": 13061.54,
-      "checksLeft": 7,
-      "bonusLeft": 0,
-      "stubPayDate": ""
+      "ytdGross": 138692.34,
+      "ytd401k": 22190.7,
+      "ytdFed": 20698.92,
+      "ytdCA": 8059.14,
+      "ytdFica": 10609.92,
+      "ytdSdi": 1803,
+      "checksLeft": 2,
+      "stubPayDate": "2026-11-27",
+      "stubUpdated": "2026-11-27"
     }
   ],
   "fixed": [
@@ -3055,7 +3055,7 @@ const DEFAULTS = {
         561600
       ],
       [
-        "2026-11-25",
+        "2026-11-27",
         630000
       ]
     ]
@@ -3779,13 +3779,17 @@ function paySchedule(perYear, iso){
    approximation, and because its paydays are real calendar dates the plan
    can also count the paydays that have landed since a stub was taken, which
    is what lets a stub roll forward (see person()). A rule is either
-   {kind:"monthly", days:[10, 25]}, paid on those days of every month — a
+   {kind:"monthly", days:[5, 20]}, paid on those days of every month — a
    payday on a Saturday pays the Friday, on a Sunday the Monday, and on a
    holiday the day before — or {kind:"biweekly", anchor:"YYYY-MM-DD"}, every
-   second week from a known payday. A person's own payRule field, if one is
-   ever set on their record, wins over this table. The demo's two people are
-   paid on the approximation. */
-const PAY_RULES = {};
+   second week from a known payday. Keep a monthly day to the 28th or before:
+   a later one doesn't come round every month. A person's own payRule field,
+   if one is ever set on their record, wins over this table. The demo's two
+   people are paid one way each. */
+const PAY_RULES = {
+  alex: {kind:"monthly", days:[5, 20]},
+  jordan: {kind:"biweekly", anchor:"2026-01-09"}
+};
 const payRuleFor = p => (p && p.payRule && p.payRule.kind) ? p.payRule : (PAY_RULES[p && p.key] || null);
 const isoOf = t => new Date(t * DAY_MS).toISOString().slice(0,10);
 const addDays = (iso, n) => isoOf(dayNo(iso) + n);

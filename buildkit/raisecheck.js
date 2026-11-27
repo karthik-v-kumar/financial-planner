@@ -7,7 +7,9 @@ const count=(l,g,w)=>chk(l,g,w,0);
    person earns, dated the way a real one is, and every expected value comes
    from checkAt() at the withholding rate the app derives, so nothing from the
    plan is named here. Pay is a list of salary rates, each from the date of the
-   first paycheck paid at it; see rateRuns(). */
+   first paycheck paid at it; see rateRuns(). Paychecks are counted against
+   the year's own paydays: on a real pay calendar a year can hold one more
+   than the paychecks a year the pay is divided by. */
 const who=X.S.people[1], Y=X.YEAR, n=who.paychecks;
 const keep=JSON.parse(JSON.stringify(who.rates));
 const base=keep[0].annual;
@@ -15,6 +17,7 @@ const base=keep[0].annual;
 console.log('--- one rate all year ---');
 who.rates=[{annual:base,from:""}];
 let m=X.model(), p=m.P[1];
+const total=p.stub.total;
 const flat=X.checkAt(who, base, p.taxRate);
 count('runs', p.runs.length, 1);
 count('paychecks in it', p.runs[0].checks, p.stub.total);
@@ -23,16 +26,16 @@ chk('monthly = net x checks/12', p.monthly, flat.net*n/12);
 chk('combined monthly = both people', m.netTotal, m.P.reduce((t,x)=>t+x.monthly,0));
 if(p.hasRaise){f++;console.log('  FAIL  one rate reads as a raise');}
 
-const raise=Math.round(base*1.08), late=Math.min(9, n);
-const from=X.nthPayday(who, Y, n-late+1);
-console.log('\n--- '+who.name+': a rate 8% higher from '+from+', the last '+late+' of '+n+' paychecks ---');
+const raise=Math.round(base*1.08), late=Math.min(9, total);
+const from=X.nthPayday(who, Y, total-late+1);
+console.log('\n--- '+who.name+': a rate 8% higher from '+from+', the last '+late+' of '+total+' paychecks ---');
 who.rates=[{annual:base,from:""},{annual:raise,from}];
 m=X.model(); p=m.P[1];
 const A=X.checkAt(who, base, p.taxRate), B=X.checkAt(who, raise, p.taxRate);
 const [rA,rB]=p.runs;
-count('paychecks at the first rate', rA.checks, n-late);
+count('paychecks at the first rate', rA.checks, total-late);
 count('paychecks at the new rate', rB.checks, late);
-count('the new rate starts at paycheck', rB.first, n-late+1);
+count('the new rate starts at paycheck', rB.first, total-late+1);
 chk('net per check before', rA.net, A.net);
 chk('net per check after', rB.net, B.net);
 // monthly is what the rate paying the next paycheck brings in
@@ -46,7 +49,7 @@ chk('gross left = each check at its rate', p.grossLeft, left);
 console.log('   projected 401k', p.total401k.toFixed(2), '| room', p.room.toFixed(2), '|', p.statusText);
 
 console.log('\n--- a second raise: three rates, three runs ---');
-const third=Math.round(raise*1.05), from3=X.nthPayday(who, Y, n-2);
+const third=Math.round(raise*1.05), from3=X.nthPayday(who, Y, total-2);
 who.rates=[{annual:base,from:""},{annual:raise,from},{annual:third,from:from3}];
 p=X.model().P[1];
 count('runs', p.runs.length, 3);

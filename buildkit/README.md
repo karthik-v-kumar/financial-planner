@@ -22,6 +22,11 @@ var), defaulting to `finance-planner.html` in the current directory.
                    writing if a replacement's target has moved in the source,
                    if the live plan has a field it doesn't know how to
                    replace, or if any term in `demo-map.local.json` survives.
+                   The demo's paystubs are made for the day it runs: each is
+                   dated to the latest payday on that person's pay calendar,
+                   with year-to-date figures to match, and the app rolls
+                   them forward from there. It also aborts if the app's own
+                   paystub check would flag one.
 - `verify.js`    — paychecks, paystub withholding, 401k, spending and net worth totals
 - `ratecheck.js` — tax engine
 - `cardcheck.js` — card credits and offers

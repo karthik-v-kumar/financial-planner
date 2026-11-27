@@ -175,7 +175,8 @@ Leave those two values blank and it stays a self-contained local file.
 
 To have stubs roll forward on an employer's real pay calendar, add it to
 `PAY_RULES` in the script: the comment above it gives both shapes, fixed days
-of the month or every second week from a known payday.
+of the month or every second week from a known payday. The demo's two people
+are paid one way each.
 
 **On the anon key being public:** that is how Supabase is designed to work.
 Access is enforced by row-level security in the database, which checks the

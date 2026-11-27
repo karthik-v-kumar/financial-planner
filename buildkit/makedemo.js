@@ -12,9 +12,9 @@ else console.warn('WARNING: no '+path.basename(MAP_PATH)+' found — the leak gu
 const stop=msg=>{console.error('ABORTED — '+msg+' Nothing was written.');process.exit(1);};
 
 /* The app is loaded under Node by the tests' own harness (see _app.js), with
-   the database off. It hands back the plan's defaults, and the two functions
-   the paystubs below are dated with. */
-const X=require('./_app')(['DEFAULTS','today','nthPayday']);
+   the database off. It hands back the plan's defaults, and the functions the
+   paystubs below are dated, priced and checked with. */
+const X=require('./_app')(['DEFAULTS','today','rulePaydays','rateRuns','runAt','person','withYear']);
 const LIVE=X.DEFAULTS;
 const D=JSON.parse(JSON.stringify(LIVE));
 
@@ -29,39 +29,84 @@ if(unknown.length) stop('the live plan has fields this build does not know: '+un
 
 /* ---- people ---- */
 // Replaced wholesale, and every paystub field is set: a missing field renders
-// as "undefined" in its input cell. The figures are one consistent set of
-// paystubs part-way through the year — year-to-date columns that agree with
-// the pay rates, 401k rate and paychecks already received — so the income
-// plan, the 401k tracker and the tax tab's withholding all have something to
-// show, and the paystub check has nothing to flag.
-// Alex: semi-monthly, 18 of 24 paid, bonus still to come.
-// Jordan: bi-weekly, 19 of 26 paid, a raise that landed with the latest
-// paycheck, bonus already paid (so it sits inside the year-to-date columns).
-// Withholding is the stub's four lines: federal, California, FICA at 7.65%
-// and CA SDI at 1.3% of gross. The stub's pay date is left for a visitor to
-// type; until it is, the paychecks left are the count given here.
-const stubDay=new Date(Date.now()-8*864e5).toISOString().slice(0,10);
-const year=+X.today().slice(0,4);
-// Jordan's raise is dated the way a real one is, from its first payday: the
-// year's 19th on a bi-weekly schedule, so the stub's own paycheck is the
-// first at it and its gross is the new rate's.
-const raiseDay=X.nthPayday({key:'jordan',paychecks:26},year,19);
+// as "undefined" in its input cell.
+//
+// Each person is paid on a calendar of their own, written into PAY_RULES
+// below: Alex semi-monthly on the 5th and 20th, Jordan every second Friday.
+// With a calendar the app counts the paychecks left from a stub's pay date,
+// and rolls the stub forward through the paydays since, so the demo stays
+// current for the rest of the year it was built in.
+const RULES={
+  alex:  {kind:"monthly", days:[5, 20]},
+  jordan:{kind:"biweekly", anchor:"2026-01-09"}
+};
+// The paystubs are made for the day the demo is built: each is the stub of
+// the person's latest payday by then, in the year the plan is for, entered
+// the day after. Its year-to-date columns are added up paycheck by paycheck,
+// at the rate in force on each payday and rounded to the cent the way payroll
+// rounds them, so they always agree with the pay date and the paystub check
+// has nothing to flag. Someone with no payday yet that year has a blank stub,
+// as everyone does when a year opens.
+const TODAY=X.today(), YEAR=LIVE.tax.params.year;
+const asOf=TODAY<`${YEAR}-12-31`?TODAY:`${YEAR}-12-31`;
+const cents=x=>Math.round(x*100)/100;
+const nextDay=iso=>new Date(Date.parse(iso+'T00:00:00Z')+864e5).toISOString().slice(0,10);
+// Withholding is the stub's four lines: federal and California as a share of
+// taxable pay, FICA at 7.65% of gross (6.2% Social Security and 1.45%
+// Medicare; neither person reaches the wage base) and CA SDI at 1.3%, which
+// has no cap. A bonus is withheld at the supplemental rates on the record.
+const FICA=0.0765, SDI=0.013;
+function stubbed(p, share){
+  const days=X.rulePaydays(RULES[p.key], YEAR), past=days.filter(d=>d<=asOf);
+  const runs=X.rateRuns({...p, payRule:RULES[p.key]}, YEAR, days.length);
+  // Paycheck k of the year, as payroll pays it
+  const check=k=>{
+    const gross=cents(X.runAt(runs,k).annual/p.paychecks), pre=cents(gross*p.pre401k), taxable=gross-pre-p.otherPre;
+    return {gross, pre, fed:cents(taxable*share.fed), ca:cents(taxable*share.ca), fica:cents(gross*FICA), sdi:cents(gross*SDI)};
+  };
+  const own=check(Math.max(1, past.length));
+  const per={fedPer:own.fed, caPer:own.ca, ficaPer:own.fica, sdiPer:own.sdi};
+  if(!past.length) return {...p, ...per, grossPer:0, ytdGross:0, ytdFed:0, ytdCA:0, ytdFica:0, ytdSdi:0, ytd401k:0,
+    checksLeft:p.paychecks, bonusLeft:p.bonus, stubUpdated:"", stubPayDate:""};
+  const ytd={gross:0, pre:0, fed:0, ca:0, fica:0, sdi:0};
+  for(let k=1;k<=past.length;k++){ const c=check(k); for(const f in ytd) ytd[f]+=c[f]; }
+  const bonus=p.bonus-p.bonusLeft, payDate=past[past.length-1];
+  return {...p, ...per, grossPer:own.gross,
+    ytdGross:cents(ytd.gross+bonus), ytd401k:cents(ytd.pre+bonus*p.pre401k),
+    ytdFed:cents(ytd.fed+bonus*p.bonusFedRate), ytdCA:cents(ytd.ca+bonus*p.bonusCARate),
+    ytdFica:cents(ytd.fica+bonus*FICA), ytdSdi:cents(ytd.sdi+bonus*SDI),
+    checksLeft:days.length-past.length, stubPayDate:payDate,
+    stubUpdated:nextDay(payDate)<TODAY?nextDay(payDate):TODAY};
+}
+// Alex: one rate all year, and 17% to the 401k, which reaches the IRS limit
+// before the year is out, so payroll stops there; the bonus is still to come.
+// Jordan: a raise from the first payday in April, and 16% to the 401k, a few
+// hundred dollars short of the limit for the recommender to work on; the
+// bonus is already paid, so it sits inside the year-to-date columns.
+const april=X.rulePaydays(RULES.jordan, YEAR).find(d=>d>=`${YEAR}-04-01`);
 D.people=[
-  {key:"alex",name:"Alex",rates:[{annual:142000,from:""}],bonus:10000,paychecks:24,variablePay:false,
-   pre401k:0.10,post401k:0,otherPre:5.20,otherPost:8.00,
-   fedPer:905.40,caPer:318.60,ficaPer:452.63,sdiPer:76.92,grossPer:5916.67,
-   ytdGross:106500,ytdFed:16297.20,ytdCA:5734.80,ytdFica:8147.34,ytdSdi:1384.56,
-   bonusFedRate:0.22,bonusCARate:0.1023,stubUpdated:stubDay,
-   ytd401k:10650,checksLeft:6,bonusLeft:10000,stubPayDate:""},
-  {key:"jordan",name:"Jordan",rates:[{annual:128000,from:""},{annual:136000,from:raiseDay}],bonus:15000,paychecks:26,variablePay:false,
-   pre401k:0.12,post401k:0,otherPre:14.00,otherPost:11.50,
-   fedPer:772.30,caPer:291.10,ficaPer:400.15,sdiPer:68.00,grossPer:5230.77,
-   ytdGross:108846.15,ytdFed:17349.70,ytdCA:6888.40,ytdFica:8326.73,ytdSdi:1415.00,
-   bonusFedRate:0.22,bonusCARate:0.1023,stubUpdated:stubDay,
-   ytd401k:13061.54,checksLeft:7,bonusLeft:0,stubPayDate:""}
+  stubbed({key:"alex",name:"Alex",rates:[{annual:142000,from:""}],bonus:10000,paychecks:24,variablePay:false,
+    pre401k:0.17,post401k:0,otherPre:5.20,otherPost:8.00,
+    bonusFedRate:0.22,bonusCARate:0.1023,bonusLeft:10000}, {fed:0.17, ca:0.06}),
+  stubbed({key:"jordan",name:"Jordan",rates:[{annual:128000,from:""},{annual:136000,from:april}],bonus:15000,paychecks:26,variablePay:false,
+    pre401k:0.16,post401k:0,otherPre:14.00,otherPost:11.50,
+    bonusFedRate:0.22,bonusCARate:0.1023,bonusLeft:0}, {fed:0.168, ca:0.063})
 ];
 const lacking=Object.keys(LIVE.people[0]).filter(k=>D.people.some(p=>!(k in p)));
 if(lacking.length) stop('the live paystub has fields the demo people lack: '+lacking.join(', ')+'. A missing field renders as "undefined"; give each person a figure.');
+// The app's own paystub check, run on the stubs as built: the paychecks left
+// are worked out from the pay date, and nothing about a stub disagrees with
+// itself or with the pay rates.
+for(const p of D.people){
+  const P=X.withYear(YEAR, ()=>X.person({...p, payRule:RULES[p.key]}));
+  if(!P) stop('the live file has no full plan for '+YEAR+' to check the paystubs against.');
+  const bad=[];
+  if(p.stubPayDate && !P.stub.derived) bad.push('the paychecks left are not worked out from its pay date');
+  if(P.stub.issue) bad.push('the paystub check finds it '+P.stub.issue);
+  if(P.sdiGap) bad.push('it has no CA SDI');
+  if(P.dataGap) bad.push('its 401k year to date is $0');
+  if(bad.length) stop(p.name+"'s paystub fails the app's own check: "+bad.join('; ')+'.');
+}
 D.notes={salary:"Annualized from gross per paycheck on the latest paystub",bonus:"",
   paychecks:"24 semi-monthly · 26 bi-weekly",pre401k:"Use the recommender below",
   post401k:"Mega-backdoor, if the plan allows in-plan Roth conversion",
@@ -200,8 +245,10 @@ must(/const CARD_IMG = \{[\s\S]*?\n\}/,'const CARD_IMG = {}','CARD_IMG');
 // demo's earlier years come from D.years above, so it is never needed.
 must(/const LEGACY_GAINS = \{[\s\S]*?\};\n/,'const LEGACY_GAINS = null;\n','LEGACY_GAINS');
 // The live file knows its two employers' real pay calendars, keyed by the
-// household's own names. The demo's people are paid on the count of
-// paychecks a year, so the table goes, with the comment that describes them.
+// household's own names. The table is replaced, with the comment that
+// describes them, by the demo people's calendars from RULES above.
+const js=v=>Array.isArray(v)?'['+v.map(js).join(', ')+']'
+  :v&&typeof v==='object'?'{'+Object.entries(v).map(([k,x])=>k+':'+js(x)).join(', ')+'}':JSON.stringify(v);
 must(/\/\* ---- The two employers' real pay schedules[\s\S]*?\nconst PAY_RULES = \{[\s\S]*?\n\};\n/,
 `/* ---- Known pay schedules ------------------------------------------------
    The count above approximates a schedule from the number of paychecks a
@@ -209,13 +256,16 @@ must(/\/\* ---- The two employers' real pay schedules[\s\S]*?\nconst PAY_RULES =
    approximation, and because its paydays are real calendar dates the plan
    can also count the paydays that have landed since a stub was taken, which
    is what lets a stub roll forward (see person()). A rule is either
-   {kind:"monthly", days:[10, 25]}, paid on those days of every month — a
+   {kind:"monthly", days:[5, 20]}, paid on those days of every month — a
    payday on a Saturday pays the Friday, on a Sunday the Monday, and on a
    holiday the day before — or {kind:"biweekly", anchor:"YYYY-MM-DD"}, every
-   second week from a known payday. A person's own payRule field, if one is
-   ever set on their record, wins over this table. The demo's two people are
-   paid on the approximation. */
-const PAY_RULES = {};
+   second week from a known payday. Keep a monthly day to the 28th or before:
+   a later one doesn't come round every month. A person's own payRule field,
+   if one is ever set on their record, wins over this table. The demo's two
+   people are paid one way each. */
+const PAY_RULES = {
+${Object.entries(RULES).map(([k,r])=>`  ${k}: ${js(r)}`).join(',\n')}
+};
 `,'the pay schedules');
 // The live file once brought a saved plan's cards into line with a change of
 // roster, naming the cards closed and opened. The demo's wallet has never
